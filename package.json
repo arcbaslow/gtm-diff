@@ -15,10 +15,10 @@
   "author": "Dilshat Rakhimov",
   "repository": {
     "type": "git",
-    "url": "https://github.com/dilshatrakhimov/gtm-diff.git"
+    "url": "https://github.com/arcbaslow/gtm-diff.git"
   },
-  "homepage": "https://github.com/dilshatrakhimov/gtm-diff#readme",
-  "bugs": "https://github.com/dilshatrakhimov/gtm-diff/issues",
+  "homepage": "https://github.com/arcbaslow/gtm-diff#readme",
+  "bugs": "https://github.com/arcbaslow/gtm-diff/issues",
   "type": "module",
   "bin": {
     "gtm-diff": "./bin/run.js"
