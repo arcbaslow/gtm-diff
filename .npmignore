@@ -1,0 +1,9 @@
+/src
+/test
+/coverage
+/.github
+tsconfig*.json
+eslint.config.js
+.prettierrc
+.editorconfig
+vitest.config.ts
