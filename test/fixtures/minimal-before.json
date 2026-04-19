@@ -1,0 +1,79 @@
+{
+  "exportFormatVersion": 2,
+  "exportTime": "2026-04-01 10:00:00",
+  "containerVersion": {
+    "path": "accounts/1234/containers/5678/versions/0",
+    "accountId": "1234",
+    "containerId": "5678",
+    "containerVersionId": "0",
+    "fingerprint": "1711980000000",
+    "tagManagerUrl": "https://tagmanager.google.com/#/versions/accounts/1234/containers/5678/versions/0",
+    "container": {
+      "path": "accounts/1234/containers/5678",
+      "accountId": "1234",
+      "containerId": "5678",
+      "name": "example.com",
+      "publicId": "GTM-ABCDE12",
+      "usageContext": ["WEB"],
+      "fingerprint": "1700000000000",
+      "tagManagerUrl": "https://tagmanager.google.com/#/container/accounts/1234/containers/5678"
+    },
+    "tag": [
+      {
+        "accountId": "1234",
+        "containerId": "5678",
+        "tagId": "1",
+        "name": "GA4 - Page View",
+        "type": "gaawe",
+        "parameter": [
+          { "type": "template", "key": "eventName", "value": "page_view" },
+          { "type": "tagReference", "key": "measurementId", "value": "{{GA4 Config}}" }
+        ],
+        "fingerprint": "1710000000000",
+        "firingTriggerId": ["2147479572"],
+        "tagFiringOption": "oncePerEvent"
+      },
+      {
+        "accountId": "1234",
+        "containerId": "5678",
+        "tagId": "2",
+        "name": "Old Pixel",
+        "type": "html",
+        "parameter": [
+          {
+            "type": "template",
+            "key": "html",
+            "value": "<script>console.log('old')</script>"
+          }
+        ],
+        "fingerprint": "1710000000001",
+        "firingTriggerId": ["2147479572"]
+      }
+    ],
+    "trigger": [
+      {
+        "accountId": "1234",
+        "containerId": "5678",
+        "triggerId": "2147479572",
+        "name": "All Pages",
+        "type": "pageview",
+        "fingerprint": "1700000000001"
+      }
+    ],
+    "variable": [
+      {
+        "accountId": "1234",
+        "containerId": "5678",
+        "variableId": "3",
+        "name": "GA4 Config",
+        "type": "gtcs",
+        "parameter": [{ "type": "template", "key": "measurementId", "value": "G-XXXXXX" }],
+        "fingerprint": "1700000000002"
+      }
+    ],
+    "builtInVariable": [
+      { "accountId": "1234", "containerId": "5678", "type": "pageUrl", "name": "Page URL" },
+      { "accountId": "1234", "containerId": "5678", "type": "pageHostname", "name": "Page Hostname" }
+    ]
+  }
+}
