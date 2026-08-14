@@ -57,6 +57,7 @@ jobs:
 
   publish:
     needs: build
+    if: vars.PUBLISH_TO_NPM == 'true'
     runs-on: ubuntu-latest
     environment: npm
     permissions:
