@@ -154,7 +154,8 @@ function normalizeTrigger(trigger: GtmTrigger, refs: ReferenceIndex): Normalized
   if (trigger.customEventFilter) {
     out['customEventFilter'] = normalizeConditions(trigger.customEventFilter);
   }
-  if (trigger.autoEventFilter) out['autoEventFilter'] = normalizeConditions(trigger.autoEventFilter);
+  if (trigger.autoEventFilter)
+    out['autoEventFilter'] = normalizeConditions(trigger.autoEventFilter);
   if (trigger.parameter) out['parameter'] = normalizeParameters(trigger.parameter);
   if (trigger.parentFolderId) {
     out['parentFolderName'] =
