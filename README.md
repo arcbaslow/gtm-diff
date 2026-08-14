@@ -1,10 +1,14 @@
 # gtm-diff
 
+[![tests](https://github.com/arcbaslow/gtm-diff/actions/workflows/tests.yml/badge.svg)](https://github.com/arcbaslow/gtm-diff/actions/workflows/tests.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![version](https://img.shields.io/badge/version-0.1.0-blue.svg)](CHANGELOG.md)
+
 A CLI toolkit for Google Tag Manager. Terraform-style developer experience:
 predictable, read-only by default, plan before apply.
 
-```
-npx gtm-diff diff before.json after.json
+```sh
+gtm-diff diff before.json after.json
 ```
 
 ## Why
@@ -21,19 +25,32 @@ only after the diff engine has been used in anger.
 
 | Version | Command | Writes to GTM? | Status |
 |---|---|---|---|
-| v0.1 | `gtm-diff diff <before> <after>` | no | in progress |
+| v0.1 | `gtm-diff diff <before> <after>` | no | complete, not yet published |
 | v0.2 | `gtm-diff plan --source <a> --target <b>` | no — emits a plan file | planned |
 | v0.3 | `gtm-diff apply --plan plan.json` | yes, with `--apply` and explicit confirms | planned |
 
 ## Install
 
+Not on npm yet. Build it from source:
+
 ```sh
-npm install -g gtm-diff
-# or run once without installing
-npx gtm-diff diff before.json after.json
+git clone https://github.com/arcbaslow/gtm-diff
+cd gtm-diff
+npm ci
+npm run build
+npm link          # puts `gtm-diff` on your PATH
+```
+
+Or run it without linking:
+
+```sh
+npm run dev -- diff before.json after.json
 ```
 
 Node.js `>=20.0.0` required.
+
+Once the first release is cut, `npm install -g gtm-diff` and
+`npx gtm-diff` will work as you'd expect.
 
 ## Usage — `diff`
 
@@ -91,9 +108,10 @@ jobs:
       - uses: actions/setup-node@v4
         with: { node-version: 20 }
       - name: Produce diff
+        # Swap for `npx gtm-diff` once the package is published.
         run: |
           git show origin/${{ github.base_ref }}:gtm/container.json > /tmp/before.json
-          npx gtm-diff diff /tmp/before.json gtm/container.json \
+          npx github:arcbaslow/gtm-diff diff /tmp/before.json gtm/container.json \
             --format markdown --output diff.md
       - name: Post as PR comment
         uses: marocchino/sticky-pull-request-comment@v2
@@ -146,3 +164,15 @@ npm run lint
 ## License
 
 MIT © Dilshat Rakhimov
+
+## Related
+
+Part of a set of marketing-measurement toolkits:
+
+- [google-ads-agents](https://github.com/arcbaslow/google-ads-agents)
+- [google-analytics-agent](https://github.com/arcbaslow/google-analytics-agent)
+- [google-search-console-agent](https://github.com/arcbaslow/google-search-console-agent)
+- [meta-ads-agents](https://github.com/arcbaslow/meta-ads-agents)
+- [figma-taxonomy-gen](https://github.com/arcbaslow/figma-taxonomy-gen)
+
+Built and maintained by [Good Labs](https://goodlabs.kz).

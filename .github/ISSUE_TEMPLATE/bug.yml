@@ -1,0 +1,93 @@
+name: Bug report
+description: The diff is wrong, or the tool doesn't behave the way the docs say.
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: >
+        Before pasting anything from a container export: exports contain API
+        keys, measurement IDs, and internal hostnames. Trim to the entity in
+        question and redact.
+
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened?
+      placeholder: "`gtm-diff diff before.json after.json` reported ..."
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: What did you expect?
+      description: For a wrong diff, say which entity and which field.
+      placeholder: "The `GA4 - Page View` tag was unchanged, but it shows as modified on `parameter[3].value`"
+    validations:
+      required: true
+
+  - type: input
+    id: command
+    attributes:
+      label: Exact command
+      placeholder: "gtm-diff diff before.json after.json --format markdown"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: surface
+    attributes:
+      label: Which part?
+      options:
+        - entity matching (something matched or failed to match across exports)
+        - normalization (a volatile field or ID reference handled wrong)
+        - diff output (a change reported that is not a change, or missed)
+        - console reporter
+        - markdown reporter
+        - HTML reporter
+        - CLI flags / exit codes
+        - programmatic API
+        - other / not sure
+    validations:
+      required: true
+
+  - type: textarea
+    id: fixture
+    attributes:
+      label: Minimal before / after
+      description: >
+        The single most useful thing you can attach. Two trimmed exports
+        containing just the entity that diffs wrong. This goes straight into
+        test/fixtures/ as a regression test - send it even without a patch.
+      render: json
+
+  - type: textarea
+    id: output
+    attributes:
+      label: Actual output
+      render: shell
+
+  - type: input
+    id: version
+    attributes:
+      label: Version
+      description: "`gtm-diff --version`, or the commit you built from"
+      placeholder: "0.1.0"
+    validations:
+      required: true
+
+  - type: input
+    id: node-version
+    attributes:
+      label: Node version
+      placeholder: "20.11.0"
+    validations:
+      required: true
+
+  - type: input
+    id: os
+    attributes:
+      label: OS
+      placeholder: "macOS 14.5 / Ubuntu 22.04 / Windows 11"
+    validations:
+      required: true
