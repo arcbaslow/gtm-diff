@@ -1,0 +1,11 @@
+# Check out LF on every platform.
+#
+# .prettierrc sets endOfLine: "lf". Without this, a Windows checkout with
+# core.autocrlf=true converts every file to CRLF and `prettier --check` fails
+# on the whole tree - which is exactly what the windows-latest CI job hit
+# while the ubuntu jobs passed.
+* text=auto eol=lf
+
+*.png binary
+*.jpg binary
+*.ico binary
