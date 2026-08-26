@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="assets/banner.png" alt="gtm-diff - Code review and CI for Tag Manager" width="880">
+</p>
+
 # gtm-diff
 
 [![tests](https://github.com/arcbaslow/gtm-diff/actions/workflows/tests.yml/badge.svg)](https://github.com/arcbaslow/gtm-diff/actions/workflows/tests.yml)
