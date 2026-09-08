@@ -1,7 +1,7 @@
 {
   "name": "gtm-diff",
   "version": "0.1.0",
-  "description": "CLI toolkit for Google Tag Manager: diff between container exports, plan for sync, apply for real pushes. Terraform-style DX.",
+  "description": "Compare Google Tag Manager container exports with semantic diffs, console, Markdown and HTML reports, and CI exit codes.",
   "keywords": [
     "gtm",
     "google-tag-manager",
@@ -41,7 +41,7 @@
     "format:check": "prettier --check \"{src,test}/**/*.ts\"",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
-    "prepack": "npm run clean && npm run build && oclif manifest && oclif readme",
+    "prepack": "npm run clean && npm run build && oclif manifest",
     "postpack": "rimraf oclif.manifest.json",
     "test": "vitest run",
     "test:watch": "vitest",

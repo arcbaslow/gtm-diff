@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>GTM diff</title>
+<style>
+  :root { color-scheme: light dark; }
+  body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; max-width: 1000px; margin: 2rem auto; padding: 0 1rem; }
+  h1 { font-size: 1.4rem; }
+  h2 { margin-top: 2rem; border-bottom: 1px solid #888; padding-bottom: .25rem; }
+  h3 { margin-top: 1rem; }
+  table.summary { border-collapse: collapse; margin: 1rem 0; }
+  table.summary th, table.summary td { padding: .25rem .75rem; border: 1px solid #888; text-align: right; }
+  table.summary th { text-align: left; }
+  pre.diff { background: rgba(128,128,128,.08); padding: .5rem; border-radius: 4px; overflow-x: auto; font-size: .85rem; line-height: 1.4; }
+  .add { color: #2e7d32; }
+  .rem { color: #c62828; }
+  .mod { color: #b26a00; }
+  .unchanged { color: #888; }
+  details { margin: .25rem 0; }
+  summary { cursor: pointer; }
+  code { background: rgba(128,128,128,.15); padding: .1em .3em; border-radius: 3px; font-size: .9em; }
+</style>
+</head>
+<body>
+<h1>GTM diff: <code>minimal-before.json</code> → <code>minimal-after.json</code></h1>
+<table class="summary">
+<thead><tr><th></th><th>Added</th><th>Removed</th><th>Modified</th><th>Unchanged</th></tr></thead>
+<tbody><tr><th>Total</th><td class="add">2</td><td class="rem">1</td><td class="mod">2</td><td class="unchanged">3</td></tr>
+<tr><th>tags</th><td class="add">1</td><td class="rem">1</td><td class="mod">1</td><td class="unchanged">0</td></tr>
+<tr><th>triggers</th><td class="add">0</td><td class="rem">0</td><td class="mod">0</td><td class="unchanged">1</td></tr>
+<tr><th>variables</th><td class="add">0</td><td class="rem">0</td><td class="mod">1</td><td class="unchanged">0</td></tr>
+<tr><th>folders</th><td class="add">0</td><td class="rem">0</td><td class="mod">0</td><td class="unchanged">0</td></tr>
+<tr><th>built-in variables</th><td class="add">1</td><td class="rem">0</td><td class="mod">0</td><td class="unchanged">2</td></tr></tbody>
+</table>
+<h2>Tags</h2>
+<h3 class="add">Added</h3><ul>
+<li><strong>Meta Pixel</strong> <code>html</code></li>
+</ul>
+<h3 class="rem">Removed</h3><ul>
+<li><strong>Old Pixel</strong> <code>html</code></li>
+</ul>
+<h3 class="mod">Modified</h3>
+<details>
+<summary><strong>GA4 - Page View</strong> <code>gaawe</code> — 1 field change</summary>
+<pre class="diff">
+<span class="add">+ parameter[2] = {
+  &quot;type&quot;: &quot;boolean&quot;,
+  &quot;key&quot;: &quot;sendPageView&quot;,
+  &quot;value&quot;: &quot;true&quot;
+}</span>
+</pre>
+</details>
+<h2>Variables</h2>
+<h3 class="mod">Modified</h3>
+<details>
+<summary><strong>GA4 Config</strong> <code>gtcs</code> — 1 field change</summary>
+<pre class="diff">
+<span class="mod">~ parameter[0].value: &quot;G-XXXXXX&quot; → &quot;G-YYYYYY&quot;</span>
+</pre>
+</details>
+<h2>Built-in variables</h2>
+<h3 class="add">Added</h3><ul>
+<li><strong>Page Path</strong> <code>pagePath</code></li>
+</ul>
+
+</body>
+</html>

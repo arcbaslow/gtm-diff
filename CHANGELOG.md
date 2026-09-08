@@ -5,9 +5,11 @@ All notable changes to this project are documented here.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 Versioning is [semantic](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [0.1.0] - 2026-09-08
 
 ### Added
+
+- SVG banner and icon, reproducible report screenshots, offline examples and release verification.
 
 - CI on Ubuntu and Windows across Node 20 / 22 / 24, running typecheck,
   lint, format check, the test suite, and a build.
@@ -18,15 +20,16 @@ Versioning is [semantic](https://semver.org/spec/v2.0.0.html).
 
 ### Changed
 
+- Package description now describes the implemented diff command. Packing preserves the hand-written README instead of running the Oclif README generator.
+- Refreshed the transitive `brace-expansion` lockfile entries to address the production dependency advisory reported by npm audit.
 - README no longer advertises `npm install -g gtm-diff` and
   `npx gtm-diff`. The package is not published, so both commands failed.
-  Install instructions now cover building from source, and the CI
-  example uses `npx github:arcbaslow/gtm-diff`.
+  Install instructions now cover building from source and running the
+  built CLI directly in CI.
 - The status table listed `v0.1 diff` as in progress. The diff engine,
-  all three reporters, and 26 tests are complete; it is unpublished, not
-  unfinished.
+  all three reporters, and 30 tests are complete in this first release.
 
-## [0.1.0] - unreleased
+### Initial diff engine
 
 ### Added
 
@@ -43,4 +46,4 @@ Versioning is [semantic](https://semver.org/spec/v2.0.0.html).
 - Exposed as a library: `loadGtmExport`, `diffExports`,
   `renderMarkdown`.
 
-[Unreleased]: https://github.com/arcbaslow/gtm-diff/compare/v0.1.0...HEAD
+[0.1.0]: https://github.com/arcbaslow/gtm-diff/releases/tag/v0.1.0

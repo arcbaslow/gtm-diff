@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="400" viewBox="0 0 1280 400" role="img" aria-labelledby="title desc">
+<title id="title">GTM Diff</title><desc id="desc">Review the changes in your Google Tag Manager exports. An independent Good Labs open-source toolkit.</desc>
+<defs><pattern id="grid" width="28" height="28" patternUnits="userSpaceOnUse"><path d="M28 0H0V28" fill="none" stroke="#0891b2" stroke-opacity=".12"/></pattern></defs>
+<rect x="1" y="1" width="1278" height="398" rx="20" fill="#fafaf7" stroke="#e2e4df"/><path d="M24 1h1232" stroke="#0891b2" stroke-width="4"/>
+<g font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Arial,sans-serif" fill="#17202a">
+<text x="56" y="61" font-family="Consolas,monospace" font-size="13" letter-spacing="1.5" fill="#0891b2">TAG OPERATIONS / 05</text>
+<text x="56" y="154" font-size="62" font-weight="700" letter-spacing="-2">GTM Diff</text><text x="58" y="215" font-size="21" fill="#52606c">Review the changes in your Google Tag Manager exports.</text><rect x="56" y="320" width="147" height="30" rx="5" fill="#0891b2" fill-opacity=".08"/><text x="71" y="340" font-size="12" letter-spacing="1" fill="#0891b2" font-weight="700">SEMANTIC DIFF</text><rect x="215" y="320" width="111" height="30" rx="5" fill="#0891b2" fill-opacity=".08"/><text x="230" y="340" font-size="12" letter-spacing="1" fill="#0891b2" font-weight="700">LOCAL CLI</text><rect x="338" y="320" width="120" height="30" rx="5" fill="#0891b2" fill-opacity=".08"/><text x="353" y="340" font-size="12" letter-spacing="1" fill="#0891b2" font-weight="700">CI REPORTS</text>
+<rect x="930" y="48" width="292" height="252" rx="16" fill="url(#grid)"/>
+<rect x="1005" y="100" width="144" height="144" rx="32" fill="#0891b2"/>
+<g transform="translate(1029 124) scale(1.5)" fill="none" stroke="white" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 10v28c0 11 26 6 26 17M45 10v15c0 11-26 6-26 17"/><circle cx="19" cy="8" r="5"/><circle cx="45" cy="8" r="5"/><circle cx="19" cy="56" r="5"/><circle cx="45" cy="56" r="5"/></g>
+<text x="1077" y="333" text-anchor="middle" font-size="14" font-weight="600" fill="#52606c">GOOD LABS / OPEN SOURCE</text>
+</g></svg>
