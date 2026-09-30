@@ -53,17 +53,17 @@ describe('diff command contract', () => {
   });
 
   it.each([
-    [before],
-    [before, after, '--unknown'],
-    [before, after, '--format', 'xml'],
-    ['missing-before.json', 'missing-after.json'],
-    [before, 'test/fixtures/invalid-json.json'],
-    [before, 'test/fixtures/malformed-entry-after.json'],
-    [before, after, '--output', 'test/fixtures'],
-  ])('returns two for command, input or output errors: %j', (args) => {
+    { args: [before], message: 'required' },
+    { args: [before, after, '--unknown'], message: '--unknown' },
+    { args: [before, after, '--format', 'xml'], message: '--format=xml' },
+    { args: ['missing-before.json', 'missing-after.json'], message: 'Could not read file' },
+    { args: [before, 'test/fixtures/invalid-json.json'], message: 'Invalid JSON' },
+    { args: [before, 'test/fixtures/malformed-entry-after.json'], message: 'tag[0]' },
+    { args: [before, after, '--output', 'test/fixtures'], message: 'fixtures' },
+  ])('returns two for command, input or output errors: $message', ({ args, message }) => {
     const result = cli('diff', ...args);
     expect(result.status).toBe(2);
-    expect(result.stderr.length).toBeGreaterThan(0);
+    expect(result.stderr).toContain(message);
     expect(result.stdout).toBe('');
   });
 
