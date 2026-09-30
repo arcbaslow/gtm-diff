@@ -118,6 +118,8 @@ After installing a release tarball into another project, import from `gtm-diff` 
 
 ## Tests
 
+Dependency audit results and supported-runtime verification are recorded in [dependency maintenance](docs/DEPENDENCIES.md).
+
 ```bash
 npm test
 npm run typecheck

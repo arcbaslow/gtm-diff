@@ -15,6 +15,7 @@ Versioning is [semantic](https://semver.org/spec/v2.0.0.html).
 
 ### Fixed
 
+- Update compatible transitive dependencies to remove the production brace-expansion advisories and affected development XML, YAML, PostCSS and Nano ID packages without adding runtime dependencies.
 - Normalize documented singleton Parameters in triggers, tag priority/consent and variable conversions; validate their consumed shapes. Resolve nested trigger-reference Parameters by target type/name, retain explicit unresolved IDs, and preserve tag-reference names and authored list order.
 - Escape Markdown HTML summaries and code labels correctly, sanitize report source labels, and visibly encode C1 controls and Unicode line separators in diff paths and values.
 - Reject malformed consumed export structures and ambiguous identities/source IDs instead of crashing or hiding changes. Treat prototype-named keys as ordinary data, including in the normalized library API.
