@@ -7,6 +7,7 @@ import { describe, expect, it } from 'vitest';
 import { diffExports } from '../../src/core/diff.js';
 import { loadGtmExport } from '../../src/core/parser.js';
 import { renderMarkdown } from '../../src/reporters/markdown.js';
+import { renderJson, type JsonReportV1 } from '../../src/reporters/json.js';
 
 const root = fileURLToPath(new URL('../../', import.meta.url));
 const before = 'test/fixtures/minimal-before.json';
@@ -25,6 +26,63 @@ function cli(...args: string[]) {
 }
 
 describe('diff command contract', () => {
+  it.each([
+    { a: before, b: after, status: 1, changed: true, complete: true },
+    { a: before, b: before, status: 0, changed: false, complete: true },
+    {
+      a: 'test/fixtures/metadata-before.json',
+      b: 'test/fixtures/metadata-after.json',
+      status: 1,
+      changed: true,
+      complete: true,
+    },
+    {
+      a: 'test/fixtures/coverage-before.json',
+      b: 'test/fixtures/coverage-after.json',
+      status: 0,
+      changed: false,
+      complete: false,
+    },
+  ])('writes only JSON to stdout for $a and $b', ({ a, b, status, changed, complete }) => {
+    const result = cli('diff', a, b, '--format', 'json', '--exit-code');
+    expect(result.status).toBe(status);
+    expect(result.stderr).toBe('');
+    const report = JSON.parse(result.stdout) as JsonReportV1;
+    expect(report.schemaVersion).toBe(1);
+    expect(report.hasChanges).toBe(changed);
+    expect(report.coverage.complete).toBe(complete);
+    expect(result.stdout).not.toContain('\u001b');
+  });
+
+  it('keeps JSON differences successful by default', () => {
+    const result = cli('diff', before, after, '--format', 'json', '--no-color');
+    expect(result.status).toBe(0);
+    expect(result.stderr).toBe('');
+    expect((JSON.parse(result.stdout) as JsonReportV1).hasChanges).toBe(true);
+  });
+
+  it.each([
+    {
+      a: 'test/fixtures/json-nonfinite-before.json',
+      b: 'test/fixtures/json-nonfinite-after.json',
+      extra: [],
+      message: 'JSON-compatible values and finite numbers',
+    },
+    {
+      a: before,
+      b: 'test/fixtures/coverage-after.json',
+      extra: ['--strict'],
+      message: 'Incomplete comparison',
+    },
+    { a: before, b: 'test/fixtures/invalid-json.json', extra: [], message: 'Invalid JSON' },
+    { a: before, b: after, extra: ['--output', 'test/fixtures'], message: 'fixtures' },
+  ])('keeps JSON command errors on stderr: $message', ({ a, b, extra, message }) => {
+    const result = cli('diff', a, b, '--format', 'json', ...extra);
+    expect(result.status).toBe(2);
+    expect(result.stdout).toBe('');
+    expect(result.stderr).toContain(message);
+  });
+
   it('returns zero for parameter map permutations and relocated trigger references', () => {
     const result = cli(
       'diff',
@@ -69,28 +127,33 @@ describe('diff command contract', () => {
     expect(cli('diff', before, after, '--strict', '--exit-code').status).toBe(1);
   });
 
-  it('does not overwrite an output file when strict coverage fails', async () => {
-    const directory = await mkdtemp(join(tmpdir(), 'gtm-diff-strict-'));
-    const output = join(directory, 'report.md');
-    try {
-      await writeFile(output, 'Keep this report', 'utf8');
-      const result = cli(
-        'diff',
-        before,
-        'test/fixtures/coverage-after.json',
-        '--strict',
-        '--output',
-        output,
-      );
-      expect(result.status).toBe(2);
-      expect(result.stdout).toBe('');
-      expect(result.stderr).toContain('Incomplete comparison');
-      expect(await readFile(output, 'utf8')).toBe('Keep this report');
-    } finally {
-      await rm(output, { force: true });
-      await rmdir(directory);
-    }
-  });
+  it.each(['console', 'json'])(
+    'does not overwrite a %s output file when strict coverage fails',
+    async (format) => {
+      const directory = await mkdtemp(join(tmpdir(), 'gtm-diff-strict-'));
+      const output = join(directory, 'report.md');
+      try {
+        await writeFile(output, 'Keep this report', 'utf8');
+        const result = cli(
+          'diff',
+          before,
+          'test/fixtures/coverage-after.json',
+          '--strict',
+          '--format',
+          format,
+          '--output',
+          output,
+        );
+        expect(result.status).toBe(2);
+        expect(result.stdout).toBe('');
+        expect(result.stderr).toContain('Incomplete comparison');
+        expect(await readFile(output, 'utf8')).toBe('Keep this report');
+      } finally {
+        await rm(output, { force: true });
+        await rmdir(directory);
+      }
+    },
+  );
 
   it('returns zero by default even with changes', () => {
     const result = cli('diff', before, after, '--no-color');
@@ -147,7 +210,10 @@ describe('diff command contract', () => {
     expect(result.stderr).not.toContain('\u0085');
   });
 
-  it('writes the full selected report before returning one', async () => {
+  it.each([
+    { format: 'markdown', render: renderMarkdown },
+    { format: 'json', render: renderJson },
+  ])('writes the full $format report before returning one', async ({ format, render }) => {
     const directory = await mkdtemp(join(tmpdir(), 'gtm-diff-cli-'));
     const output = join(directory, 'report\u0085.md');
     try {
@@ -156,20 +222,20 @@ describe('diff command contract', () => {
         before,
         after,
         '--format',
-        'markdown',
+        format,
         '--output',
         output,
         '--exit-code',
       );
       expect(result.status).toBe(1);
       expect(result.stderr).toBe('');
-      expect(result.stdout.trim()).toBe(`Wrote markdown report to ${join(directory, 'report.md')}`);
+      expect(result.stdout.trim()).toBe(
+        `Wrote ${format} report to ${join(directory, 'report.md')}`,
+      );
       const a = await loadGtmExport(join(root, before));
       const b = await loadGtmExport(join(root, after));
       expect(await readFile(output, 'utf8')).toBe(
-        renderMarkdown(
-          diffExports(a, b, { before: 'minimal-before.json', after: 'minimal-after.json' }),
-        ),
+        render(diffExports(a, b, { before: 'minimal-before.json', after: 'minimal-after.json' })),
       );
     } finally {
       await rm(output, { force: true });

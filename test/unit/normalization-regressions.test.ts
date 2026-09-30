@@ -4,6 +4,7 @@ import { diffExports, hasChanges } from '../../src/core/diff.js';
 import { loadGtmExport } from '../../src/core/parser.js';
 import { renderConsole } from '../../src/reporters/console.js';
 import { renderHtml } from '../../src/reporters/html.js';
+import { renderJson } from '../../src/reporters/json.js';
 import { renderMarkdown } from '../../src/reporters/markdown.js';
 import type { GtmExport } from '../../src/types/gtm.js';
 
@@ -83,6 +84,7 @@ describe('canonical normalization', () => {
       renderMarkdown,
       renderHtml,
       (diff: typeof original) => renderConsole(diff, { color: false }),
+      renderJson,
     ]) {
       expect(render(reordered)).toBe(render(original));
       expect(render(original)).toMatchSnapshot();

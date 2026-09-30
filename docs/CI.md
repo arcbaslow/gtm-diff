@@ -26,4 +26,20 @@ esac
 
 Upload `diff.md` as an artifact after this step. If changes should fail the job, preserve status 1 and configure artifact upload to run after a failed comparison step too. Do not interpret status 2 as an ordinary drift result or publish an old report from a previous run.
 
-The Markdown report uses a summary table, lists and collapsed details. It can be selected as a PR comment body by a separately configured integration. The CLI does not send comments, access GitHub tokens or run network requests. Review the destination before sharing: reports can include secrets present in exports. JSON output and a reusable GitHub Action remain [roadmap proposals](ROADMAP.md).
+The Markdown report uses a summary table, lists and collapsed details. It can be selected as a PR comment body by a separately configured integration. The CLI does not send comments, access GitHub tokens or run network requests. Review the destination before sharing: reports can include secrets present in exports. A reusable GitHub Action remains a [roadmap proposal](ROADMAP.md).
+
+## Machine-readable reports
+
+Use `--format json` for a [versioned JSON report](JSON_REPORT.md). The same status handling above applies. Without `--output`, stdout is a single JSON document; with it, parse the written file, not the acknowledgement on stdout. Check `schemaVersion === 1`, then inspect `coverage.complete` independently of `hasChanges`. Metadata-only changes set `hasChanges` even when entity counts are zero. Errors remain plain stderr diagnostics and status 2; do not parse or reuse a stale report after an error.
+
+After a successful status 0 or 1, a local Node step can read the artifact:
+
+```js
+import { readFile } from 'node:fs/promises';
+const report = JSON.parse(await readFile('diff.json', 'utf8'));
+if (report.schemaVersion !== 1) throw new Error('Unsupported diff report version');
+if (!report.coverage.complete) throw new Error('Incomplete comparison');
+console.log({ hasChanges: report.hasChanges, summary: report.summary });
+```
+
+The report retains full normalized changed entities, including potentially sensitive values. Decoded strings require escaping before use in HTML, Markdown or terminal labels. JSON is report data, not a GTM import or apply plan.

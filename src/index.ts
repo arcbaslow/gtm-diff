@@ -12,6 +12,8 @@ export type { NormalizedContainer, NormalizedEntity } from './core/normalize.js'
 export { renderConsole } from './reporters/console.js';
 export { renderMarkdown } from './reporters/markdown.js';
 export { renderHtml } from './reporters/html.js';
+export { renderJson } from './reporters/json.js';
+export type { JsonReportV1, JsonEntityChange, JsonFieldChange } from './reporters/json.js';
 export type {
   EntityKind,
   GtmExport,
