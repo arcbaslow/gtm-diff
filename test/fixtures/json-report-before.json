@@ -1,0 +1,46 @@
+{
+  "containerVersion": {
+    "container": {
+      "name": "JSON report",
+      "notes": "before"
+    },
+    "tag": [
+      {
+        "tagId": "1",
+        "type": "html",
+        "name": "Changed",
+        "notes": "old",
+        "removed": null,
+        "extension": {
+          "toJSON": "inert text",
+          "constructor": "ordinary key",
+          "__proto__": {
+            "enabled": false
+          }
+        },
+        "parameter": [
+          {
+            "type": "list",
+            "key": "ordered",
+            "list": [
+              {
+                "type": "template",
+                "value": "first"
+              },
+              {
+                "type": "template",
+                "value": "second"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "tagId": "2",
+        "type": "html",
+        "name": "Removed",
+        "notes": "keep the full removed entity"
+      }
+    ]
+  }
+}

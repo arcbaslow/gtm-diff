@@ -1,0 +1,365 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`version 1 JSON report > distinguishes no changes from incomplete coverage and metadata-only changes 1`] = `
+"{
+  "containerMeta": [],
+  "coverage": {
+    "complete": false,
+    "omittedFields": {
+      "after": [
+        "\\u003cimg src=x onerror=alert(1)\\u003e\`\\u001b\\u0085",
+        "futureResource"
+      ],
+      "before": [
+        "\\u003cimg src=x onerror=alert(1)\\u003e\`\\u001b\\u0085",
+        "futureResource"
+      ]
+    }
+  },
+  "hasChanges": false,
+  "kinds": [
+    {
+      "added": [],
+      "kind": "tag",
+      "modified": [],
+      "removed": [],
+      "unchanged": 0
+    },
+    {
+      "added": [],
+      "kind": "trigger",
+      "modified": [],
+      "removed": [],
+      "unchanged": 0
+    },
+    {
+      "added": [],
+      "kind": "variable",
+      "modified": [],
+      "removed": [],
+      "unchanged": 0
+    },
+    {
+      "added": [],
+      "kind": "folder",
+      "modified": [],
+      "removed": [],
+      "unchanged": 0
+    },
+    {
+      "added": [],
+      "kind": "builtInVariable",
+      "modified": [],
+      "removed": [],
+      "unchanged": 0
+    },
+    {
+      "added": [],
+      "kind": "client",
+      "modified": [],
+      "removed": [],
+      "unchanged": 0
+    },
+    {
+      "added": [],
+      "kind": "transformation",
+      "modified": [],
+      "removed": [],
+      "unchanged": 0
+    },
+    {
+      "added": [],
+      "kind": "customTemplate",
+      "modified": [],
+      "removed": [],
+      "unchanged": 0
+    },
+    {
+      "added": [],
+      "kind": "zone",
+      "modified": [],
+      "removed": [],
+      "unchanged": 0
+    },
+    {
+      "added": [],
+      "kind": "gtagConfig",
+      "modified": [],
+      "removed": [],
+      "unchanged": 0
+    }
+  ],
+  "schemaVersion": 1,
+  "source": {
+    "label": "before"
+  },
+  "summary": {
+    "added": 0,
+    "modified": 0,
+    "removed": 0,
+    "unchanged": 0
+  },
+  "target": {
+    "label": "after"
+  }
+}"
+`;
+
+exports[`version 1 JSON report > includes full entities, typed field paths and values without truncation 1`] = `
+"{
+  "containerMeta": [
+    {
+      "oldValue": "before",
+      "path": [
+        "notes"
+      ],
+      "type": "CHANGE",
+      "value": null
+    }
+  ],
+  "coverage": {
+    "complete": true,
+    "omittedFields": {
+      "after": [],
+      "before": []
+    }
+  },
+  "hasChanges": true,
+  "kinds": [
+    {
+      "added": [
+        {
+          "entity": {
+            "extension": [
+              null,
+              false,
+              0,
+              1.5,
+              ""
+            ],
+            "name": "Added",
+            "notes": "keep the full added entity",
+            "type": "html"
+          },
+          "key": "html::Added",
+          "kind": "tag",
+          "status": "added"
+        }
+      ],
+      "kind": "tag",
+      "modified": [
+        {
+          "after": {
+            "created": false,
+            "extension": {
+              "__proto__": {
+                "enabled": true
+              },
+              "constructor": "ordinary key",
+              "toJSON": "inert text"
+            },
+            "name": "Changed",
+            "notes": "\\u003c/script\\u003e\\u003cimg src=x onerror=alert(1)\\u003e\\u0026\\u0027\\"\\\\\\u0000\\u001b\\u007f\\u0085\\u009b\\u2028\\u2029\\nFull value retained. Full value retained. Full value retained. Full value retained. Full value retained. Full value retained. Full value retained. Full value retained. Full value retained. Full value retained. Full value retained. Full value retained. Full value retained. Full value retained. Full value retained. Full value retained. Full value retained. Full value retained. Full value retained. Full value retained. ",
+            "parameter": [
+              {
+                "key": "ordered",
+                "list": [
+                  {
+                    "type": "template",
+                    "value": "second"
+                  },
+                  {
+                    "type": "template",
+                    "value": "first"
+                  }
+                ],
+                "type": "list"
+              }
+            ],
+            "type": "html"
+          },
+          "before": {
+            "extension": {
+              "__proto__": {
+                "enabled": false
+              },
+              "constructor": "ordinary key",
+              "toJSON": "inert text"
+            },
+            "name": "Changed",
+            "notes": "old",
+            "parameter": [
+              {
+                "key": "ordered",
+                "list": [
+                  {
+                    "type": "template",
+                    "value": "first"
+                  },
+                  {
+                    "type": "template",
+                    "value": "second"
+                  }
+                ],
+                "type": "list"
+              }
+            ],
+            "removed": null,
+            "type": "html"
+          },
+          "fieldDiffs": [
+            {
+              "oldValue": false,
+              "path": [
+                "extension",
+                "__proto__",
+                "enabled"
+              ],
+              "type": "CHANGE",
+              "value": true
+            },
+            {
+              "oldValue": "old",
+              "path": [
+                "notes"
+              ],
+              "type": "CHANGE",
+              "value": "\\u003c/script\\u003e\\u003cimg src=x onerror=alert(1)\\u003e\\u0026\\u0027\\"\\\\\\u0000\\u001b\\u007f\\u0085\\u009b\\u2028\\u2029\\nFull value retained. Full value retained. Full value retained. Full value retained. Full value retained. Full value retained. Full value retained. Full value retained. Full value retained. Full value retained. Full value retained. Full value retained. Full value retained. Full value retained. Full value retained. Full value retained. Full value retained. Full value retained. Full value retained. Full value retained. "
+            },
+            {
+              "oldValue": "first",
+              "path": [
+                "parameter",
+                0,
+                "list",
+                0,
+                "value"
+              ],
+              "type": "CHANGE",
+              "value": "second"
+            },
+            {
+              "oldValue": "second",
+              "path": [
+                "parameter",
+                0,
+                "list",
+                1,
+                "value"
+              ],
+              "type": "CHANGE",
+              "value": "first"
+            },
+            {
+              "oldValue": null,
+              "path": [
+                "removed"
+              ],
+              "type": "REMOVE"
+            },
+            {
+              "path": [
+                "created"
+              ],
+              "type": "CREATE",
+              "value": false
+            }
+          ],
+          "key": "html::Changed",
+          "kind": "tag",
+          "status": "modified"
+        }
+      ],
+      "removed": [
+        {
+          "entity": {
+            "name": "Removed",
+            "notes": "keep the full removed entity",
+            "type": "html"
+          },
+          "key": "html::Removed",
+          "kind": "tag",
+          "status": "removed"
+        }
+      ],
+      "unchanged": 0
+    },
+    {
+      "added": [],
+      "kind": "trigger",
+      "modified": [],
+      "removed": [],
+      "unchanged": 0
+    },
+    {
+      "added": [],
+      "kind": "variable",
+      "modified": [],
+      "removed": [],
+      "unchanged": 0
+    },
+    {
+      "added": [],
+      "kind": "folder",
+      "modified": [],
+      "removed": [],
+      "unchanged": 0
+    },
+    {
+      "added": [],
+      "kind": "builtInVariable",
+      "modified": [],
+      "removed": [],
+      "unchanged": 0
+    },
+    {
+      "added": [],
+      "kind": "client",
+      "modified": [],
+      "removed": [],
+      "unchanged": 0
+    },
+    {
+      "added": [],
+      "kind": "transformation",
+      "modified": [],
+      "removed": [],
+      "unchanged": 0
+    },
+    {
+      "added": [],
+      "kind": "customTemplate",
+      "modified": [],
+      "removed": [],
+      "unchanged": 0
+    },
+    {
+      "added": [],
+      "kind": "zone",
+      "modified": [],
+      "removed": [],
+      "unchanged": 0
+    },
+    {
+      "added": [],
+      "kind": "gtagConfig",
+      "modified": [],
+      "removed": [],
+      "unchanged": 0
+    }
+  ],
+  "schemaVersion": 1,
+  "source": {
+    "label": "before"
+  },
+  "summary": {
+    "added": 1,
+    "modified": 1,
+    "removed": 1,
+    "unchanged": 0
+  },
+  "target": {
+    "label": "after"
+  }
+}"
+`;

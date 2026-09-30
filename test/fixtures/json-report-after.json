@@ -1,0 +1,53 @@
+{
+  "containerVersion": {
+    "container": {
+      "name": "JSON report",
+      "notes": null
+    },
+    "tag": [
+      {
+        "tagId": "100",
+        "type": "html",
+        "name": "Changed",
+        "notes": "</script><img src=x onerror=alert(1)>&'\"\\\u0000\u001b  \nFull value retained. Full value retained. Full value retained. Full value retained. Full value retained. Full value retained. Full value retained. Full value retained. Full value retained. Full value retained. Full value retained. Full value retained. Full value retained. Full value retained. Full value retained. Full value retained. Full value retained. Full value retained. Full value retained. Full value retained. ",
+        "extension": {
+          "toJSON": "inert text",
+          "constructor": "ordinary key",
+          "__proto__": {
+            "enabled": true
+          }
+        },
+        "parameter": [
+          {
+            "type": "list",
+            "key": "ordered",
+            "list": [
+              {
+                "type": "template",
+                "value": "second"
+              },
+              {
+                "type": "template",
+                "value": "first"
+              }
+            ]
+          }
+        ],
+        "created": false
+      },
+      {
+        "tagId": "3",
+        "type": "html",
+        "name": "Added",
+        "notes": "keep the full added entity",
+        "extension": [
+          null,
+          false,
+          0,
+          1.5,
+          ""
+        ]
+      }
+    ]
+  }
+}

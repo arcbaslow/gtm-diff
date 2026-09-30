@@ -26,11 +26,12 @@ somewhere the operator did not ask for.
   reviewer opens in a browser without thinking, so this is the
   highest-value bug class here.
 - **A regression in `sanitizeLabel`** (`src/reporters/shared.ts`).
-  Entity names are stripped of C0/C1 control characters before they
-  reach any reporter, because a name carrying ESC sequences could move
+  Human-readable entity labels are stripped of C0/C1 control characters before they
+  reach a reporter, because a name carrying ESC sequences could move
   the cursor and paint over lines the console reporter already printed,
   hiding one change behind another.
 - **A regression in Markdown escaping or value formatting** (`src/reporters/markdown.ts`, `src/reporters/shared.ts`). HTML fragments use `escapeHtml`, labels use `sanitizeLabel`, and paths/values visibly escape C1 controls and Unicode line separators as well as JSON's C0 escapes. A report must not allow export text to change its markup or terminal structure.
+- **A regression in JSON escaping** (`src/reporters/json.ts`). Source/target display labels use `sanitizeLabel`. Data strings and property names use reversible JSON escapes for controls, line separators and markup characters before every serialized line passes through `sanitizeLabel`. Parsed values remain exact untrusted data and require context-specific escaping when rendered. See the [JSON contract](docs/JSON_REPORT.md).
 - Any path where parsing an export executes code from it, including
   `eval`, `Function`, dynamic `import`, or prototype pollution through
   `JSON.parse` output reaching an object merge.

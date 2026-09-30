@@ -216,6 +216,242 @@ TAGS
 "
 `;
 
+exports[`canonical normalization > renders identical snapshots across object, entity and map permutations 4`] = `
+"{
+  "containerMeta": [],
+  "coverage": {
+    "complete": true,
+    "omittedFields": {
+      "after": [],
+      "before": []
+    }
+  },
+  "hasChanges": true,
+  "kinds": [
+    {
+      "added": [],
+      "kind": "tag",
+      "modified": [
+        {
+          "after": {
+            "name": "A",
+            "notes": "new",
+            "type": "html"
+          },
+          "before": {
+            "name": "A",
+            "notes": "old",
+            "type": "html"
+          },
+          "fieldDiffs": [
+            {
+              "oldValue": "old",
+              "path": [
+                "notes"
+              ],
+              "type": "CHANGE",
+              "value": "new"
+            }
+          ],
+          "key": "html::A",
+          "kind": "tag",
+          "status": "modified"
+        },
+        {
+          "after": {
+            "extension": {
+              "a": "new",
+              "z": "new"
+            },
+            "name": "Z",
+            "notes": "new",
+            "parameter": [
+              {
+                "key": "x",
+                "map": [
+                  {
+                    "key": "a",
+                    "type": "template",
+                    "value": "new"
+                  },
+                  {
+                    "key": "z",
+                    "type": "template",
+                    "value": "new"
+                  }
+                ],
+                "type": "map"
+              }
+            ],
+            "type": "html"
+          },
+          "before": {
+            "extension": {
+              "a": "old",
+              "z": "old"
+            },
+            "name": "Z",
+            "notes": "old",
+            "parameter": [
+              {
+                "key": "x",
+                "map": [
+                  {
+                    "key": "a",
+                    "type": "template",
+                    "value": "old"
+                  },
+                  {
+                    "key": "z",
+                    "type": "template",
+                    "value": "old"
+                  }
+                ],
+                "type": "map"
+              }
+            ],
+            "type": "html"
+          },
+          "fieldDiffs": [
+            {
+              "oldValue": "old",
+              "path": [
+                "extension",
+                "a"
+              ],
+              "type": "CHANGE",
+              "value": "new"
+            },
+            {
+              "oldValue": "old",
+              "path": [
+                "extension",
+                "z"
+              ],
+              "type": "CHANGE",
+              "value": "new"
+            },
+            {
+              "oldValue": "old",
+              "path": [
+                "notes"
+              ],
+              "type": "CHANGE",
+              "value": "new"
+            },
+            {
+              "oldValue": "old",
+              "path": [
+                "parameter",
+                0,
+                "map",
+                0,
+                "value"
+              ],
+              "type": "CHANGE",
+              "value": "new"
+            },
+            {
+              "oldValue": "old",
+              "path": [
+                "parameter",
+                0,
+                "map",
+                1,
+                "value"
+              ],
+              "type": "CHANGE",
+              "value": "new"
+            }
+          ],
+          "key": "html::Z",
+          "kind": "tag",
+          "status": "modified"
+        }
+      ],
+      "removed": [],
+      "unchanged": 0
+    },
+    {
+      "added": [],
+      "kind": "trigger",
+      "modified": [],
+      "removed": [],
+      "unchanged": 0
+    },
+    {
+      "added": [],
+      "kind": "variable",
+      "modified": [],
+      "removed": [],
+      "unchanged": 0
+    },
+    {
+      "added": [],
+      "kind": "folder",
+      "modified": [],
+      "removed": [],
+      "unchanged": 0
+    },
+    {
+      "added": [],
+      "kind": "builtInVariable",
+      "modified": [],
+      "removed": [],
+      "unchanged": 0
+    },
+    {
+      "added": [],
+      "kind": "client",
+      "modified": [],
+      "removed": [],
+      "unchanged": 0
+    },
+    {
+      "added": [],
+      "kind": "transformation",
+      "modified": [],
+      "removed": [],
+      "unchanged": 0
+    },
+    {
+      "added": [],
+      "kind": "customTemplate",
+      "modified": [],
+      "removed": [],
+      "unchanged": 0
+    },
+    {
+      "added": [],
+      "kind": "zone",
+      "modified": [],
+      "removed": [],
+      "unchanged": 0
+    },
+    {
+      "added": [],
+      "kind": "gtagConfig",
+      "modified": [],
+      "removed": [],
+      "unchanged": 0
+    }
+  ],
+  "schemaVersion": 1,
+  "source": {
+    "label": "before"
+  },
+  "summary": {
+    "added": 0,
+    "modified": 2,
+    "removed": 0,
+    "unchanged": 0
+  },
+  "target": {
+    "label": "after"
+  }
+}"
+`;
+
 exports[`canonical normalization > retains unknown parameter and condition fields 1`] = `
 [
   {

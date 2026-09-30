@@ -5,6 +5,7 @@ import { diffExports, hasChanges } from '../core/diff.js';
 import { loadGtmExport } from '../core/parser.js';
 import { renderConsole } from '../reporters/console.js';
 import { renderHtml } from '../reporters/html.js';
+import { renderJson } from '../reporters/json.js';
 import { renderMarkdown } from '../reporters/markdown.js';
 import { coverageNotice, sanitizeLabel } from '../reporters/shared.js';
 
@@ -16,6 +17,7 @@ export default class Diff extends Command {
     '<%= config.bin %> <%= command.id %> before.json after.json',
     '<%= config.bin %> <%= command.id %> before.json after.json --format markdown --output diff.md',
     '<%= config.bin %> <%= command.id %> before.json after.json --format html --output diff.html',
+    '<%= config.bin %> <%= command.id %> before.json after.json --format json --output diff.json',
     '<%= config.bin %> <%= command.id %> before.json after.json --exit-code  # for CI',
   ];
 
@@ -39,7 +41,7 @@ export default class Diff extends Command {
     format: Flags.string({
       char: 'f',
       description: 'Output format.',
-      options: ['console', 'markdown', 'html'],
+      options: ['console', 'markdown', 'html', 'json'],
       default: 'console',
     }),
     output: Flags.string({
@@ -95,6 +97,8 @@ export default class Diff extends Command {
     flags: { format: string; 'no-color': boolean; output?: string | undefined },
   ): string {
     switch (flags.format) {
+      case 'json':
+        return renderJson(diff);
       case 'markdown':
         return renderMarkdown(diff);
       case 'html':
