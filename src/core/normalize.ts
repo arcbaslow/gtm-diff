@@ -9,6 +9,7 @@ import type {
   GtmTrigger,
   GtmVariable,
 } from '../types/gtm.js';
+import { canonicalize } from './canonical.js';
 
 /**
  * Fields stripped from every entity before diffing. These are either assigned
@@ -92,7 +93,7 @@ export function normalizeExport(exp: GtmExport): NormalizedContainer {
     result.builtInVariable[builtInIdentity(b)] = normalizeBuiltIn(b);
   }
 
-  return result;
+  return canonicalize(result) as NormalizedContainer;
 }
 
 /**
@@ -184,7 +185,7 @@ function resolveTriggerNames(ids: string[], refs: ReferenceIndex): string[] {
 
 function normalizeConditions(conditions: Array<{ type: string; parameter: GtmParameter[] }>) {
   const normalized = conditions.map((c) => ({
-    type: c.type,
+    ...c,
     parameter: normalizeParameters(c.parameter),
   }));
   normalized.sort((a, b) => {
@@ -210,10 +211,7 @@ function normalizeParameters(params: GtmParameter[]): GtmParameter[] {
 }
 
 function normalizeParameter(p: GtmParameter): GtmParameter {
-  const out: GtmParameter = { type: p.type };
-  if (p.key !== undefined) out.key = p.key;
-  if (p.value !== undefined) out.value = p.value;
-  if (p.isWeakReference !== undefined) out.isWeakReference = p.isWeakReference;
+  const out: GtmParameter = { ...p };
 
   if (p.list) {
     // Lists are positional, including unknown and keyless template parameters.
@@ -241,5 +239,5 @@ function stripVolatile(obj: Record<string, unknown>): Record<string, unknown> {
 }
 
 function stableKey(value: unknown): string {
-  return JSON.stringify(value, Object.keys(value as object).sort());
+  return JSON.stringify(canonicalize(value));
 }

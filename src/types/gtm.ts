@@ -16,11 +16,13 @@ export type GtmParameter = {
   list?: GtmParameter[];
   map?: GtmParameter[];
   isWeakReference?: boolean;
+  [key: string]: unknown;
 };
 
 export type GtmCondition = {
   type: string;
   parameter: GtmParameter[];
+  [key: string]: unknown;
 };
 
 export type GtmTag = {

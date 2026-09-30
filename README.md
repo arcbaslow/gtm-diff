@@ -73,6 +73,8 @@ Invalid files and command errors also return a nonzero exit status; use the repo
 | Resolve trigger, folder and tag references to names | References remain meaningful after ID changes |
 | Sort keyed parameter and map collections | Serialization order does not create false changes |
 | Preserve every parameter list in authored order | E-commerce, custom and keyless list ordering is still compared |
+| Sort condition sets and object keys recursively | Equivalent JSON property and condition order produces identical reports |
+| Retain unknown parameter and condition fields | New fields remain visible to reviewers |
 | Key built-in variables by type | Export order does not affect identity |
 
 A renamed entity appears as removed plus added. This is a semantic export comparison; it does not validate whether the resulting tracking behavior is correct on a website.

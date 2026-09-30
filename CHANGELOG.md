@@ -9,6 +9,7 @@ Versioning is [semantic](https://semver.org/spec/v2.0.0.html).
 
 ### Fixed
 
+- Compare complete nested condition values, preserve unknown parameter/condition fields, and stabilize report ordering across object-key permutations.
 - Preserve all parameter list ordering, including custom and keyless lists, so authored order changes remain visible.
 
 ## [0.1.0] - 2026-09-08
