@@ -30,6 +30,8 @@ Coverage at base: four unit test files, 30 tests, one synthetic web fixture pair
 
 These are the bounded changes authorized for this branch. Bug fixes precede the small CI feature. Each row is independently reviewable; fixes include fixture pairs and regression tests, and changes affecting order include snapshots.
 
+N1–N5 are implemented on `roadmap-work`. The [verification record](ROADMAP_VERIFICATION.md) lists commit hashes, reproduction results and final checks. Next and Later remain proposals.
+
 | Item | What and why | Evidence | Effort | Risk |
 | --- | --- | --- | --- | --- |
 | N1 Preserve list semantics | Preserve every Parameter.list in authored order, including unknown and keyless lists. Continue sorting keyed parameter/map collections. Reviewers must see order changes rather than receive a false clean result. | `normalize.ts:33,235`; [Parameter](https://developers.google.com/tag-platform/tag-manager/api/reference/rest/v2/Parameter) distinguishes keyed maps from lists | S | Medium: more visible diffs for lists previously sorted; deliberate conservative behavior |
@@ -92,6 +94,7 @@ CI recommendations are inferences from interfaces, not surveyed user requirement
 
 ## Open questions and rejected ideas
 
+- Identity keys still use `::`. N3 rejects collisions within one export. A type string containing this delimiter can still collide across two files or display incorrectly; code inspection confirms the possibility, but valid GTM types containing it were not established. Decide encoding or rejection with real fixtures before changing the public key format (`src/core/identity.ts`).
 - Leave normalization of empty versus absent fields, built-in display-name localization, container publicId/environment metadata, duplicate trigger names across different types and unresolved built-in trigger references unchanged until fixtures establish intended semantics. Name-only resolved references may conflate same-named triggers of different types; code inspection identifies the risk, but this run did not establish whether GTM permits that input.
 - Reject heuristic rename detection: CONTRIBUTING.md requires removed plus added. Never guess from similarity or IDs.
 - Reject applying a raw microdiff as a v0.2 plan: stripped IDs, partial exports and ignored kinds make it incomplete. `plan` needs its own reviewed read-only file contract.
