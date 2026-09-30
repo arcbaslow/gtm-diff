@@ -56,7 +56,10 @@ export function diffNormalized(
   // Also protect callers of this lower-level library API from inherited keys.
   before = canonicalize(before) as NormalizedContainer;
   after = canonicalize(after) as NormalizedContainer;
-  const kinds: KindDiff[] = ENTITY_KINDS.map((kind) => diffKind(kind, before[kind], after[kind]));
+  const emptyEntities = Object.create(null) as Record<string, NormalizedEntity>;
+  const kinds: KindDiff[] = ENTITY_KINDS.map((kind) =>
+    diffKind(kind, before[kind] ?? emptyEntities, after[kind] ?? emptyEntities),
+  );
 
   const summary = kinds.reduce(
     (acc, k) => ({

@@ -35,7 +35,7 @@ After building, `npm link` optionally makes the `gtm-diff` command available glo
 
 ![GTM Diff HTML report generated from the included container fixtures](assets/screenshot.png)
 
-The screenshot shows the **actual HTML reporter** comparing the two bundled synthetic GTM exports. Generate the same report:
+The screenshot shows the **v0.1 HTML reporter** comparing the two bundled synthetic GTM exports. Current reports also include summary rows for clients, transformations, templates, zones and Google tag configs. Generate a current report:
 
 ```bash
 node bin/run.js diff test/fixtures/minimal-before.json test/fixtures/minimal-after.json --format html --output diff.html
@@ -69,9 +69,9 @@ Exit status is `0` on success (including differences when `--exit-code` is omitt
 
 | Normalization | Why it matters |
 | --- | --- |
-| Match entities by type and name | IDs can differ between workspaces or environments |
+| Match named entities by type and name | IDs can differ between workspaces or environments; Google tag configs use type and source ID because they have no documented name |
 | Strip IDs, fingerprints, paths and other volatile fields | Export metadata does not overwhelm the review |
-| Resolve trigger, folder and tag references to names | References remain meaningful after ID changes |
+| Resolve supported trigger-ID arrays and folder references to names | References remain meaningful after ID changes; tag references already use names |
 | Sort keyed parameter and map collections | Serialization order does not create false changes |
 | Preserve every parameter list in authored order | E-commerce, custom and keyless list ordering is still compared |
 | Sort condition sets and object keys recursively | Equivalent JSON property and condition order produces identical reports |
@@ -82,7 +82,9 @@ A renamed entity appears as removed plus added. This is a semantic export compar
 
 Malformed entity entries, parameter trees and reference arrays fail validation with a location. Duplicate `(type, name)` identities (or built-in types), ambiguous identity keys, duplicate source IDs and duplicate keyed parameters are rejected instead of silently selecting one entry. These checks also apply to `normalizeExport` and `diffExports` library calls. Unknown fields on supported entities are retained; this is not a complete GTM schema validator.
 
-Comparison currently covers tags, triggers, variables, folders, built-in variables and container metadata. Clients, transformations, custom templates, zones and Google tag configs are not compared. Reports list omitted `containerVersion` fields and qualify clean results as “No changes in compared fields.” Use `--strict` to reject incomplete coverage before writing a report. Empty unknown arrays contain no entities and do not trigger a notice. Known version metadata (including version name, description and deleted status) and the export envelope are intentionally excluded. Unknown fields within supported entities remain compared. This coverage check is not full schema or behavior validation. See the [coverage contract](docs/COVERAGE.md) and [roadmap](docs/ROADMAP.md).
+Comparison covers container metadata and all ten documented entity collections: tags, triggers, variables, folders, built-in variables, clients, transformations, custom templates, zones and Google tag configs. Template text is compared without execution. Zone evaluation trigger IDs resolve to names. Google tag configs require a nonempty `gtagConfigId`; an ID change is removed plus added. Template-backed type identifiers and Parameter `triggerReference` values remain raw, so relocated IDs can still produce differences.
+
+Reports list unknown `containerVersion` fields that were omitted and qualify clean results as “No changes in compared fields.” Use `--strict` to reject incomplete coverage before writing a report. Empty unknown arrays contain no entities and do not trigger a notice. Known version metadata (including version name, description and deleted status) and the export envelope are intentionally excluded. Unknown fields within supported entities remain compared. This coverage check is not full schema or behavior validation. See the [coverage contract](docs/COVERAGE.md) and [roadmap](docs/ROADMAP.md).
 
 ## Use in CI
 

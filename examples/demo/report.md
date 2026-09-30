@@ -8,6 +8,11 @@
 | variables | 0 | 0 | 1 | 0 |
 | folders | 0 | 0 | 0 | 0 |
 | built-in variables | 1 | 0 | 0 | 2 |
+| clients | 0 | 0 | 0 | 0 |
+| transformations | 0 | 0 | 0 | 0 |
+| custom templates | 0 | 0 | 0 | 0 |
+| zones | 0 | 0 | 0 | 0 |
+| Google tag configs | 0 | 0 | 0 | 0 |
 
 ## Tags
 

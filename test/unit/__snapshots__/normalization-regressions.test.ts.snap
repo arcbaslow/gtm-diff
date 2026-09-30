@@ -39,6 +39,41 @@ exports[`canonical normalization > ignores condition permutations using all nest
       "removed": [],
       "unchanged": 0,
     },
+    {
+      "added": [],
+      "kind": "client",
+      "modified": [],
+      "removed": [],
+      "unchanged": 0,
+    },
+    {
+      "added": [],
+      "kind": "transformation",
+      "modified": [],
+      "removed": [],
+      "unchanged": 0,
+    },
+    {
+      "added": [],
+      "kind": "customTemplate",
+      "modified": [],
+      "removed": [],
+      "unchanged": 0,
+    },
+    {
+      "added": [],
+      "kind": "zone",
+      "modified": [],
+      "removed": [],
+      "unchanged": 0,
+    },
+    {
+      "added": [],
+      "kind": "gtagConfig",
+      "modified": [],
+      "removed": [],
+      "unchanged": 0,
+    },
   ],
   "source": {
     "label": "before",
@@ -66,6 +101,11 @@ exports[`canonical normalization > renders identical snapshots across object, en
 | variables | 0 | 0 | 0 | 0 |
 | folders | 0 | 0 | 0 | 0 |
 | built-in variables | 0 | 0 | 0 | 0 |
+| clients | 0 | 0 | 0 | 0 |
+| transformations | 0 | 0 | 0 | 0 |
+| custom templates | 0 | 0 | 0 | 0 |
+| zones | 0 | 0 | 0 | 0 |
+| Google tag configs | 0 | 0 | 0 | 0 |
 
 ## Tags
 
@@ -128,7 +168,12 @@ exports[`canonical normalization > renders identical snapshots across object, en
 <tr><th>triggers</th><td class="add">0</td><td class="rem">0</td><td class="mod">0</td><td class="unchanged">0</td></tr>
 <tr><th>variables</th><td class="add">0</td><td class="rem">0</td><td class="mod">0</td><td class="unchanged">0</td></tr>
 <tr><th>folders</th><td class="add">0</td><td class="rem">0</td><td class="mod">0</td><td class="unchanged">0</td></tr>
-<tr><th>built-in variables</th><td class="add">0</td><td class="rem">0</td><td class="mod">0</td><td class="unchanged">0</td></tr></tbody>
+<tr><th>built-in variables</th><td class="add">0</td><td class="rem">0</td><td class="mod">0</td><td class="unchanged">0</td></tr>
+<tr><th>clients</th><td class="add">0</td><td class="rem">0</td><td class="mod">0</td><td class="unchanged">0</td></tr>
+<tr><th>transformations</th><td class="add">0</td><td class="rem">0</td><td class="mod">0</td><td class="unchanged">0</td></tr>
+<tr><th>custom templates</th><td class="add">0</td><td class="rem">0</td><td class="mod">0</td><td class="unchanged">0</td></tr>
+<tr><th>zones</th><td class="add">0</td><td class="rem">0</td><td class="mod">0</td><td class="unchanged">0</td></tr>
+<tr><th>Google tag configs</th><td class="add">0</td><td class="rem">0</td><td class="mod">0</td><td class="unchanged">0</td></tr></tbody>
 </table>
 <h2>Tags</h2>
 <h3 class="mod">Modified</h3>

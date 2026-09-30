@@ -34,7 +34,12 @@ exports[`hostile reporter fixture pair > escapes every HTML data context includi
 <tr><th>triggers</th><td class="add">0</td><td class="rem">0</td><td class="mod">0</td><td class="unchanged">0</td></tr>
 <tr><th>variables</th><td class="add">0</td><td class="rem">0</td><td class="mod">0</td><td class="unchanged">0</td></tr>
 <tr><th>folders</th><td class="add">0</td><td class="rem">0</td><td class="mod">0</td><td class="unchanged">0</td></tr>
-<tr><th>built-in variables</th><td class="add">0</td><td class="rem">0</td><td class="mod">1</td><td class="unchanged">0</td></tr></tbody>
+<tr><th>built-in variables</th><td class="add">0</td><td class="rem">0</td><td class="mod">1</td><td class="unchanged">0</td></tr>
+<tr><th>clients</th><td class="add">0</td><td class="rem">0</td><td class="mod">0</td><td class="unchanged">0</td></tr>
+<tr><th>transformations</th><td class="add">0</td><td class="rem">0</td><td class="mod">0</td><td class="unchanged">0</td></tr>
+<tr><th>custom templates</th><td class="add">0</td><td class="rem">0</td><td class="mod">0</td><td class="unchanged">0</td></tr>
+<tr><th>zones</th><td class="add">0</td><td class="rem">0</td><td class="mod">0</td><td class="unchanged">0</td></tr>
+<tr><th>Google tag configs</th><td class="add">0</td><td class="rem">0</td><td class="mod">0</td><td class="unchanged">0</td></tr></tbody>
 </table>
 <h2>Container metadata</h2>
 <pre class="diff">
@@ -105,6 +110,11 @@ exports[`hostile reporter fixture pair > uses HTML escaping in Markdown summarie
 | variables | 0 | 0 | 0 | 0 |
 | folders | 0 | 0 | 0 | 0 |
 | built-in variables | 0 | 0 | 1 | 0 |
+| clients | 0 | 0 | 0 | 0 |
+| transformations | 0 | 0 | 0 | 0 |
+| custom templates | 0 | 0 | 0 | 0 |
+| zones | 0 | 0 | 0 | 0 |
+| Google tag configs | 0 | 0 | 0 | 0 |
 
 ## Container metadata
 

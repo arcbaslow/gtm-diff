@@ -1,0 +1,12 @@
+{
+  "containerVersion": {
+    "container": { "name": "Resource coverage", "usageContext": ["server"] },
+    "folder": [{ "folderId": "1", "name": "Requests" }],
+    "trigger": [{ "triggerId": "2", "name": "Allowed", "type": "customEvent" }],
+    "client": [{ "clientId": "10", "name": "Request", "type": "ga4", "priority": 1, "parentFolderId": "1", "parameter": [{ "type": "template", "key": "path", "value": "/old" }] }],
+    "transformation": [{ "transformationId": "20", "name": "Redact", "type": "exclude", "parentFolderId": "1", "parameter": [{ "type": "tagReference", "key": "tag", "value": "Analytics", "isWeakReference": false }] }],
+    "customTemplate": [{ "templateId": "30", "name": "Request template", "templateData": "// Old template\nconst x = '<script>not executed</script>';", "galleryReference": { "host": "github.com", "owner": "example", "repository": "template", "version": "1", "signature": "old" } }],
+    "zone": [{ "zoneId": "40", "name": "Site zone", "childContainer": [{ "publicId": "GTM-CHILD", "nickname": "Child" }], "boundary": { "condition": [{ "type": "equals", "parameter": [{ "type": "template", "key": "arg0", "value": "{{Page Path}}" }, { "type": "template", "key": "arg1", "value": "/old" }] }], "customEvaluationTriggerId": ["2"] }, "typeRestriction": { "enable": true, "whitelistedTypeId": ["html"] } }],
+    "gtagConfig": [{ "gtagConfigId": "50", "type": "gtagconfig", "parameter": [{ "type": "boolean", "key": "send_page_view", "value": "true" }] }]
+  }
+}
