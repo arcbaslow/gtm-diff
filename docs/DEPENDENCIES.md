@@ -22,7 +22,9 @@ After these compatible updates, `npm audit --omit=dev` reports zero vulnerabilit
 
 The [Vitest advisory](https://github.com/advisories/GHSA-5xrq-8626-4rwp) affects versions before 3.2.6. npm suggests the current Vitest 5 release, but [Vitest 5 requires Node 22.12 or newer](https://vitest.dev/guide/migration/), excluding this repository's Node 20 support. Do not accept that automatic major upgrade.
 
-The planned compatible target is Vitest 4.1.11 with Vite 6.4.3. Their [Vitest package metadata](https://registry.npmjs.org/vitest/4.1.11) and [Vite package metadata](https://registry.npmjs.org/vite/6.4.3) include Node 20/22/24. Vite 6 is declared explicitly as a development dependency to keep Vitest's broad Vite range from selecting a newer Node minimum. No runtime dependency is added. Review the [Vitest 4 migration guide](https://v4.vitest.dev/guide/migration) and keep all report snapshots unchanged.
+The implemented compatible target is Vitest 4.1.11 with Vite 6.4.3. Their [Vitest package metadata](https://registry.npmjs.org/vitest/4.1.11) and [Vite package metadata](https://registry.npmjs.org/vite/6.4.3) include Node 20/22/24. Vite 6 is declared explicitly as a development dependency to keep Vitest's broad Vite range from selecting a newer Node minimum. No runtime dependency is added. The [Vitest 4 migration guide](https://v4.vitest.dev/guide/migration) was reviewed; the existing config and tests work without changes. All report snapshots remain unchanged.
+
+Vitest 4 removes vite-node, and Vite 6 replaces its old esbuild dependency. The clean final install reports zero vulnerabilities for both full and production-only audits. Audit dependency metadata falls from 588 total at baseline to 563, while production stays at 46 (including the root project). Comparing production lock entries before and after the test-tool migration shows no changes. These dated results do not guarantee that no future advisories will be published.
 
 ## Verification scope
 
@@ -30,4 +32,14 @@ Official Node 20.20.2 and 22.23.3 Windows archives were downloaded from [Node di
 
 The existing GitHub workflow covers Ubuntu and Windows on Node 20/22/24. This branch push does not itself run that workflow: it listens to main pushes and pull requests to main. No PR is opened or hosted CI result claimed. Tests and application code remain offline, use existing local fixtures, and introduce no GTM write or export-execution path.
 
-For the compatible-transitive-update commit, all five checks passed on Windows with Node 20.20.2, 22.23.3 and 24.19.0; each run passed all 160 tests. Test-source TypeScript checking also passed. Source, tests, report snapshots and direct dependency declarations are unchanged in that commit.
+For the compatible-transitive-update commit (`7bfb42f`), all five checks passed on Windows with Node 20.20.2, 22.23.3 and 24.19.0; each run passed all 160 tests. Test-source TypeScript checking also passed. Source, tests, report snapshots and direct dependency declarations are unchanged in that commit.
+
+After the test-tool migration and a clean `npm ci`, the final results are:
+
+| Windows runtime | Typecheck | Lint | Format check | Tests | Build |
+| --- | --- | --- | --- | --- | --- |
+| Node 20.20.2 | Pass | Pass | Pass | 160 pass | Pass |
+| Node 22.23.3 | Pass | Pass | Pass | 160 pass | Pass |
+| Node 24.19.0 | Pass | Pass | Pass | 160 pass | Pass |
+
+Test-source TypeScript checking, `git diff --check` and `npm pack --dry-run` also pass. The package dry run exercises the existing prepack build and manifest generation without publishing. Application source, tests, Vitest config and snapshots remain unchanged throughout X3. No new regression fixtures are needed for these dependency-only changes; the existing fixture and snapshot suite passes on all three tested runtimes. Ubuntu and hosted CI are not verified in this run.

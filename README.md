@@ -118,7 +118,7 @@ After installing a release tarball into another project, import from `gtm-diff` 
 
 ## Tests
 
-Dependency audit results and supported-runtime verification are recorded in [dependency maintenance](docs/DEPENDENCIES.md).
+Tests use Vitest 4 with Vite 6 to retain Node 20/22/24 support. Dependency audit results and supported-runtime verification are recorded in [dependency maintenance](docs/DEPENDENCIES.md).
 
 ```bash
 npm test
