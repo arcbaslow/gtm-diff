@@ -13,6 +13,10 @@ Versioning is [semantic](https://semver.org/spec/v2.0.0.html).
 - Report omitted container-version fields in all formats and expose them through the library; add `--strict` to return status 2 before writing a report when coverage is incomplete.
 - Document and enforce the diff CLI exit contract: success `0`, opt-in differences `1`, command/input/output errors `2`; validate the before file first and sanitize diagnostics. Add offline command-process coverage and a CI status-handling recipe.
 
+### Changed
+
+- Upgrade development testing to Vitest 4.1.11 and Vite 6.4.3, removing the remaining audited test-tool vulnerabilities while retaining Node 20/22/24 support and unchanged report snapshots.
+
 ### Fixed
 
 - Update compatible transitive dependencies to remove the production brace-expansion advisories and affected development XML, YAML, PostCSS and Nano ID packages without adding runtime dependencies.
