@@ -1,0 +1,7 @@
+{
+  "containerVersion": {
+    "container": { "name": "Coverage" },
+    "futureResource": [{ "name": "Old" }],
+    "<img src=x onerror=alert(1)>`\u001b\u0085": { "enabled": false }
+  }
+}

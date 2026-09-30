@@ -1,4 +1,4 @@
-import type { EntityChange } from '../core/diff.js';
+import type { ContainerDiff, EntityChange } from '../core/diff.js';
 import type { EntityKind } from '../types/gtm.js';
 
 export const KIND_LABELS: Record<EntityKind, { singular: string; plural: string }> = {
@@ -8,6 +8,13 @@ export const KIND_LABELS: Record<EntityKind, { singular: string; plural: string 
   folder: { singular: 'folder', plural: 'folders' },
   builtInVariable: { singular: 'built-in variable', plural: 'built-in variables' },
 };
+
+/** Safe plain text; HTML contexts must additionally use escapeHtml. */
+export function coverageNotice(diff: ContainerDiff): string {
+  if (!diff.omittedFields) return '';
+  const fields = (keys: string[]) => keys.map((key) => formatPath([key])).join(', ') || 'none';
+  return `Incomplete comparison: omitted containerVersion fields (before: ${fields(diff.omittedFields.before)}; after: ${fields(diff.omittedFields.after)}).`;
+}
 
 /**
  * Drop C0/C1 control characters from a label.

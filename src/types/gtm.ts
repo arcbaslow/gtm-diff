@@ -177,6 +177,7 @@ export type GtmExport = {
  * The kinds of entities we diff. Matches the keys on `GtmContainerVersion`
  * minus the container metadata itself.
  */
-export type EntityKind = 'tag' | 'trigger' | 'variable' | 'folder' | 'builtInVariable';
+export const ENTITY_KINDS = ['tag', 'trigger', 'variable', 'folder', 'builtInVariable'] as const;
+export type EntityKind = (typeof ENTITY_KINDS)[number];
 
 export type GtmEntity = GtmTag | GtmTrigger | GtmVariable | GtmFolder | GtmBuiltInVariable;

@@ -9,6 +9,7 @@ import type {
   GtmVariable,
 } from '../types/gtm.js';
 import { canonicalize } from './canonical.js';
+import { ENTITY_KINDS } from '../types/gtm.js';
 import { builtInIdentity, identityKey } from './identity.js';
 import { validateGtmExport } from './parser.js';
 
@@ -41,6 +42,7 @@ type ReferenceIndex = {
 };
 
 export type NormalizedContainer = {
+  omittedFields?: string[];
   container: Record<string, unknown>;
   tag: Record<string, NormalizedEntity>;
   trigger: Record<string, NormalizedEntity>;
@@ -97,8 +99,30 @@ export function normalizeExport(exp: GtmExport): NormalizedContainer {
     result.builtInVariable[builtInIdentity(b)] = normalizeBuiltIn(b);
   }
 
+  const omittedFields = Object.keys(cv)
+    .filter((key) => !COMPARED_OR_METADATA_FIELDS.has(key))
+    .filter((key) => !Array.isArray(cv[key]) || cv[key].length > 0)
+    .sort();
+  if (omittedFields.length > 0) result.omittedFields = omittedFields;
+
   return canonicalize(result) as NormalizedContainer;
 }
+
+// Version-level metadata has never been part of the entity comparison.
+// Unknown fields on compared entities are retained, not reported as omitted.
+const COMPARED_OR_METADATA_FIELDS = new Set<string>([
+  ...ENTITY_KINDS,
+  'container',
+  'path',
+  'accountId',
+  'containerId',
+  'containerVersionId',
+  'name',
+  'deleted',
+  'description',
+  'fingerprint',
+  'tagManagerUrl',
+]);
 
 function normalizeTag(tag: GtmTag, refs: ReferenceIndex): NormalizedEntity {
   const out = stripVolatile(tag as unknown as Record<string, unknown>);

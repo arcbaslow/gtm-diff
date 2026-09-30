@@ -1,5 +1,6 @@
 import type { ContainerDiff, KindDiff } from '../core/diff.js';
 import {
+  coverageNotice,
   displayIdentity,
   escapeHtml,
   formatPath,
@@ -17,6 +18,7 @@ export function renderHtml(diff: ContainerDiff): string {
   const body = [
     `<h1>GTM diff: <code>${escapeHtml(sanitizeLabel(diff.source.label))}</code> → <code>${escapeHtml(sanitizeLabel(diff.target.label))}</code></h1>`,
     renderSummary(diff),
+    ...(diff.omittedFields ? [`<p>${escapeHtml(coverageNotice(diff))}</p>`] : []),
     ...(diff.containerMeta.length > 0
       ? [
           '<h2>Container metadata</h2>',
@@ -31,7 +33,7 @@ export function renderHtml(diff: ContainerDiff): string {
         : renderKindHtml(kind),
     ),
     added + removed + modified === 0 && diff.containerMeta.length === 0
-      ? '<p><em>No changes.</em></p>'
+      ? `<p><em>${diff.omittedFields ? 'No changes in compared fields.' : 'No changes.'}</em></p>`
       : '',
   ].join('\n');
 

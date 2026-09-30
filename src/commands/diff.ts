@@ -6,7 +6,7 @@ import { loadGtmExport } from '../core/parser.js';
 import { renderConsole } from '../reporters/console.js';
 import { renderHtml } from '../reporters/html.js';
 import { renderMarkdown } from '../reporters/markdown.js';
-import { sanitizeLabel } from '../reporters/shared.js';
+import { coverageNotice, sanitizeLabel } from '../reporters/shared.js';
 
 export default class Diff extends Command {
   static override description =
@@ -31,6 +31,11 @@ export default class Diff extends Command {
   };
 
   static override flags = {
+    strict: Flags.boolean({
+      description:
+        'Fail with exit 2 before writing a report when containerVersion fields are omitted.',
+      default: false,
+    }),
     format: Flags.string({
       char: 'f',
       description: 'Output format.',
@@ -62,6 +67,8 @@ export default class Diff extends Command {
       before: basename(args.before),
       after: basename(args.after),
     });
+
+    if (flags.strict && diff.omittedFields) throw new Error(coverageNotice(diff));
 
     const rendered = this.render(diff, flags);
 

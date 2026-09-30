@@ -1,5 +1,6 @@
 import microdiff, { type Difference } from 'microdiff';
 import type { EntityKind, GtmExport } from '../types/gtm.js';
+import { ENTITY_KINDS } from '../types/gtm.js';
 import { normalizeExport, type NormalizedContainer, type NormalizedEntity } from './normalize.js';
 import { canonicalize } from './canonical.js';
 
@@ -24,6 +25,7 @@ export type KindDiff = {
 };
 
 export type ContainerDiff = {
+  omittedFields?: { before: string[]; after: string[] };
   source: { label: string };
   target: { label: string };
   containerMeta: Difference[];
@@ -35,8 +37,6 @@ export type ContainerDiff = {
     unchanged: number;
   };
 };
-
-const KINDS: EntityKind[] = ['tag', 'trigger', 'variable', 'folder', 'builtInVariable'];
 
 export function diffExports(
   before: GtmExport,
@@ -56,7 +56,7 @@ export function diffNormalized(
   // Also protect callers of this lower-level library API from inherited keys.
   before = canonicalize(before) as NormalizedContainer;
   after = canonicalize(after) as NormalizedContainer;
-  const kinds: KindDiff[] = KINDS.map((kind) => diffKind(kind, before[kind], after[kind]));
+  const kinds: KindDiff[] = ENTITY_KINDS.map((kind) => diffKind(kind, before[kind], after[kind]));
 
   const summary = kinds.reduce(
     (acc, k) => ({
@@ -71,6 +71,14 @@ export function diffNormalized(
   const containerMeta = microdiff(before.container, after.container);
 
   return {
+    ...((before.omittedFields?.length ?? 0) + (after.omittedFields?.length ?? 0) > 0
+      ? {
+          omittedFields: {
+            before: [...(before.omittedFields ?? [])].sort(),
+            after: [...(after.omittedFields ?? [])].sort(),
+          },
+        }
+      : {}),
     source: { label: labels.before },
     target: { label: labels.after },
     containerMeta,

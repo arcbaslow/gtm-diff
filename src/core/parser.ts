@@ -1,5 +1,6 @@
 import { readFile } from 'node:fs/promises';
 import type { GtmBuiltInVariable, GtmEntity, GtmExport } from '../types/gtm.js';
+import { ENTITY_KINDS } from '../types/gtm.js';
 import { builtInIdentity, identityKey } from './identity.js';
 
 export class GtmParseError extends Error {
@@ -102,7 +103,7 @@ export function validateGtmExport(value: unknown, source: string): GtmExport {
     throw new GtmParseError('Missing `containerVersion.container`', source);
   }
 
-  for (const key of ['tag', 'trigger', 'variable', 'folder', 'builtInVariable'] as const) {
+  for (const key of ENTITY_KINDS) {
     const arr = (cv as Record<string, unknown>)[key];
     if (arr !== undefined && !Array.isArray(arr)) {
       throw new GtmParseError(`\`containerVersion.${key}\` must be an array if present`, source);
