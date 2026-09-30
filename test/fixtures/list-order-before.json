@@ -1,0 +1,18 @@
+{
+  "exportFormatVersion": 2,
+  "containerVersion": {
+    "container": { "name": "List order regression" },
+    "variable": [{
+      "name": "Ordered values",
+      "type": "custom",
+      "parameter": [{
+        "key": "customRows",
+        "type": "list",
+        "list": [
+          { "type": "template", "value": "first" },
+          { "type": "template", "value": "second" }
+        ]
+      }]
+    }]
+  }
+}

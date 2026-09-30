@@ -30,22 +30,6 @@ const VOLATILE_FIELDS = [
   'containerVersionId',
 ] as const;
 
-/**
- * Some parameter keys hold lists whose order is authored and meaningful (e.g.
- * data layer push values). Most others are commutative and sorted for a clean
- * diff. If you are not sure, default to "meaningful" — false positives are
- * safer than false negatives.
- */
-const ORDER_MATTERS_PARAM_KEYS = new Set([
-  'eventParameters',
-  'ecommerce',
-  'items',
-  'itemList',
-  'promotions',
-  'impressions',
-  'products',
-]);
-
 type ReferenceIndex = {
   triggerIdToName: Map<string, string>;
   folderIdToName: Map<string, string>;
@@ -232,16 +216,9 @@ function normalizeParameter(p: GtmParameter): GtmParameter {
   if (p.isWeakReference !== undefined) out.isWeakReference = p.isWeakReference;
 
   if (p.list) {
-    const list = p.list.map((item) => normalizeParameter(item));
-    const preserveOrder = p.key ? ORDER_MATTERS_PARAM_KEYS.has(p.key) : false;
-    if (!preserveOrder) {
-      list.sort((a, b) => {
-        const ak = stableKey(a);
-        const bk = stableKey(b);
-        return ak < bk ? -1 : ak > bk ? 1 : 0;
-      });
-    }
-    out.list = list;
+    // Lists are positional, including unknown and keyless template parameters.
+    // Only keyed parameter/map collections are safe to sort generically.
+    out.list = p.list.map((item) => normalizeParameter(item));
   }
   if (p.map) {
     const map = p.map.map((item) => normalizeParameter(item));
