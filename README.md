@@ -71,8 +71,8 @@ Invalid files and command errors also return a nonzero exit status; use the repo
 | Match entities by type and name | IDs can differ between workspaces or environments |
 | Strip IDs, fingerprints, paths and other volatile fields | Export metadata does not overwhelm the review |
 | Resolve trigger, folder and tag references to names | References remain meaningful after ID changes |
-| Sort parameter lists where order is not significant | Serialization order does not create false changes |
-| Preserve known order-sensitive lists | E-commerce item ordering is still compared |
+| Sort keyed parameter and map collections | Serialization order does not create false changes |
+| Preserve every parameter list in authored order | E-commerce, custom and keyless list ordering is still compared |
 | Key built-in variables by type | Export order does not affect identity |
 
 A renamed entity appears as removed plus added. This is a semantic export comparison; it does not validate whether the resulting tracking behavior is correct on a website.

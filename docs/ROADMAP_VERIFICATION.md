@@ -4,6 +4,10 @@ Date: 2026-09-30. Branch: `roadmap-work`, based on main at `4dec665e7c8a529b1c33
 
 Local environment: Windows, Node 24.19.0, npm 11.17.0.
 
+## Regression evidence
+
+- N1: `list-order-before.json` / `list-order-after.json` reproduced the hidden change. Two regression cases failed before the fix (custom and keyless lists). Lists now preserve authored order; the console snapshot fixes field ordering. Keyed parameters and maps still sort.
+
 | Check | Baseline | Final |
 | --- | --- | --- |
 | npm ci | Passed, 517 packages installed | Same locked dependencies |
