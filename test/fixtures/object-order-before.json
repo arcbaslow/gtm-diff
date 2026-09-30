@@ -1,0 +1,41 @@
+{
+  "containerVersion": {
+    "container": {
+      "name": "Canonical ordering"
+    },
+    "tag": [
+      {
+        "name": "Z",
+        "type": "html",
+        "notes": "old",
+        "parameter": [
+          {
+            "type": "map",
+            "key": "x",
+            "map": [
+              {
+                "type": "template",
+                "key": "z",
+                "value": "old"
+              },
+              {
+                "type": "template",
+                "key": "a",
+                "value": "old"
+              }
+            ]
+          }
+        ],
+        "extension": {
+          "z": "old",
+          "a": "old"
+        }
+      },
+      {
+        "name": "A",
+        "type": "html",
+        "notes": "old"
+      }
+    ]
+  }
+}

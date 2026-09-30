@@ -3,6 +3,9 @@ import { describe, expect, it } from 'vitest';
 import { diffExports, hasChanges } from '../../src/core/diff.js';
 import { loadGtmExport } from '../../src/core/parser.js';
 import { renderConsole } from '../../src/reporters/console.js';
+import { renderHtml } from '../../src/reporters/html.js';
+import { renderMarkdown } from '../../src/reporters/markdown.js';
+import type { GtmExport } from '../../src/types/gtm.js';
 
 async function pair(name: string) {
   return Promise.all(
@@ -34,5 +37,55 @@ describe('list order regression', () => {
       ];
     }
     expect(hasChanges(diffExports(before!, after!))).toBe(true);
+  });
+});
+
+describe('canonical normalization', () => {
+  it('ignores condition permutations using all nested parameter values', async () => {
+    const [before, after] = await pair('condition-order');
+    const diff = diffExports(before!, after!);
+    expect(hasChanges(diff)).toBe(false);
+    expect(diff).toMatchSnapshot();
+  });
+
+  it('retains unknown parameter and condition fields', async () => {
+    const [before, after] = await pair('unknown-fields');
+    const diff = diffExports(before!, after!);
+    expect(diff.summary.modified).toBe(2);
+    expect(diff.kinds.flatMap((kind) => kind.modified)).toMatchSnapshot();
+  });
+
+  it('renders identical snapshots across object, entity and map permutations', async () => {
+    const [before, after] = await pair('object-order');
+    const permute = (value: unknown): unknown => {
+      if (Array.isArray(value)) return value.map(permute);
+      if (value !== null && typeof value === 'object') {
+        return Object.fromEntries(
+          Object.entries(value)
+            .reverse()
+            .map(([k, v]) => [k, permute(v)]),
+        );
+      }
+      return value;
+    };
+    const a = permute(before) as GtmExport;
+    const b = permute(after) as GtmExport;
+    for (const exp of [a, b]) {
+      exp.containerVersion.tag!.reverse();
+      for (const tag of exp.containerVersion.tag!) {
+        tag.parameter?.reverse();
+        tag.parameter?.forEach((p) => p.map?.reverse());
+      }
+    }
+    const original = diffExports(before!, after!);
+    const reordered = diffExports(a, b);
+    for (const render of [
+      renderMarkdown,
+      renderHtml,
+      (diff: typeof original) => renderConsole(diff, { color: false }),
+    ]) {
+      expect(render(reordered)).toBe(render(original));
+      expect(render(original)).toMatchSnapshot();
+    }
   });
 });

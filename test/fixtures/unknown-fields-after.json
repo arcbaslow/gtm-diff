@@ -1,0 +1,49 @@
+{
+  "containerVersion": {
+    "container": {
+      "name": "Canonical ordering"
+    },
+    "tag": [
+      {
+        "name": "T",
+        "type": "html",
+        "parameter": [
+          {
+            "type": "template",
+            "key": "x",
+            "value": "same",
+            "futureSetting": {
+              "nested": "new"
+            }
+          }
+        ]
+      }
+    ],
+    "trigger": [
+      {
+        "name": "T",
+        "type": "customEvent",
+        "filter": [
+          {
+            "type": "equals",
+            "parameter": [
+              {
+                "type": "template",
+                "key": "arg0",
+                "value": "{{Event}}"
+              },
+              {
+                "type": "template",
+                "key": "arg1",
+                "value": "a"
+              }
+            ],
+            "futureSetting": {
+              "nested": "new"
+            }
+          }
+        ]
+      }
+    ]
+  }
+}

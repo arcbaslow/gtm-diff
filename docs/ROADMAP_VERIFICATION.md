@@ -6,6 +6,7 @@ Local environment: Windows, Node 24.19.0, npm 11.17.0.
 
 ## Regression evidence
 
+- N2: `condition-order`, `unknown-fields` and `object-order` fixture pairs reproduced false changes, lost fields and different report ordering. All three tests failed before the fix. Snapshots cover the diff and all three reporters; permutations preserve authored list order.
 - N1: `list-order-before.json` / `list-order-after.json` reproduced the hidden change. Two regression cases failed before the fix (custom and keyless lists). Lists now preserve authored order; the console snapshot fixes field ordering. Keyed parameters and maps still sort.
 
 | Check | Baseline | Final |
