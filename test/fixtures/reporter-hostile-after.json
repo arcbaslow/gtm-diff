@@ -1,0 +1,34 @@
+{
+  "containerVersion": {
+    "container": {
+      "name": "`<&\"'>\u001b[2A ",
+      "notes": "new[2A \n```\n<script>alert(1)</script>",
+      "</pre><script>alert(1)</script>[2A ": "new[2A \n```\n<script>alert(1)</script>"
+    },
+    "tag": [
+      {
+        "name": "<img src=x onerror=alert(1)> & `label`\u001b[2A",
+        "type": "html`<b>&",
+        "notes": "new[2A \n```\n<script>alert(1)</script>",
+        "</pre><script>alert(1)</script>[2A ": "new[2A \n```\n<script>alert(1)</script>",
+        "parameter": [
+          {
+            "type": "template",
+            "key": "html",
+            "value": "new[2A \n```\n<script>alert(1)</script>"
+          }
+        ]
+      },
+      {
+        "name": "after <img src=x onerror=alert(1)> & `label`\u001b[2A",
+        "type": "html`<b>&"
+      }
+    ],
+    "builtInVariable": [
+      {
+        "type": "pageUrl",
+        "name": "after <img src=x onerror=alert(1)> & `label`\u001b[2A"
+      }
+    ]
+  }
+}

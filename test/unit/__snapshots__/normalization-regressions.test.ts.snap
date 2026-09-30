@@ -56,7 +56,7 @@ exports[`canonical normalization > ignores condition permutations using all nest
 `;
 
 exports[`canonical normalization > renders identical snapshots across object, entity and map permutations 1`] = `
-"# GTM diff: \`before\` → \`after\`
+"# GTM diff: <code>before</code> → <code>after</code>
 
 | | Added | Removed | Modified | Unchanged |
 |---|---:|---:|---:|---:|

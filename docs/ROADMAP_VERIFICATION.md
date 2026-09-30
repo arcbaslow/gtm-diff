@@ -6,6 +6,7 @@ Local environment: Windows, Node 24.19.0, npm 11.17.0.
 
 ## Regression evidence
 
+- N4: `reporter-hostile-before.json` / `reporter-hostile-after.json` cover source labels, added/removed/modified names and types, built-ins, metadata, paths and values. Three regression tests failed before the fix. Snapshots cover all reporters; Markdown summaries now use HTML entities and C1/Unicode separators are visible escapes. Markdown was inspected as generated text, not rendered by GitHub or a browser.
 - N3: `duplicate-identity`, `malformed-entry` and `prototype-identity` pairs show silent overwrites, late crashes and hidden built-ins. Before the fix, 23 of 24 input regression cases failed. The validator now checks consumed shapes and duplicate keys/IDs; it is intentionally not a complete resource schema. The lower-level normalized diff also copies JSON into canonical own-key dictionaries before microdiff.
 - N2: `condition-order`, `unknown-fields` and `object-order` fixture pairs reproduced false changes, lost fields and different report ordering. All three tests failed before the fix. Snapshots cover the diff and all three reporters; permutations preserve authored list order.
 - N1: `list-order-before.json` / `list-order-after.json` reproduced the hidden change. Two regression cases failed before the fix (custom and keyless lists). Lists now preserve authored order; the console snapshot fixes field ordering. Keyed parameters and maps still sort.

@@ -9,6 +9,7 @@ Versioning is [semantic](https://semver.org/spec/v2.0.0.html).
 
 ### Fixed
 
+- Escape Markdown HTML summaries and code labels correctly, sanitize report source labels, and visibly encode C1 controls and Unicode line separators in diff paths and values.
 - Reject malformed consumed export structures and ambiguous identities/source IDs instead of crashing or hiding changes. Treat prototype-named keys as ordinary data, including in the normalized library API.
 - Compare complete nested condition values, preserve unknown parameter/condition fields, and stabilize report ordering across object-key permutations.
 - Preserve all parameter list ordering, including custom and keyless lists, so authored order changes remain visible.
