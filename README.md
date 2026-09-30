@@ -62,7 +62,7 @@ node bin/run.js diff before.json after.json --exit-code --no-color
 | `--no-color` | Disable console ANSI colors |
 | `--exit-code` | Return `1` when differences exist; unchanged exports return `0` |
 
-Invalid files and command errors also return a nonzero exit status; use the report and error output to distinguish them from detected changes.
+Exit status is `0` on success (including differences when `--exit-code` is omitted), `1` for detected differences with `--exit-code`, and `2` for diff command, input or output errors. Errors go to stderr. Reports go to stdout unless `--output` is supplied; the selected file is written before returning `1`. When both inputs are invalid, the before-file error is reported first. Help returns `0`.
 
 ## What the comparison means
 
@@ -94,6 +94,8 @@ node bin/run.js diff before.json after.json --format markdown --output diff.md -
 ```
 
 Omit `--exit-code` when differences are expected and the job should produce a report without failing on a change. Supply `before.json` from a trusted baseline and `after.json` from the proposed change. No OAuth token is required.
+
+See the [CI contract and status-handling example](docs/CI.md). Reports do not post themselves as comments or call GitHub APIs.
 
 ## Use as a library
 
