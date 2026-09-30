@@ -8,7 +8,7 @@ Build the checked-out tool with `npm ci` and `npm run build`. Supply two local e
 | 1 | Successful comparison with differences and `--exit-code` |
 | 2 | Diff argument, input, validation, rendering or output error |
 
-Metadata-only changes count as differences. Unsupported collections are still omitted; see [coverage limits](../README.md#what-the-comparison-means). Status 0 is not proof that unsupported GTM resources are identical. Normal OS termination or a failure before the command loads is outside this contract.
+Metadata-only changes count as differences. Omitted version fields are listed in reports; see the [coverage contract](COVERAGE.md). Use `--strict` to return 2 before writing a report when fields are omitted. Status 0 without strict mode is not proof that unsupported GTM resources are identical. Normal OS termination or a failure before the command loads is outside this contract.
 
 Without `--output`, stdout contains the selected report. With `--output`, stdout contains a short file acknowledgement. Errors use stderr. Status 1 is returned only after the report is written. Report bytes depend on input basenames in the heading as well as export contents. If both inputs are invalid, the before input is validated first for a deterministic diagnostic.
 
@@ -16,7 +16,7 @@ For a Bash CI step that should keep a report when changes are expected:
 
 ```bash
 status=0
-node bin/run.js diff before.json after.json --format markdown --output diff.md --exit-code || status=$?
+node bin/run.js diff before.json after.json --format markdown --output diff.md --strict --exit-code || status=$?
 case "$status" in
   0) echo 'No differences in supported data' ;;
   1) echo 'Changes found; diff.md is ready for review' ;;

@@ -1,6 +1,7 @@
 import chalk, { Chalk } from 'chalk';
 import type { ContainerDiff, KindDiff } from '../core/diff.js';
 import { displayIdentity, formatPath, formatValue, KIND_LABELS, sanitizeLabel } from './shared.js';
+import { coverageNotice } from './shared.js';
 
 export type ConsoleReporterOptions = {
   color?: boolean | undefined;
@@ -14,6 +15,8 @@ export function renderConsole(diff: ContainerDiff, options: ConsoleReporterOptio
     c.bold(`GTM diff: ${sanitizeLabel(diff.source.label)} → ${sanitizeLabel(diff.target.label)}`),
   );
   lines.push('');
+
+  if (diff.omittedFields) lines.push(c.yellow(coverageNotice(diff)), '');
 
   const { added, removed, modified, unchanged } = diff.summary;
   const summary = [
@@ -41,7 +44,7 @@ export function renderConsole(diff: ContainerDiff, options: ConsoleReporterOptio
   }
 
   if (added + removed + modified === 0 && diff.containerMeta.length === 0) {
-    lines.push(c.green('No changes.'));
+    lines.push(c.green(diff.omittedFields ? 'No changes in compared fields.' : 'No changes.'));
   }
 
   return lines.join('\n');

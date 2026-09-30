@@ -1,5 +1,5 @@
 import { spawnSync } from 'node:child_process';
-import { mkdtemp, readFile, rm, rmdir } from 'node:fs/promises';
+import { mkdtemp, readFile, rm, rmdir, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -25,6 +25,48 @@ function cli(...args: string[]) {
 }
 
 describe('diff command contract', () => {
+  it('warns about incomplete comparisons by default and rejects them in strict mode', () => {
+    const args = [
+      'diff',
+      'test/fixtures/coverage-before.json',
+      'test/fixtures/coverage-after.json',
+    ];
+    const permissive = cli(...args, '--exit-code', '--no-color');
+    expect(permissive.status).toBe(0);
+    expect(permissive.stdout).toContain('Incomplete comparison');
+    expect(permissive.stdout).not.toContain('No changes.');
+    const strict = cli(...args, '--strict', '--exit-code');
+    expect(strict.status).toBe(2);
+    expect(strict.stdout).toBe('');
+    expect(strict.stderr).toContain('Incomplete comparison');
+    expect(strict.stderr).not.toContain('\u001b');
+    expect(strict.stderr).not.toContain('\u0085');
+    expect(cli('diff', before, after, '--strict', '--exit-code').status).toBe(1);
+  });
+
+  it('does not overwrite an output file when strict coverage fails', async () => {
+    const directory = await mkdtemp(join(tmpdir(), 'gtm-diff-strict-'));
+    const output = join(directory, 'report.md');
+    try {
+      await writeFile(output, 'Keep this report', 'utf8');
+      const result = cli(
+        'diff',
+        before,
+        'test/fixtures/coverage-after.json',
+        '--strict',
+        '--output',
+        output,
+      );
+      expect(result.status).toBe(2);
+      expect(result.stdout).toBe('');
+      expect(result.stderr).toContain('Incomplete comparison');
+      expect(await readFile(output, 'utf8')).toBe('Keep this report');
+    } finally {
+      await rm(output, { force: true });
+      await rmdir(directory);
+    }
+  });
+
   it('returns zero by default even with changes', () => {
     const result = cli('diff', before, after, '--no-color');
     expect(result.status).toBe(0);

@@ -9,6 +9,7 @@ Versioning is [semantic](https://semver.org/spec/v2.0.0.html).
 
 ### Added
 
+- Report omitted container-version fields in all formats and expose them through the library; add `--strict` to return status 2 before writing a report when coverage is incomplete.
 - Document and enforce the diff CLI exit contract: success `0`, opt-in differences `1`, command/input/output errors `2`; validate the before file first and sanitize diagnostics. Add offline command-process coverage and a CI status-handling recipe.
 
 ### Fixed

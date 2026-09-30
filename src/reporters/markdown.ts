@@ -1,5 +1,6 @@
 import type { ContainerDiff, KindDiff } from '../core/diff.js';
 import {
+  coverageNotice,
   displayIdentity,
   escapeHtml,
   formatPath,
@@ -19,6 +20,8 @@ export function renderMarkdown(diff: ContainerDiff): string {
     `# GTM diff: <code>${escapeHtml(sanitizeLabel(diff.source.label))}</code> → <code>${escapeHtml(sanitizeLabel(diff.target.label))}</code>`,
   );
   lines.push('');
+
+  if (diff.omittedFields) lines.push(`<p>${escapeHtml(coverageNotice(diff))}</p>`, '');
 
   const { added, removed, modified, unchanged } = diff.summary;
   lines.push('| | Added | Removed | Modified | Unchanged |');
@@ -48,7 +51,7 @@ export function renderMarkdown(diff: ContainerDiff): string {
   }
 
   if (added + removed + modified === 0 && diff.containerMeta.length === 0) {
-    lines.push('_No changes._');
+    lines.push(diff.omittedFields ? '_No changes in compared fields._' : '_No changes._');
   }
 
   return lines.join('\n') + '\n';

@@ -61,6 +61,7 @@ node bin/run.js diff before.json after.json --exit-code --no-color
 | `-o, --output` | Write the report to a file instead of stdout |
 | `--no-color` | Disable console ANSI colors |
 | `--exit-code` | Return `1` when differences exist; unchanged exports return `0` |
+| `--strict` | Return `2` before writing a report when container-version fields are omitted |
 
 Exit status is `0` on success (including differences when `--exit-code` is omitted), `1` for detected differences with `--exit-code`, and `2` for diff command, input or output errors. Errors go to stderr. Reports go to stdout unless `--output` is supplied; the selected file is written before returning `1`. When both inputs are invalid, the before-file error is reported first. Help returns `0`.
 
@@ -81,7 +82,7 @@ A renamed entity appears as removed plus added. This is a semantic export compar
 
 Malformed entity entries, parameter trees and reference arrays fail validation with a location. Duplicate `(type, name)` identities (or built-in types), ambiguous identity keys, duplicate source IDs and duplicate keyed parameters are rejected instead of silently selecting one entry. These checks also apply to `normalizeExport` and `diffExports` library calls. Unknown fields on supported entities are retained; this is not a complete GTM schema validator.
 
-Comparison currently covers tags, triggers, variables, folders, built-in variables and container metadata. Clients, transformations, custom templates, zones and Google tag configs are not compared. A report saying “No changes” therefore applies only to supported data. See the [roadmap](docs/ROADMAP.md) for coverage gaps and the read-only v0.2 plan proposal.
+Comparison currently covers tags, triggers, variables, folders, built-in variables and container metadata. Clients, transformations, custom templates, zones and Google tag configs are not compared. Reports list omitted `containerVersion` fields and qualify clean results as “No changes in compared fields.” Use `--strict` to reject incomplete coverage before writing a report. Empty unknown arrays contain no entities and do not trigger a notice. Known version metadata (including version name, description and deleted status) and the export envelope are intentionally excluded. Unknown fields within supported entities remain compared. This coverage check is not full schema or behavior validation. See the [coverage contract](docs/COVERAGE.md) and [roadmap](docs/ROADMAP.md).
 
 ## Use in CI
 
