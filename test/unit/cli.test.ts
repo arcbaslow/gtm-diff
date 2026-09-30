@@ -25,6 +25,17 @@ function cli(...args: string[]) {
 }
 
 describe('diff command contract', () => {
+  it('accepts all documented resource collections in strict mode and counts their changes', () => {
+    const before = 'test/fixtures/resources-before.json';
+    const after = 'test/fixtures/resources-after.json';
+    const changed = cli('diff', before, after, '--strict', '--exit-code', '--no-color');
+    expect(changed.status).toBe(1);
+    expect(changed.stderr).toBe('');
+    expect(changed.stdout).toContain('~5 modified');
+    expect(changed.stdout).not.toContain('Incomplete comparison');
+    expect(cli('diff', before, before, '--strict', '--exit-code').status).toBe(0);
+  });
+
   it('warns about incomplete comparisons by default and rejects them in strict mode', () => {
     const args = [
       'diff',

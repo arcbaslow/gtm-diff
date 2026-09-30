@@ -1,7 +1,7 @@
 import { readFile } from 'node:fs/promises';
-import type { GtmBuiltInVariable, GtmEntity, GtmExport } from '../types/gtm.js';
+import type { GtmBuiltInVariable, GtmEntity, GtmExport, GtmGtagConfig } from '../types/gtm.js';
 import { ENTITY_KINDS } from '../types/gtm.js';
-import { builtInIdentity, identityKey } from './identity.js';
+import { builtInIdentity, gtagConfigIdentity, identityKey } from './identity.js';
 
 export class GtmParseError extends Error {
   constructor(
@@ -85,6 +85,14 @@ export function validateGtmExport(value: unknown, source: string): GtmExport {
       }
     });
   }
+  function conditions(value: unknown, path: string): void {
+    array(value, path).forEach((item, i) => {
+      const at = `${path}[${i}]`;
+      const condition = object(item, at);
+      string(condition['type'], `${at}.type`);
+      parameters(condition['parameter'], `${at}.parameter`);
+    });
+  }
   if (!value || typeof value !== 'object' || Array.isArray(value)) {
     throw new GtmParseError('Top-level value must be an object', source);
   }
@@ -113,17 +121,24 @@ export function validateGtmExport(value: unknown, source: string): GtmExport {
     for (const [index, value] of (arr ?? []).entries()) {
       const path = `containerVersion.${key}[${index}]`;
       const entity = object(value, path);
-      if (key !== 'builtInVariable') string(entity['name'], `${path}.name`);
+      if (key !== 'builtInVariable' && key !== 'gtagConfig') string(entity['name'], `${path}.name`);
       else optionalString(entity, 'name', path);
-      if (key !== 'folder') string(entity['type'], `${path}.type`);
+      if (key !== 'folder' && key !== 'customTemplate' && key !== 'zone')
+        string(entity['type'], `${path}.type`);
       else optionalString(entity, 'type', path);
+      if (key === 'gtagConfig') {
+        string(entity['gtagConfigId'], `${path}.gtagConfigId`);
+        if (entity['gtagConfigId'].length === 0) fail(`${path}.gtagConfigId`, 'Must not be empty');
+      }
       const identity =
         key === 'builtInVariable'
           ? builtInIdentity(entity as GtmBuiltInVariable)
-          : identityKey(entity as GtmEntity);
+          : key === 'gtagConfig'
+            ? gtagConfigIdentity(entity as GtmGtagConfig)
+            : identityKey(entity as GtmEntity);
       if (identities.has(identity)) fail(path, 'Duplicate identity or ambiguous type/name key');
       identities.add(identity);
-      const idKey = `${key}Id`;
+      const idKey = key === 'customTemplate' ? 'templateId' : `${key}Id`;
       optionalString(entity, idKey, path);
       const id = entity[idKey];
       if (typeof id === 'string') {
@@ -150,12 +165,26 @@ export function validateGtmExport(value: unknown, source: string): GtmExport {
       if (key === 'trigger') {
         for (const field of ['filter', 'customEventFilter', 'autoEventFilter']) {
           if (entity[field] === undefined) continue;
-          array(entity[field], `${path}.${field}`).forEach((item, i) => {
-            const at = `${path}.${field}[${i}]`;
-            const condition = object(item, at);
-            string(condition['type'], `${at}.type`);
-            parameters(condition['parameter'], `${at}.parameter`);
-          });
+          conditions(entity[field], `${path}.${field}`);
+        }
+      }
+      if (
+        key === 'client' &&
+        entity['priority'] !== undefined &&
+        !Number.isInteger(entity['priority'])
+      ) {
+        fail(`${path}.priority`, 'Must be an integer');
+      }
+      if (key === 'customTemplate') optionalString(entity, 'templateData', path);
+      if (key === 'zone' && entity['boundary'] !== undefined) {
+        const boundary = object(entity['boundary'], `${path}.boundary`);
+        if (boundary['condition'] !== undefined)
+          conditions(boundary['condition'], `${path}.boundary.condition`);
+        if (boundary['customEvaluationTriggerId'] !== undefined) {
+          array(
+            boundary['customEvaluationTriggerId'],
+            `${path}.boundary.customEvaluationTriggerId`,
+          ).forEach((id, i) => string(id, `${path}.boundary.customEvaluationTriggerId[${i}]`));
         }
       }
     }

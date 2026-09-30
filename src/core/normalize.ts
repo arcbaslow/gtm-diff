@@ -7,10 +7,14 @@ import type {
   GtmTag,
   GtmTrigger,
   GtmVariable,
+  GtmClient,
+  GtmTransformation,
+  GtmGtagConfig,
+  GtmZone,
 } from '../types/gtm.js';
 import { canonicalize } from './canonical.js';
 import { ENTITY_KINDS } from '../types/gtm.js';
-import { builtInIdentity, identityKey } from './identity.js';
+import { builtInIdentity, gtagConfigIdentity, identityKey } from './identity.js';
 import { validateGtmExport } from './parser.js';
 
 export { builtInIdentity, identityKey } from './identity.js';
@@ -49,6 +53,11 @@ export type NormalizedContainer = {
   variable: Record<string, NormalizedEntity>;
   folder: Record<string, NormalizedEntity>;
   builtInVariable: Record<string, NormalizedEntity>;
+  client?: Record<string, NormalizedEntity>;
+  transformation?: Record<string, NormalizedEntity>;
+  customTemplate?: Record<string, NormalizedEntity>;
+  zone?: Record<string, NormalizedEntity>;
+  gtagConfig?: Record<string, NormalizedEntity>;
 };
 
 export type NormalizedEntity = Record<string, unknown>;
@@ -97,6 +106,36 @@ export function normalizeExport(exp: GtmExport): NormalizedContainer {
   }
   for (const b of cv.builtInVariable ?? []) {
     result.builtInVariable[builtInIdentity(b)] = normalizeBuiltIn(b);
+  }
+
+  for (const kind of [
+    'client',
+    'transformation',
+    'customTemplate',
+    'zone',
+    'gtagConfig',
+  ] as const) {
+    const entities: Record<string, NormalizedEntity> = Object.create(null) as Record<
+      string,
+      NormalizedEntity
+    >;
+    for (const entity of cv[kind] ?? []) {
+      const idKey = kind === 'customTemplate' ? 'templateId' : `${kind}Id`;
+      const key =
+        kind === 'gtagConfig' ? gtagConfigIdentity(entity as GtmGtagConfig) : identityKey(entity);
+      const out =
+        kind === 'zone'
+          ? normalizeZone(entity as GtmZone, refs)
+          : kind === 'client' || kind === 'transformation' || kind === 'gtagConfig'
+            ? normalizeParameterizedResource(
+                entity as GtmClient | GtmTransformation | GtmGtagConfig,
+                refs,
+              )
+            : stripVolatile(entity);
+      delete out[idKey];
+      entities[key] = out;
+    }
+    result[kind] = entities;
   }
 
   const omittedFields = Object.keys(cv)
@@ -187,6 +226,38 @@ function normalizeFolder(folder: GtmFolder): NormalizedEntity {
 
 function normalizeBuiltIn(b: GtmBuiltInVariable): NormalizedEntity {
   return stripVolatile(b as unknown as Record<string, unknown>);
+}
+
+function normalizeParameterizedResource(
+  resource: GtmClient | GtmTransformation | GtmGtagConfig,
+  refs: ReferenceIndex,
+): NormalizedEntity {
+  const out = stripVolatile(resource);
+  if (resource.parameter) out['parameter'] = normalizeParameters(resource.parameter);
+  const folderId = resource['parentFolderId'];
+  if (typeof folderId === 'string' && folderId) {
+    out['parentFolderName'] = refs.folderIdToName.get(folderId) ?? folderId;
+    delete out['parentFolderId'];
+  }
+  return out;
+}
+
+function normalizeZone(zone: GtmZone, refs: ReferenceIndex): NormalizedEntity {
+  const out = stripVolatile(zone);
+  if (zone.boundary) {
+    const boundary: Record<string, unknown> = { ...zone.boundary };
+    if (zone.boundary.condition)
+      boundary['condition'] = normalizeConditions(zone.boundary.condition);
+    if (zone.boundary.customEvaluationTriggerId) {
+      boundary['customEvaluationTriggerNames'] = resolveTriggerNames(
+        zone.boundary.customEvaluationTriggerId,
+        refs,
+      );
+      delete boundary['customEvaluationTriggerId'];
+    }
+    out['boundary'] = boundary;
+  }
+  return out;
 }
 
 function resolveTriggerNames(ids: string[], refs: ReferenceIndex): string[] {

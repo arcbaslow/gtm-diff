@@ -7,6 +7,11 @@ export const KIND_LABELS: Record<EntityKind, { singular: string; plural: string 
   variable: { singular: 'variable', plural: 'variables' },
   folder: { singular: 'folder', plural: 'folders' },
   builtInVariable: { singular: 'built-in variable', plural: 'built-in variables' },
+  client: { singular: 'client', plural: 'clients' },
+  transformation: { singular: 'transformation', plural: 'transformations' },
+  customTemplate: { singular: 'custom template', plural: 'custom templates' },
+  zone: { singular: 'zone', plural: 'zones' },
+  gtagConfig: { singular: 'Google tag config', plural: 'Google tag configs' },
 };
 
 /** Safe plain text; HTML contexts must additionally use escapeHtml. */
@@ -48,9 +53,8 @@ export function splitIdentityKey(key: string): { type: string; name: string } {
 }
 
 /**
- * Human label + type for a change, handling the two identity shapes we use:
- * `type::name` for authored entities, and a bare type string for built-in
- * variables (they have no user-assigned name).
+ * Human label + type: `type::name` for named entities, `type::gtagConfigId`
+ * for Google tag configs, and a bare type string for built-in variables.
  */
 export function displayIdentity(change: EntityChange): { name: string; type: string } {
   if (change.kind === 'builtInVariable') {

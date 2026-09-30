@@ -9,6 +9,7 @@ Versioning is [semantic](https://semver.org/spec/v2.0.0.html).
 
 ### Added
 
+- Compare clients, transformations, custom templates, zones and Google tag configs with typed resources, deterministic ordering, consumed-shape validation and escaped reports. Resolve client/transformation folders and zone evaluation triggers; match nameless Google tag configs by type and source ID. Preserve template text as inert data and retain gallery metadata.
 - Report omitted container-version fields in all formats and expose them through the library; add `--strict` to return status 2 before writing a report when coverage is incomplete.
 - Document and enforce the diff CLI exit contract: success `0`, opt-in differences `1`, command/input/output errors `2`; validate the before file first and sanitize diagnostics. Add offline command-process coverage and a CI status-handling recipe.
 

@@ -1,12 +1,11 @@
 /**
  * GTM container export schema, based on the Google Tag Manager API v2
  * ContainerVersion resource:
- * https://developers.google.com/tag-platform/tag-manager/api/v2/reference/accounts/containers/versions
+ * https://developers.google.com/tag-platform/tag-manager/api/reference/rest/v2/accounts.containers.versions
  *
  * Only the fields we read are typed. Unknown fields are preserved as `unknown`
- * via index signatures. This does not imply comparison support for other
- * collections: zones, clients, templates, transformations and gtag configs
- * are currently omitted by the normalizer.
+ * via index signatures. All ten documented entity collections are compared;
+ * unknown version-level fields are reported as omitted.
  */
 
 export type GtmParameter = {
@@ -145,6 +144,80 @@ export type GtmContainerMeta = {
   [key: string]: unknown;
 };
 
+type GtmResourceMetadata = {
+  accountId?: string;
+  containerId?: string;
+  workspaceId?: string;
+  path?: string;
+  tagManagerUrl?: string;
+  fingerprint?: string;
+};
+
+export type GtmClient = GtmResourceMetadata & {
+  clientId?: string;
+  name: string;
+  type: string;
+  parameter?: GtmParameter[];
+  priority?: number;
+  parentFolderId?: string;
+  notes?: string;
+  [key: string]: unknown;
+};
+
+export type GtmTransformation = GtmResourceMetadata & {
+  transformationId?: string;
+  name: string;
+  type: string;
+  parameter?: GtmParameter[];
+  parentFolderId?: string;
+  notes?: string;
+  [key: string]: unknown;
+};
+
+export type GtmCustomTemplate = GtmResourceMetadata & {
+  templateId?: string;
+  name: string;
+  templateData?: string;
+  galleryReference?: {
+    host?: string;
+    owner?: string;
+    repository?: string;
+    version?: string;
+    isModified?: boolean;
+    signature?: string;
+    templateDeveloperId?: string;
+    galleryTemplateId?: string;
+    [key: string]: unknown;
+  };
+  [key: string]: unknown;
+};
+
+export type GtmZone = GtmResourceMetadata & {
+  zoneId?: string;
+  name: string;
+  notes?: string;
+  childContainer?: Array<{ publicId?: string; nickname?: string; [key: string]: unknown }>;
+  boundary?: {
+    condition?: GtmCondition[];
+    customEvaluationTriggerId?: string[];
+    [key: string]: unknown;
+  };
+  typeRestriction?: {
+    enable?: boolean;
+    whitelistedTypeId?: string[];
+    [key: string]: unknown;
+  };
+  [key: string]: unknown;
+};
+
+/** No authored name is documented; the source ID is required for identity. */
+export type GtmGtagConfig = GtmResourceMetadata & {
+  gtagConfigId: string;
+  type: string;
+  parameter?: GtmParameter[];
+  [key: string]: unknown;
+};
+
 export type GtmContainerVersion = {
   path?: string;
   accountId?: string;
@@ -161,9 +234,11 @@ export type GtmContainerVersion = {
   variable?: GtmVariable[];
   folder?: GtmFolder[];
   builtInVariable?: GtmBuiltInVariable[];
-  customTemplate?: unknown[];
-  zone?: unknown[];
-  client?: unknown[];
+  customTemplate?: GtmCustomTemplate[];
+  zone?: GtmZone[];
+  client?: GtmClient[];
+  transformation?: GtmTransformation[];
+  gtagConfig?: GtmGtagConfig[];
   [key: string]: unknown;
 };
 
@@ -177,7 +252,28 @@ export type GtmExport = {
  * The kinds of entities we diff. Matches the keys on `GtmContainerVersion`
  * minus the container metadata itself.
  */
-export const ENTITY_KINDS = ['tag', 'trigger', 'variable', 'folder', 'builtInVariable'] as const;
+export const ENTITY_KINDS = [
+  'tag',
+  'trigger',
+  'variable',
+  'folder',
+  'builtInVariable',
+  'client',
+  'transformation',
+  'customTemplate',
+  'zone',
+  'gtagConfig',
+] as const;
 export type EntityKind = (typeof ENTITY_KINDS)[number];
 
-export type GtmEntity = GtmTag | GtmTrigger | GtmVariable | GtmFolder | GtmBuiltInVariable;
+export type GtmEntity =
+  | GtmTag
+  | GtmTrigger
+  | GtmVariable
+  | GtmFolder
+  | GtmBuiltInVariable
+  | GtmClient
+  | GtmTransformation
+  | GtmCustomTemplate
+  | GtmZone
+  | GtmGtagConfig;

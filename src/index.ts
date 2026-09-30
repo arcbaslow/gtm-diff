@@ -7,6 +7,7 @@ export { diffExports, diffNormalized, hasChanges } from './core/diff.js';
 export type { ContainerDiff, EntityChange, KindDiff } from './core/diff.js';
 export { GtmParseError, loadGtmExport, validateGtmExport } from './core/parser.js';
 export { normalizeExport, identityKey, buildReferenceIndex } from './core/normalize.js';
+export { gtagConfigIdentity } from './core/identity.js';
 export type { NormalizedContainer, NormalizedEntity } from './core/normalize.js';
 export { renderConsole } from './reporters/console.js';
 export { renderMarkdown } from './reporters/markdown.js';
@@ -22,4 +23,9 @@ export type {
   GtmBuiltInVariable,
   GtmParameter,
   GtmCondition,
+  GtmClient,
+  GtmTransformation,
+  GtmCustomTemplate,
+  GtmZone,
+  GtmGtagConfig,
 } from './types/gtm.js';
