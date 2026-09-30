@@ -1,0 +1,17 @@
+{
+  "containerVersion": {
+    "container": {
+      "name": "Input regression"
+    },
+    "builtInVariable": [
+      {
+        "type": "__proto__",
+        "name": "Prototype"
+      },
+      {
+        "type": "constructor",
+        "name": "Constructor"
+      }
+    ]
+  }
+}

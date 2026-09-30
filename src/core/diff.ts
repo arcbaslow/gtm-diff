@@ -1,6 +1,7 @@
 import microdiff, { type Difference } from 'microdiff';
 import type { EntityKind, GtmExport } from '../types/gtm.js';
 import { normalizeExport, type NormalizedContainer, type NormalizedEntity } from './normalize.js';
+import { canonicalize } from './canonical.js';
 
 export type EntityChange =
   | { status: 'added'; kind: EntityKind; key: string; entity: NormalizedEntity }
@@ -52,6 +53,9 @@ export function diffNormalized(
   after: NormalizedContainer,
   labels: { before: string; after: string },
 ): ContainerDiff {
+  // Also protect callers of this lower-level library API from inherited keys.
+  before = canonicalize(before) as NormalizedContainer;
+  after = canonicalize(after) as NormalizedContainer;
   const kinds: KindDiff[] = KINDS.map((kind) => diffKind(kind, before[kind], after[kind]));
 
   const summary = kinds.reduce(

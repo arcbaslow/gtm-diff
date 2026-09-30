@@ -79,6 +79,10 @@ Invalid files and command errors also return a nonzero exit status; use the repo
 
 A renamed entity appears as removed plus added. This is a semantic export comparison; it does not validate whether the resulting tracking behavior is correct on a website.
 
+Malformed entity entries, parameter trees and reference arrays fail validation with a location. Duplicate `(type, name)` identities (or built-in types), ambiguous identity keys, duplicate source IDs and duplicate keyed parameters are rejected instead of silently selecting one entry. These checks also apply to `normalizeExport` and `diffExports` library calls. Unknown fields on supported entities are retained; this is not a complete GTM schema validator.
+
+Comparison currently covers tags, triggers, variables, folders, built-in variables and container metadata. Clients, transformations, custom templates, zones and Google tag configs are not compared. A report saying “No changes” therefore applies only to supported data. See the [roadmap](docs/ROADMAP.md) for coverage gaps and the read-only v0.2 plan proposal.
+
 ## Use in CI
 
 Build this repository, run the CLI against your two exports, and upload the report as an artifact. This repository already tests the same fixture pair; a minimal local CI step after `npm ci` and `npm run build` is:

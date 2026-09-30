@@ -4,9 +4,9 @@
  * https://developers.google.com/tag-platform/tag-manager/api/v2/reference/accounts/containers/versions
  *
  * Only the fields we read are typed. Unknown fields are preserved as `unknown`
- * via index signatures so exports from other GTM features (e.g. server-side
- * containers, zones, clients, templates) round-trip cleanly even if we do not
- * yet diff them field-by-field.
+ * via index signatures. This does not imply comparison support for other
+ * collections: zones, clients, templates, transformations and gtag configs
+ * are currently omitted by the normalizer.
  */
 
 export type GtmParameter = {

@@ -1,0 +1,75 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`input regressions > compares prototype-named built-ins as ordinary identities 1`] = `
+{
+  "containerMeta": [],
+  "kinds": [
+    {
+      "added": [],
+      "kind": "tag",
+      "modified": [],
+      "removed": [],
+      "unchanged": 0,
+    },
+    {
+      "added": [],
+      "kind": "trigger",
+      "modified": [],
+      "removed": [],
+      "unchanged": 0,
+    },
+    {
+      "added": [],
+      "kind": "variable",
+      "modified": [],
+      "removed": [],
+      "unchanged": 0,
+    },
+    {
+      "added": [],
+      "kind": "folder",
+      "modified": [],
+      "removed": [],
+      "unchanged": 0,
+    },
+    {
+      "added": [
+        {
+          "entity": {
+            "name": "Prototype",
+            "type": "__proto__",
+          },
+          "key": "__proto__",
+          "kind": "builtInVariable",
+          "status": "added",
+        },
+        {
+          "entity": {
+            "name": "Constructor",
+            "type": "constructor",
+          },
+          "key": "constructor",
+          "kind": "builtInVariable",
+          "status": "added",
+        },
+      ],
+      "kind": "builtInVariable",
+      "modified": [],
+      "removed": [],
+      "unchanged": 0,
+    },
+  ],
+  "source": {
+    "label": "before",
+  },
+  "summary": {
+    "added": 2,
+    "modified": 0,
+    "removed": 0,
+    "unchanged": 0,
+  },
+  "target": {
+    "label": "after",
+  },
+}
+`;

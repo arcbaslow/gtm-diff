@@ -1,7 +1,6 @@
 import type {
   GtmBuiltInVariable,
   GtmContainerVersion,
-  GtmEntity,
   GtmExport,
   GtmFolder,
   GtmParameter,
@@ -10,6 +9,10 @@ import type {
   GtmVariable,
 } from '../types/gtm.js';
 import { canonicalize } from './canonical.js';
+import { builtInIdentity, identityKey } from './identity.js';
+import { validateGtmExport } from './parser.js';
+
+export { builtInIdentity, identityKey } from './identity.js';
 
 /**
  * Fields stripped from every entity before diffing. These are either assigned
@@ -65,16 +68,17 @@ export function buildReferenceIndex(cv: GtmContainerVersion): ReferenceIndex {
 }
 
 export function normalizeExport(exp: GtmExport): NormalizedContainer {
+  validateGtmExport(exp, 'input');
   const cv = exp.containerVersion;
   const refs = buildReferenceIndex(cv);
 
   const result: NormalizedContainer = {
     container: stripVolatile(cv.container as unknown as Record<string, unknown>),
-    tag: {},
-    trigger: {},
-    variable: {},
-    folder: {},
-    builtInVariable: {},
+    tag: Object.create(null) as Record<string, NormalizedEntity>,
+    trigger: Object.create(null) as Record<string, NormalizedEntity>,
+    variable: Object.create(null) as Record<string, NormalizedEntity>,
+    folder: Object.create(null) as Record<string, NormalizedEntity>,
+    builtInVariable: Object.create(null) as Record<string, NormalizedEntity>,
   };
 
   for (const t of cv.tag ?? []) {
@@ -94,22 +98,6 @@ export function normalizeExport(exp: GtmExport): NormalizedContainer {
   }
 
   return canonicalize(result) as NormalizedContainer;
-}
-
-/**
- * Entities are matched across exports by `(type, name)`. Type is included
- * because two entities can legitimately share a name (e.g. a Custom HTML tag
- * and a Custom Image tag both named "pixel"). Stable keys are essential for
- * the diff to align entities correctly.
- */
-export function identityKey(e: GtmEntity): string {
-  const name = (e as { name?: string }).name ?? '<unnamed>';
-  const type = (e as { type?: string }).type ?? '<no-type>';
-  return `${type}::${name}`;
-}
-
-export function builtInIdentity(b: GtmBuiltInVariable): string {
-  return b.type;
 }
 
 function normalizeTag(tag: GtmTag, refs: ReferenceIndex): NormalizedEntity {

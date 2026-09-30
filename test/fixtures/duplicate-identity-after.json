@@ -1,0 +1,18 @@
+{
+  "containerVersion": {
+    "container": {
+      "name": "Input regression"
+    },
+    "tag": [
+      {
+        "type": "html",
+        "name": "Duplicate",
+        "notes": "new"
+      },
+      {
+        "type": "html",
+        "name": "Duplicate"
+      }
+    ]
+  }
+}

@@ -9,6 +9,7 @@ Versioning is [semantic](https://semver.org/spec/v2.0.0.html).
 
 ### Fixed
 
+- Reject malformed consumed export structures and ambiguous identities/source IDs instead of crashing or hiding changes. Treat prototype-named keys as ordinary data, including in the normalized library API.
 - Compare complete nested condition values, preserve unknown parameter/condition fields, and stabilize report ordering across object-key permutations.
 - Preserve all parameter list ordering, including custom and keyless lists, so authored order changes remain visible.
 
