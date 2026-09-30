@@ -1,4 +1,4 @@
-# GTM diff: `minimal-before.json` → `minimal-after.json`
+# GTM diff: <code>minimal-before.json</code> → <code>minimal-after.json</code>
 
 | | Added | Removed | Modified | Unchanged |
 |---|---:|---:|---:|---:|
@@ -12,19 +12,19 @@
 ## Tags
 
 ### Added
-- **Meta Pixel** `html`
+- **Meta Pixel** <code>html</code>
 
 ### Removed
-- **Old Pixel** `html`
+- **Old Pixel** <code>html</code>
 
 ### Modified
 <details>
-<summary><strong>GA4 \- Page View</strong> <code>gaawe</code> — 1 field change</summary>
+<summary><strong>GA4 - Page View</strong> <code>gaawe</code> — 1 field change</summary>
 
 ```diff
 + parameter[2] = {
-  "type": "boolean",
   "key": "sendPageView",
+  "type": "boolean",
   "value": "true"
 }
 ```
@@ -46,5 +46,5 @@
 ## Built-in variables
 
 ### Added
-- **Page Path** `pagePath`
+- **Page Path** <code>pagePath</code>
 

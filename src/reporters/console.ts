@@ -1,6 +1,6 @@
 import chalk, { Chalk } from 'chalk';
 import type { ContainerDiff, KindDiff } from '../core/diff.js';
-import { displayIdentity, formatPath, formatValue, KIND_LABELS } from './shared.js';
+import { displayIdentity, formatPath, formatValue, KIND_LABELS, sanitizeLabel } from './shared.js';
 
 export type ConsoleReporterOptions = {
   color?: boolean | undefined;
@@ -10,7 +10,9 @@ export function renderConsole(diff: ContainerDiff, options: ConsoleReporterOptio
   const c = buildChalk(options.color);
   const lines: string[] = [];
 
-  lines.push(c.bold(`GTM diff: ${diff.source.label} → ${diff.target.label}`));
+  lines.push(
+    c.bold(`GTM diff: ${sanitizeLabel(diff.source.label)} → ${sanitizeLabel(diff.target.label)}`),
+  );
   lines.push('');
 
   const { added, removed, modified, unchanged } = diff.summary;

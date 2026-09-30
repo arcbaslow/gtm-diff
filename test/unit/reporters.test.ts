@@ -5,7 +5,12 @@ import { loadGtmExport } from '../../src/core/parser.js';
 import { renderConsole } from '../../src/reporters/console.js';
 import { renderHtml } from '../../src/reporters/html.js';
 import { renderMarkdown } from '../../src/reporters/markdown.js';
-import { sanitizeLabel, splitIdentityKey } from '../../src/reporters/shared.js';
+import {
+  formatPath,
+  formatValue,
+  sanitizeLabel,
+  splitIdentityKey,
+} from '../../src/reporters/shared.js';
 
 const BEFORE = fileURLToPath(new URL('../fixtures/minimal-before.json', import.meta.url));
 const AFTER = fileURLToPath(new URL('../fixtures/minimal-after.json', import.meta.url));
@@ -126,5 +131,66 @@ describe('displayIdentity', () => {
     const { type, name } = splitIdentityKey(`ht${esc}ml::Meta${esc}[31m Pixel`);
     expect(type).toBe('html');
     expect(name).toBe('Meta[31m Pixel');
+  });
+});
+
+describe('hostile reporter fixture pair', () => {
+  async function hostileDiff() {
+    const before = await loadGtmExport(
+      fileURLToPath(new URL('../fixtures/reporter-hostile-before.json', import.meta.url)),
+    );
+    const after = await loadGtmExport(
+      fileURLToPath(new URL('../fixtures/reporter-hostile-after.json', import.meta.url)),
+    );
+    return diffExports(before, after, {
+      before: before.containerVersion.container.name,
+      after: after.containerVersion.container.name,
+    });
+  }
+
+  it('sanitizes source labels and visibly escapes controls in paths and values', async () => {
+    const text = renderConsole(await hostileDiff(), { color: false });
+    for (const cp of [0x1b, 0x85, 0x9b, 0x2028])
+      expect(text).not.toContain(String.fromCharCode(cp));
+    expect(text).toContain('\\u009b');
+    expect(text).toContain('\\u0085');
+    expect(text).toContain('\\u2028');
+    expect(text).toMatchSnapshot();
+  });
+
+  it('uses HTML escaping in Markdown summaries and safe source/type labels', async () => {
+    const md = renderMarkdown(await hostileDiff());
+    const summaries = md
+      .split('\n')
+      .filter((line) => line.startsWith('<summary>'))
+      .join('\n');
+    expect(summaries).not.toContain('<img');
+    expect(summaries).toContain('&lt;img');
+    expect(summaries).toContain('&amp;');
+    expect(md.split('\n')[0]).toBe(
+      '# GTM diff: <code>`&lt;&amp;&quot;&#39;&gt;[2A</code> → <code>`&lt;&amp;&quot;&#39;&gt;[2A</code>',
+    );
+    expect(md).toContain('<code>html`&lt;b&gt;&amp;</code>');
+    expect(md.split('\n').filter((line) => line === '```')).toHaveLength(3);
+    expect(md).toMatchSnapshot();
+  });
+
+  it('escapes every HTML data context including metadata, paths, names, types and labels', async () => {
+    const html = renderHtml(await hostileDiff());
+    expect(html).not.toContain('<img');
+    expect(html).not.toContain('<script>');
+    expect(html).not.toContain('<b>');
+    expect(html).toContain('&lt;img');
+    expect(html).toContain('&lt;script&gt;');
+    expect(html).toContain('&quot;');
+    expect(html).toContain('&#39;');
+    expect(html).toMatchSnapshot();
+  });
+
+  it('visibly encodes C1 characters rather than erasing value differences', () => {
+    expect(formatValue('a\u009bb')).toBe('"a\\u009bb"');
+    expect(formatValue({ nested: 'a\u0085b' })).toContain('a\\u0085b');
+    expect(formatPath(['a\u009bb'])).toBe('["a\\u009bb"]');
+    expect(sanitizeLabel('one\u2028two\u2029three')).toBe('onetwothree');
   });
 });

@@ -18,9 +18,8 @@ export const KIND_LABELS: Record<EntityKind, { singular: string; plural: string 
  * change conceal another in the very output you are reviewing. Newlines break
  * the line-oriented console and markdown reporters the same way.
  *
- * Values are already safe: formatValue runs strings through JSON.stringify,
- * which escapes control characters. Names are the only thing reaching a
- * reporter raw.
+ * Values use JSON escaping plus visible escapes for C1 and Unicode line
+ * separators. JSON.stringify alone does not escape those characters.
  *
  * Done by codepoint rather than a regex so no control characters appear in this
  * source file.
@@ -29,7 +28,7 @@ export function sanitizeLabel(s: string): string {
   let out = '';
   for (const ch of s) {
     const cp = ch.codePointAt(0)!;
-    if (cp <= 0x1f || (cp >= 0x7f && cp <= 0x9f)) continue;
+    if (cp <= 0x1f || (cp >= 0x7f && cp <= 0x9f) || cp === 0x2028 || cp === 0x2029) continue;
     out += ch;
   }
   return out;
@@ -68,18 +67,36 @@ export function formatPath(path: ReadonlyArray<string | number>): string {
     } else if (/^[A-Za-z_$][\w$]*$/.test(segment)) {
       out += out === '' ? segment : `.${segment}`;
     } else {
-      out += `[${JSON.stringify(segment)}]`;
+      out += `[${safeJson(segment)}]`;
     }
   }
-  return out || '(root)';
+  return sanitizeLabel(out) || '(root)';
 }
 
 export function formatValue(value: unknown): string {
   if (value === undefined) return 'undefined';
-  if (typeof value === 'string') return JSON.stringify(value);
+  if (typeof value === 'string') return safeJson(value);
   if (typeof value === 'number' || typeof value === 'boolean' || value === null) {
     return String(value);
   }
-  const json = JSON.stringify(value, null, 2);
+  const json = safeJson(value, 2);
   return json.length > 200 ? `${json.slice(0, 200)}…` : json;
+}
+
+function safeJson(value: unknown, space?: number): string {
+  const json = JSON.stringify(value, null, space).replace(
+    /[\u007f-\u009f\u2028\u2029]/g,
+    (ch) => `\\u${ch.charCodeAt(0).toString(16).padStart(4, '0')}`,
+  );
+  // Only JSON's generated indentation/newlines survive; strings stay inert.
+  return json.split('\n').map(sanitizeLabel).join('\n');
+}
+
+export function escapeHtml(s: string): string {
+  return s
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
 }

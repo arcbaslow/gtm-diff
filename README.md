@@ -85,6 +85,8 @@ Comparison currently covers tags, triggers, variables, folders, built-in variabl
 
 ## Use in CI
 
+Reports treat exports as inert data. Labels omit terminal controls and line separators; diff values and paths show those characters as visible JSON escapes. HTML and Markdown HTML fragments escape container text. Report files can still contain secrets from exports, so choose where to store or share them explicitly.
+
 Build this repository, run the CLI against your two exports, and upload the report as an artifact. This repository already tests the same fixture pair; a minimal local CI step after `npm ci` and `npm run build` is:
 
 ```bash

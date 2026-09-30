@@ -1,5 +1,12 @@
 import type { ContainerDiff, KindDiff } from '../core/diff.js';
-import { displayIdentity, formatPath, formatValue, KIND_LABELS } from './shared.js';
+import {
+  displayIdentity,
+  escapeHtml,
+  formatPath,
+  formatValue,
+  KIND_LABELS,
+  sanitizeLabel,
+} from './shared.js';
 
 /**
  * Self-contained HTML report. No external CSS, no JS. Opens in any browser,
@@ -8,7 +15,7 @@ import { displayIdentity, formatPath, formatValue, KIND_LABELS } from './shared.
 export function renderHtml(diff: ContainerDiff): string {
   const { added, removed, modified } = diff.summary;
   const body = [
-    `<h1>GTM diff: <code>${escapeHtml(diff.source.label)}</code> → <code>${escapeHtml(diff.target.label)}</code></h1>`,
+    `<h1>GTM diff: <code>${escapeHtml(sanitizeLabel(diff.source.label))}</code> → <code>${escapeHtml(sanitizeLabel(diff.target.label))}</code></h1>`,
     renderSummary(diff),
     ...(diff.containerMeta.length > 0
       ? [
@@ -109,15 +116,6 @@ function renderUnifiedDiffLineHtml(d: {
     return `<span class="rem">- ${path} (was ${escapeHtml(formatValue(d.oldValue))})</span>`;
   }
   return `<span class="mod">~ ${path}: ${escapeHtml(formatValue(d.oldValue))} → ${escapeHtml(formatValue(d.value))}</span>`;
-}
-
-function escapeHtml(s: string): string {
-  return s
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;')
-    .replace(/'/g, '&#39;');
 }
 
 function capitalize(s: string): string {

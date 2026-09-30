@@ -1,5 +1,12 @@
 import type { ContainerDiff, KindDiff } from '../core/diff.js';
-import { displayIdentity, formatPath, formatValue, KIND_LABELS } from './shared.js';
+import {
+  displayIdentity,
+  escapeHtml,
+  formatPath,
+  formatValue,
+  KIND_LABELS,
+  sanitizeLabel,
+} from './shared.js';
 
 /**
  * Markdown reporter. Designed to be posted as a PR comment. Uses collapsible
@@ -8,7 +15,9 @@ import { displayIdentity, formatPath, formatValue, KIND_LABELS } from './shared.
  */
 export function renderMarkdown(diff: ContainerDiff): string {
   const lines: string[] = [];
-  lines.push(`# GTM diff: \`${diff.source.label}\` → \`${diff.target.label}\``);
+  lines.push(
+    `# GTM diff: <code>${escapeHtml(sanitizeLabel(diff.source.label))}</code> → <code>${escapeHtml(sanitizeLabel(diff.target.label))}</code>`,
+  );
   lines.push('');
 
   const { added, removed, modified, unchanged } = diff.summary;
@@ -53,7 +62,7 @@ function renderKindMarkdown(kind: KindDiff, lines: string[]): void {
     lines.push('### Added');
     for (const change of kind.added) {
       const { type, name } = displayIdentity(change);
-      lines.push(`- **${escapeMd(name)}** \`${escapeMd(type)}\``);
+      lines.push(`- **${escapeMd(escapeHtml(name))}** <code>${escapeHtml(type)}</code>`);
     }
     lines.push('');
   }
@@ -62,7 +71,7 @@ function renderKindMarkdown(kind: KindDiff, lines: string[]): void {
     lines.push('### Removed');
     for (const change of kind.removed) {
       const { type, name } = displayIdentity(change);
-      lines.push(`- **${escapeMd(name)}** \`${escapeMd(type)}\``);
+      lines.push(`- **${escapeMd(escapeHtml(name))}** <code>${escapeHtml(type)}</code>`);
     }
     lines.push('');
   }
@@ -74,7 +83,7 @@ function renderKindMarkdown(kind: KindDiff, lines: string[]): void {
       const { type, name } = displayIdentity(change);
       lines.push('<details>');
       lines.push(
-        `<summary><strong>${escapeMd(name)}</strong> <code>${escapeMd(type)}</code> — ${change.fieldDiffs.length} field change${change.fieldDiffs.length === 1 ? '' : 's'}</summary>`,
+        `<summary><strong>${escapeHtml(name)}</strong> <code>${escapeHtml(type)}</code> — ${change.fieldDiffs.length} field change${change.fieldDiffs.length === 1 ? '' : 's'}</summary>`,
       );
       lines.push('');
       lines.push('```diff');

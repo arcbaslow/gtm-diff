@@ -30,6 +30,7 @@ somewhere the operator did not ask for.
   reach any reporter, because a name carrying ESC sequences could move
   the cursor and paint over lines the console reporter already printed,
   hiding one change behind another.
+- **A regression in Markdown escaping or value formatting** (`src/reporters/markdown.ts`, `src/reporters/shared.ts`). HTML fragments use `escapeHtml`, labels use `sanitizeLabel`, and paths/values visibly escape C1 controls and Unicode line separators as well as JSON's C0 escapes. A report must not allow export text to change its markup or terminal structure.
 - Any path where parsing an export executes code from it, including
   `eval`, `Function`, dynamic `import`, or prototype pollution through
   `JSON.parse` output reaching an object merge.
