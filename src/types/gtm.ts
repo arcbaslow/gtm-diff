@@ -39,7 +39,11 @@ export type GtmTag = {
   blockingTriggerId?: string[];
   tagFiringOption?: string;
   monitoringMetadata?: GtmParameter;
-  consentSettings?: Record<string, unknown>;
+  consentSettings?: {
+    consentStatus?: string;
+    consentType?: GtmParameter;
+    [key: string]: unknown;
+  };
   parentFolderId?: string;
   priority?: GtmParameter;
   notes?: string;
@@ -99,7 +103,16 @@ export type GtmVariable = {
   parameter?: GtmParameter[];
   scheduleStartMs?: string;
   scheduleEndMs?: string;
-  formatValue?: Record<string, unknown>;
+  formatValue?: {
+    caseConversionType?: string;
+    convertToNumber?: string;
+    convertToBoolean?: boolean;
+    convertNullToValue?: GtmParameter;
+    convertUndefinedToValue?: GtmParameter;
+    convertTrueToValue?: GtmParameter;
+    convertFalseToValue?: GtmParameter;
+    [key: string]: unknown;
+  };
   disablingTriggerId?: string[];
   enablingTriggerId?: string[];
   parentFolderId?: string;

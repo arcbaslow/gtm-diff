@@ -1,0 +1,11 @@
+{
+  "containerVersion": {
+    "container": { "name": "Parameter locations" },
+    "trigger": [
+      { "triggerId": "1", "name": "Ready", "type": "customEvent" },
+      { "triggerId": "2", "name": "Timer", "type": "timer", "eventName": { "type": "map", "map": [{ "key": "z", "type": "template", "value": "z" }, { "key": "a", "type": "template", "value": "a" }] }, "parameter": [{ "key": "nested", "type": "list", "list": [{ "type": "triggerReference", "value": "1" }] }] }
+    ],
+    "tag": [{ "name": "Analytics", "type": "html", "priority": { "type": "map", "map": [{ "key": "z", "type": "integer", "value": "2" }, { "key": "a", "type": "integer", "value": "1" }] }, "consentSettings": { "consentStatus": "needed", "consentType": { "type": "list", "list": [{ "type": "template", "value": "ad_storage" }, { "type": "template", "value": "analytics_storage" }] } }, "parameter": [{ "key": "event", "type": "triggerReference", "value": "1" }] }],
+    "variable": [{ "name": "Conversion", "type": "c", "formatValue": { "convertNullToValue": { "type": "map", "map": [{ "key": "z", "type": "template", "value": "z" }, { "key": "a", "type": "template", "value": "a" }] }, "convertUndefinedToValue": { "type": "triggerReference", "value": "1" }, "caseConversionType": "lowercase" } }]
+  }
+}

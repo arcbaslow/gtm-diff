@@ -2,6 +2,7 @@ import { readFile } from 'node:fs/promises';
 import type { GtmBuiltInVariable, GtmEntity, GtmExport, GtmGtagConfig } from '../types/gtm.js';
 import { ENTITY_KINDS } from '../types/gtm.js';
 import { builtInIdentity, gtagConfigIdentity, identityKey } from './identity.js';
+import { isTriggerReference, SINGLE_PARAMETER_PATHS } from './parameter-fields.js';
 
 export class GtmParseError extends Error {
   constructor(
@@ -66,6 +67,7 @@ export function validateGtmExport(value: unknown, source: string): GtmExport {
     string(p['type'], `${path}.type`);
     optionalString(p, 'key', path);
     optionalString(p, 'value', path);
+    if (isTriggerReference(p['type'])) string(p['value'], `${path}.value`);
     if (p['isWeakReference'] !== undefined && typeof p['isWeakReference'] !== 'boolean') {
       fail(`${path}.isWeakReference`, 'Must be a boolean');
     }
@@ -159,8 +161,16 @@ export function validateGtmExport(value: unknown, source: string): GtmExport {
         }
       }
       if (entity['parameter'] !== undefined) parameters(entity['parameter'], `${path}.parameter`);
-      if (key === 'tag' && entity['monitoringMetadata'] !== undefined) {
-        parameter(entity['monitoringMetadata'], `${path}.monitoringMetadata`);
+      for (const segments of SINGLE_PARAMETER_PATHS[key] ?? []) {
+        let parent = entity;
+        let at = path;
+        for (const [i, segment] of segments.entries()) {
+          const value = parent[segment];
+          if (value === undefined) break;
+          at += `.${segment}`;
+          if (i === segments.length - 1) parameter(value, at);
+          else parent = object(value, at);
+        }
       }
       if (key === 'trigger') {
         for (const field of ['filter', 'customEventFilter', 'autoEventFilter']) {

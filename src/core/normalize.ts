@@ -11,7 +11,9 @@ import type {
   GtmTransformation,
   GtmGtagConfig,
   GtmZone,
+  EntityKind,
 } from '../types/gtm.js';
+import { isTriggerReference, SINGLE_PARAMETER_PATHS } from './parameter-fields.js';
 import { canonicalize } from './canonical.js';
 import { ENTITY_KINDS } from '../types/gtm.js';
 import { builtInIdentity, gtagConfigIdentity, identityKey } from './identity.js';
@@ -40,6 +42,7 @@ const VOLATILE_FIELDS = [
 ] as const;
 
 type ReferenceIndex = {
+  triggerIdToIdentity: Map<string, { type: string; name: string }>;
   triggerIdToName: Map<string, string>;
   folderIdToName: Map<string, string>;
   tagIdToName: Map<string, string>;
@@ -63,9 +66,13 @@ export type NormalizedContainer = {
 export type NormalizedEntity = Record<string, unknown>;
 
 export function buildReferenceIndex(cv: GtmContainerVersion): ReferenceIndex {
+  const triggerIdToIdentity = new Map<string, { type: string; name: string }>();
   const triggerIdToName = new Map<string, string>();
   for (const t of cv.trigger ?? []) {
-    if (t.triggerId) triggerIdToName.set(t.triggerId, t.name);
+    if (t.triggerId) {
+      triggerIdToName.set(t.triggerId, t.name);
+      triggerIdToIdentity.set(t.triggerId, { type: t.type, name: t.name });
+    }
   }
   const folderIdToName = new Map<string, string>();
   for (const f of cv.folder ?? []) {
@@ -75,7 +82,7 @@ export function buildReferenceIndex(cv: GtmContainerVersion): ReferenceIndex {
   for (const t of cv.tag ?? []) {
     if (t.tagId) tagIdToName.set(t.tagId, t.name);
   }
-  return { triggerIdToName, folderIdToName, tagIdToName };
+  return { triggerIdToName, triggerIdToIdentity, folderIdToName, tagIdToName };
 }
 
 export function normalizeExport(exp: GtmExport): NormalizedContainer {
@@ -165,7 +172,8 @@ const COMPARED_OR_METADATA_FIELDS = new Set<string>([
 
 function normalizeTag(tag: GtmTag, refs: ReferenceIndex): NormalizedEntity {
   const out = stripVolatile(tag as unknown as Record<string, unknown>);
-  if (tag.parameter) out['parameter'] = normalizeParameters(tag.parameter);
+  if (tag.parameter) out['parameter'] = normalizeParameters(tag.parameter, refs);
+  normalizeSingleParameters(out, 'tag', refs);
   if (tag.firingTriggerId) {
     out['firingTriggerNames'] = resolveTriggerNames(tag.firingTriggerId, refs);
     delete out['firingTriggerId'];
@@ -178,21 +186,19 @@ function normalizeTag(tag: GtmTag, refs: ReferenceIndex): NormalizedEntity {
     out['parentFolderName'] = refs.folderIdToName.get(tag.parentFolderId) ?? tag.parentFolderId;
     delete out['parentFolderId'];
   }
-  if (tag.monitoringMetadata) {
-    out['monitoringMetadata'] = normalizeParameter(tag.monitoringMetadata);
-  }
   return out;
 }
 
 function normalizeTrigger(trigger: GtmTrigger, refs: ReferenceIndex): NormalizedEntity {
   const out = stripVolatile(trigger as unknown as Record<string, unknown>);
-  if (trigger.filter) out['filter'] = normalizeConditions(trigger.filter);
+  normalizeSingleParameters(out, 'trigger', refs);
+  if (trigger.filter) out['filter'] = normalizeConditions(trigger.filter, refs);
   if (trigger.customEventFilter) {
-    out['customEventFilter'] = normalizeConditions(trigger.customEventFilter);
+    out['customEventFilter'] = normalizeConditions(trigger.customEventFilter, refs);
   }
   if (trigger.autoEventFilter)
-    out['autoEventFilter'] = normalizeConditions(trigger.autoEventFilter);
-  if (trigger.parameter) out['parameter'] = normalizeParameters(trigger.parameter);
+    out['autoEventFilter'] = normalizeConditions(trigger.autoEventFilter, refs);
+  if (trigger.parameter) out['parameter'] = normalizeParameters(trigger.parameter, refs);
   if (trigger.parentFolderId) {
     out['parentFolderName'] =
       refs.folderIdToName.get(trigger.parentFolderId) ?? trigger.parentFolderId;
@@ -203,7 +209,8 @@ function normalizeTrigger(trigger: GtmTrigger, refs: ReferenceIndex): Normalized
 
 function normalizeVariable(variable: GtmVariable, refs: ReferenceIndex): NormalizedEntity {
   const out = stripVolatile(variable as unknown as Record<string, unknown>);
-  if (variable.parameter) out['parameter'] = normalizeParameters(variable.parameter);
+  normalizeSingleParameters(out, 'variable', refs);
+  if (variable.parameter) out['parameter'] = normalizeParameters(variable.parameter, refs);
   if (variable.disablingTriggerId) {
     out['disablingTriggerNames'] = resolveTriggerNames(variable.disablingTriggerId, refs);
     delete out['disablingTriggerId'];
@@ -233,7 +240,7 @@ function normalizeParameterizedResource(
   refs: ReferenceIndex,
 ): NormalizedEntity {
   const out = stripVolatile(resource);
-  if (resource.parameter) out['parameter'] = normalizeParameters(resource.parameter);
+  if (resource.parameter) out['parameter'] = normalizeParameters(resource.parameter, refs);
   const folderId = resource['parentFolderId'];
   if (typeof folderId === 'string' && folderId) {
     out['parentFolderName'] = refs.folderIdToName.get(folderId) ?? folderId;
@@ -247,7 +254,7 @@ function normalizeZone(zone: GtmZone, refs: ReferenceIndex): NormalizedEntity {
   if (zone.boundary) {
     const boundary: Record<string, unknown> = { ...zone.boundary };
     if (zone.boundary.condition)
-      boundary['condition'] = normalizeConditions(zone.boundary.condition);
+      boundary['condition'] = normalizeConditions(zone.boundary.condition, refs);
     if (zone.boundary.customEvaluationTriggerId) {
       boundary['customEvaluationTriggerNames'] = resolveTriggerNames(
         zone.boundary.customEvaluationTriggerId,
@@ -266,10 +273,13 @@ function resolveTriggerNames(ids: string[], refs: ReferenceIndex): string[] {
   return names;
 }
 
-function normalizeConditions(conditions: Array<{ type: string; parameter: GtmParameter[] }>) {
+function normalizeConditions(
+  conditions: Array<{ type: string; parameter: GtmParameter[] }>,
+  refs: ReferenceIndex,
+) {
   const normalized = conditions.map((c) => ({
     ...c,
-    parameter: normalizeParameters(c.parameter),
+    parameter: normalizeParameters(c.parameter, refs),
   }));
   normalized.sort((a, b) => {
     const ak = stableKey(a);
@@ -279,8 +289,10 @@ function normalizeConditions(conditions: Array<{ type: string; parameter: GtmPar
   return normalized;
 }
 
-function normalizeParameters(params: GtmParameter[]): GtmParameter[] {
-  const out = params.map((p) => normalizeParameter(p));
+type NormalizedParameter = { type: string; key?: string; [key: string]: unknown };
+
+function normalizeParameters(params: GtmParameter[], refs: ReferenceIndex): NormalizedParameter[] {
+  const out = params.map((p) => normalizeParameter(p, refs));
   out.sort((a, b) => {
     const ak = a.key ?? '';
     const bk = b.key ?? '';
@@ -293,24 +305,52 @@ function normalizeParameters(params: GtmParameter[]): GtmParameter[] {
   return out;
 }
 
-function normalizeParameter(p: GtmParameter): GtmParameter {
-  const out: GtmParameter = { ...p };
+function normalizeParameter(p: GtmParameter, refs: ReferenceIndex): NormalizedParameter {
+  const out: NormalizedParameter = { ...p };
+
+  if (isTriggerReference(p.type) && p.value !== undefined) {
+    const target = refs.triggerIdToIdentity.get(p.value);
+    // Keep resolved identities distinct from unresolved IDs, even if a name
+    // resembles an unresolved marker. Never interpret ordinary string values.
+    out['value'] = target ? { trigger: { ...target } } : { unresolvedTriggerId: p.value };
+  }
 
   if (p.list) {
     // Lists are positional, including unknown and keyless template parameters.
     // Only keyed parameter/map collections are safe to sort generically.
-    out.list = p.list.map((item) => normalizeParameter(item));
+    out['list'] = p.list.map((item) => normalizeParameter(item, refs));
   }
   if (p.map) {
-    const map = p.map.map((item) => normalizeParameter(item));
+    const map = p.map.map((item) => normalizeParameter(item, refs));
     map.sort((a, b) => {
       const ak = a.key ?? '';
       const bk = b.key ?? '';
       return ak < bk ? -1 : ak > bk ? 1 : 0;
     });
-    out.map = map;
+    out['map'] = map;
   }
   return out;
+}
+
+function normalizeSingleParameters(
+  out: NormalizedEntity,
+  kind: EntityKind,
+  refs: ReferenceIndex,
+): void {
+  for (const [field, nested] of SINGLE_PARAMETER_PATHS[kind] ?? []) {
+    if (out[field] === undefined) continue;
+    if (nested === undefined) {
+      out[field] = normalizeParameter(out[field] as GtmParameter, refs);
+    } else {
+      const group = out[field] as Record<string, unknown>;
+      if (group[nested] !== undefined) {
+        out[field] = {
+          ...group,
+          [nested]: normalizeParameter(group[nested] as GtmParameter, refs),
+        };
+      }
+    }
+  }
 }
 
 function stripVolatile(obj: Record<string, unknown>): Record<string, unknown> {

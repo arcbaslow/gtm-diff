@@ -1,0 +1,341 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`Parameter locations > ignores keyed-map order and trigger ID relocation in documented Parameter locations 1`] = `
+[
+  "GTM diff: before → after
+
++0 added  -0 removed  ~0 modified  4 unchanged
+
+No changes.",
+  "# GTM diff: <code>before</code> → <code>after</code>
+
+| | Added | Removed | Modified | Unchanged |
+|---|---:|---:|---:|---:|
+| Total | 0 | 0 | 0 | 4 |
+| tags | 0 | 0 | 0 | 1 |
+| triggers | 0 | 0 | 0 | 2 |
+| variables | 0 | 0 | 0 | 1 |
+| folders | 0 | 0 | 0 | 0 |
+| built-in variables | 0 | 0 | 0 | 0 |
+| clients | 0 | 0 | 0 | 0 |
+| transformations | 0 | 0 | 0 | 0 |
+| custom templates | 0 | 0 | 0 | 0 |
+| zones | 0 | 0 | 0 | 0 |
+| Google tag configs | 0 | 0 | 0 | 0 |
+
+_No changes._
+",
+  "<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>GTM diff</title>
+<style>
+  :root { color-scheme: light dark; }
+  body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; max-width: 1000px; margin: 2rem auto; padding: 0 1rem; }
+  h1 { font-size: 1.4rem; }
+  h2 { margin-top: 2rem; border-bottom: 1px solid #888; padding-bottom: .25rem; }
+  h3 { margin-top: 1rem; }
+  table.summary { border-collapse: collapse; margin: 1rem 0; }
+  table.summary th, table.summary td { padding: .25rem .75rem; border: 1px solid #888; text-align: right; }
+  table.summary th { text-align: left; }
+  pre.diff { background: rgba(128,128,128,.08); padding: .5rem; border-radius: 4px; overflow-x: auto; font-size: .85rem; line-height: 1.4; }
+  .add { color: #2e7d32; }
+  .rem { color: #c62828; }
+  .mod { color: #b26a00; }
+  .unchanged { color: #888; }
+  details { margin: .25rem 0; }
+  summary { cursor: pointer; }
+  code { background: rgba(128,128,128,.15); padding: .1em .3em; border-radius: 3px; font-size: .9em; }
+</style>
+</head>
+<body>
+<h1>GTM diff: <code>before</code> → <code>after</code></h1>
+<table class="summary">
+<thead><tr><th></th><th>Added</th><th>Removed</th><th>Modified</th><th>Unchanged</th></tr></thead>
+<tbody><tr><th>Total</th><td class="add">0</td><td class="rem">0</td><td class="mod">0</td><td class="unchanged">4</td></tr>
+<tr><th>tags</th><td class="add">0</td><td class="rem">0</td><td class="mod">0</td><td class="unchanged">1</td></tr>
+<tr><th>triggers</th><td class="add">0</td><td class="rem">0</td><td class="mod">0</td><td class="unchanged">2</td></tr>
+<tr><th>variables</th><td class="add">0</td><td class="rem">0</td><td class="mod">0</td><td class="unchanged">1</td></tr>
+<tr><th>folders</th><td class="add">0</td><td class="rem">0</td><td class="mod">0</td><td class="unchanged">0</td></tr>
+<tr><th>built-in variables</th><td class="add">0</td><td class="rem">0</td><td class="mod">0</td><td class="unchanged">0</td></tr>
+<tr><th>clients</th><td class="add">0</td><td class="rem">0</td><td class="mod">0</td><td class="unchanged">0</td></tr>
+<tr><th>transformations</th><td class="add">0</td><td class="rem">0</td><td class="mod">0</td><td class="unchanged">0</td></tr>
+<tr><th>custom templates</th><td class="add">0</td><td class="rem">0</td><td class="mod">0</td><td class="unchanged">0</td></tr>
+<tr><th>zones</th><td class="add">0</td><td class="rem">0</td><td class="mod">0</td><td class="unchanged">0</td></tr>
+<tr><th>Google tag configs</th><td class="add">0</td><td class="rem">0</td><td class="mod">0</td><td class="unchanged">0</td></tr></tbody>
+</table>
+<p><em>No changes.</em></p>
+</body>
+</html>
+",
+]
+`;
+
+exports[`Parameter locations > reports real consent, priority, trigger and conversion changes without changing inputs 1`] = `
+[
+  "GTM diff: before → after
+
++0 added  -0 removed  ~3 modified  1 unchanged
+
+TAGS
+  ~ Analytics  (html)
+      ~ consentSettings.consentStatus: "needed" → "notNeeded"
+      ~ consentSettings.consentType.list[0].value: "ad_storage" → "analytics_storage"
+      ~ consentSettings.consentType.list[1].value: "analytics_storage" → "ad_storage"
+      - priority.map (was [
+  {
+    "key": "a",
+    "type": "integer",
+    "value": "1"
+  },
+  {
+    "key": "z",
+    "type": "integer",
+    "value": "2"
+  }
+])
+      ~ priority.type: "map" → "integer"
+      + priority.value = "5"
+
+TRIGGERS
+  ~ Timer  (timer)
+      - eventName.map (was [
+  {
+    "key": "a",
+    "type": "template",
+    "value": "a"
+  },
+  {
+    "key": "z",
+    "type": "template",
+    "value": "z"
+  }
+])
+      ~ eventName.type: "map" → "template"
+      + eventName.value = "new event"
+
+VARIABLES
+  ~ Conversion  (c)
+      - formatValue.convertNullToValue.map (was [
+  {
+    "key": "a",
+    "type": "template",
+    "value": "a"
+  },
+  {
+    "key": "z",
+    "type": "template",
+    "value": "z"
+  }
+])
+      ~ formatValue.convertNullToValue.type: "map" → "template"
+      + formatValue.convertNullToValue.value = "new value"
+",
+  "# GTM diff: <code>before</code> → <code>after</code>
+
+| | Added | Removed | Modified | Unchanged |
+|---|---:|---:|---:|---:|
+| Total | 0 | 0 | 3 | 1 |
+| tags | 0 | 0 | 1 | 0 |
+| triggers | 0 | 0 | 1 | 1 |
+| variables | 0 | 0 | 1 | 0 |
+| folders | 0 | 0 | 0 | 0 |
+| built-in variables | 0 | 0 | 0 | 0 |
+| clients | 0 | 0 | 0 | 0 |
+| transformations | 0 | 0 | 0 | 0 |
+| custom templates | 0 | 0 | 0 | 0 |
+| zones | 0 | 0 | 0 | 0 |
+| Google tag configs | 0 | 0 | 0 | 0 |
+
+## Tags
+
+### Modified
+<details>
+<summary><strong>Analytics</strong> <code>html</code> — 6 field changes</summary>
+
+\`\`\`diff
+~ consentSettings.consentStatus: "needed" → "notNeeded"
+~ consentSettings.consentType.list[0].value: "ad_storage" → "analytics_storage"
+~ consentSettings.consentType.list[1].value: "analytics_storage" → "ad_storage"
+- priority.map (was [
+  {
+    "key": "a",
+    "type": "integer",
+    "value": "1"
+  },
+  {
+    "key": "z",
+    "type": "integer",
+    "value": "2"
+  }
+])
+~ priority.type: "map" → "integer"
++ priority.value = "5"
+\`\`\`
+
+</details>
+
+## Triggers
+
+### Modified
+<details>
+<summary><strong>Timer</strong> <code>timer</code> — 3 field changes</summary>
+
+\`\`\`diff
+- eventName.map (was [
+  {
+    "key": "a",
+    "type": "template",
+    "value": "a"
+  },
+  {
+    "key": "z",
+    "type": "template",
+    "value": "z"
+  }
+])
+~ eventName.type: "map" → "template"
++ eventName.value = "new event"
+\`\`\`
+
+</details>
+
+## Variables
+
+### Modified
+<details>
+<summary><strong>Conversion</strong> <code>c</code> — 3 field changes</summary>
+
+\`\`\`diff
+- formatValue.convertNullToValue.map (was [
+  {
+    "key": "a",
+    "type": "template",
+    "value": "a"
+  },
+  {
+    "key": "z",
+    "type": "template",
+    "value": "z"
+  }
+])
+~ formatValue.convertNullToValue.type: "map" → "template"
++ formatValue.convertNullToValue.value = "new value"
+\`\`\`
+
+</details>
+
+",
+  "<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>GTM diff</title>
+<style>
+  :root { color-scheme: light dark; }
+  body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; max-width: 1000px; margin: 2rem auto; padding: 0 1rem; }
+  h1 { font-size: 1.4rem; }
+  h2 { margin-top: 2rem; border-bottom: 1px solid #888; padding-bottom: .25rem; }
+  h3 { margin-top: 1rem; }
+  table.summary { border-collapse: collapse; margin: 1rem 0; }
+  table.summary th, table.summary td { padding: .25rem .75rem; border: 1px solid #888; text-align: right; }
+  table.summary th { text-align: left; }
+  pre.diff { background: rgba(128,128,128,.08); padding: .5rem; border-radius: 4px; overflow-x: auto; font-size: .85rem; line-height: 1.4; }
+  .add { color: #2e7d32; }
+  .rem { color: #c62828; }
+  .mod { color: #b26a00; }
+  .unchanged { color: #888; }
+  details { margin: .25rem 0; }
+  summary { cursor: pointer; }
+  code { background: rgba(128,128,128,.15); padding: .1em .3em; border-radius: 3px; font-size: .9em; }
+</style>
+</head>
+<body>
+<h1>GTM diff: <code>before</code> → <code>after</code></h1>
+<table class="summary">
+<thead><tr><th></th><th>Added</th><th>Removed</th><th>Modified</th><th>Unchanged</th></tr></thead>
+<tbody><tr><th>Total</th><td class="add">0</td><td class="rem">0</td><td class="mod">3</td><td class="unchanged">1</td></tr>
+<tr><th>tags</th><td class="add">0</td><td class="rem">0</td><td class="mod">1</td><td class="unchanged">0</td></tr>
+<tr><th>triggers</th><td class="add">0</td><td class="rem">0</td><td class="mod">1</td><td class="unchanged">1</td></tr>
+<tr><th>variables</th><td class="add">0</td><td class="rem">0</td><td class="mod">1</td><td class="unchanged">0</td></tr>
+<tr><th>folders</th><td class="add">0</td><td class="rem">0</td><td class="mod">0</td><td class="unchanged">0</td></tr>
+<tr><th>built-in variables</th><td class="add">0</td><td class="rem">0</td><td class="mod">0</td><td class="unchanged">0</td></tr>
+<tr><th>clients</th><td class="add">0</td><td class="rem">0</td><td class="mod">0</td><td class="unchanged">0</td></tr>
+<tr><th>transformations</th><td class="add">0</td><td class="rem">0</td><td class="mod">0</td><td class="unchanged">0</td></tr>
+<tr><th>custom templates</th><td class="add">0</td><td class="rem">0</td><td class="mod">0</td><td class="unchanged">0</td></tr>
+<tr><th>zones</th><td class="add">0</td><td class="rem">0</td><td class="mod">0</td><td class="unchanged">0</td></tr>
+<tr><th>Google tag configs</th><td class="add">0</td><td class="rem">0</td><td class="mod">0</td><td class="unchanged">0</td></tr></tbody>
+</table>
+<h2>Tags</h2>
+<h3 class="mod">Modified</h3>
+<details>
+<summary><strong>Analytics</strong> <code>html</code> — 6 field changes</summary>
+<pre class="diff">
+<span class="mod">~ consentSettings.consentStatus: &quot;needed&quot; → &quot;notNeeded&quot;</span>
+<span class="mod">~ consentSettings.consentType.list[0].value: &quot;ad_storage&quot; → &quot;analytics_storage&quot;</span>
+<span class="mod">~ consentSettings.consentType.list[1].value: &quot;analytics_storage&quot; → &quot;ad_storage&quot;</span>
+<span class="rem">- priority.map (was [
+  {
+    &quot;key&quot;: &quot;a&quot;,
+    &quot;type&quot;: &quot;integer&quot;,
+    &quot;value&quot;: &quot;1&quot;
+  },
+  {
+    &quot;key&quot;: &quot;z&quot;,
+    &quot;type&quot;: &quot;integer&quot;,
+    &quot;value&quot;: &quot;2&quot;
+  }
+])</span>
+<span class="mod">~ priority.type: &quot;map&quot; → &quot;integer&quot;</span>
+<span class="add">+ priority.value = &quot;5&quot;</span>
+</pre>
+</details>
+<h2>Triggers</h2>
+<h3 class="mod">Modified</h3>
+<details>
+<summary><strong>Timer</strong> <code>timer</code> — 3 field changes</summary>
+<pre class="diff">
+<span class="rem">- eventName.map (was [
+  {
+    &quot;key&quot;: &quot;a&quot;,
+    &quot;type&quot;: &quot;template&quot;,
+    &quot;value&quot;: &quot;a&quot;
+  },
+  {
+    &quot;key&quot;: &quot;z&quot;,
+    &quot;type&quot;: &quot;template&quot;,
+    &quot;value&quot;: &quot;z&quot;
+  }
+])</span>
+<span class="mod">~ eventName.type: &quot;map&quot; → &quot;template&quot;</span>
+<span class="add">+ eventName.value = &quot;new event&quot;</span>
+</pre>
+</details>
+<h2>Variables</h2>
+<h3 class="mod">Modified</h3>
+<details>
+<summary><strong>Conversion</strong> <code>c</code> — 3 field changes</summary>
+<pre class="diff">
+<span class="rem">- formatValue.convertNullToValue.map (was [
+  {
+    &quot;key&quot;: &quot;a&quot;,
+    &quot;type&quot;: &quot;template&quot;,
+    &quot;value&quot;: &quot;a&quot;
+  },
+  {
+    &quot;key&quot;: &quot;z&quot;,
+    &quot;type&quot;: &quot;template&quot;,
+    &quot;value&quot;: &quot;z&quot;
+  }
+])</span>
+<span class="mod">~ formatValue.convertNullToValue.type: &quot;map&quot; → &quot;template&quot;</span>
+<span class="add">+ formatValue.convertNullToValue.value = &quot;new value&quot;</span>
+</pre>
+</details>
+
+</body>
+</html>
+",
+]
+`;

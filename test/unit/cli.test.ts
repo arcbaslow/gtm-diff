@@ -25,6 +25,20 @@ function cli(...args: string[]) {
 }
 
 describe('diff command contract', () => {
+  it('returns zero for parameter map permutations and relocated trigger references', () => {
+    const result = cli(
+      'diff',
+      'test/fixtures/parameter-locations-before.json',
+      'test/fixtures/parameter-locations-after.json',
+      '--strict',
+      '--exit-code',
+      '--no-color',
+    );
+    expect(result.status).toBe(0);
+    expect(result.stderr).toBe('');
+    expect(result.stdout).toContain('No changes.');
+  });
+
   it('accepts all documented resource collections in strict mode and counts their changes', () => {
     const before = 'test/fixtures/resources-before.json';
     const after = 'test/fixtures/resources-after.json';
