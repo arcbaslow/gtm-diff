@@ -7,6 +7,10 @@ Versioning is [semantic](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+### Added
+
+- Document and enforce the diff CLI exit contract: success `0`, opt-in differences `1`, command/input/output errors `2`; validate the before file first and sanitize diagnostics. Add offline command-process coverage and a CI status-handling recipe.
+
 ### Fixed
 
 - Escape Markdown HTML summaries and code labels correctly, sanitize report source labels, and visibly encode C1 controls and Unicode line separators in diff paths and values.

@@ -1,0 +1,26 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`diff command contract > returns zero when unchanged and one for detected changes with --exit-code 1`] = `
+"GTM diff: minimal-before.json → minimal-after.json
+
++2 added  -1 removed  ~2 modified  3 unchanged
+
+TAGS
+  + Meta Pixel  (html)
+  - Old Pixel  (html)
+  ~ GA4 - Page View  (gaawe)
+      + parameter[2] = {
+  "key": "sendPageView",
+  "type": "boolean",
+  "value": "true"
+}
+
+VARIABLES
+  ~ GA4 Config  (gtcs)
+      ~ parameter[0].value: "G-XXXXXX" → "G-YYYYYY"
+
+BUILT-IN VARIABLES
+  + Page Path  (pagePath)
+
+"
+`;

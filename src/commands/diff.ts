@@ -1,11 +1,12 @@
 import { writeFile } from 'node:fs/promises';
 import { basename } from 'node:path';
-import { Args, Command, Flags } from '@oclif/core';
+import { Args, Command, Errors, Flags } from '@oclif/core';
 import { diffExports, hasChanges } from '../core/diff.js';
 import { loadGtmExport } from '../core/parser.js';
 import { renderConsole } from '../reporters/console.js';
 import { renderHtml } from '../reporters/html.js';
 import { renderMarkdown } from '../reporters/markdown.js';
+import { sanitizeLabel } from '../reporters/shared.js';
 
 export default class Diff extends Command {
   static override description =
@@ -45,7 +46,7 @@ export default class Diff extends Command {
       default: false,
     }),
     'exit-code': Flags.boolean({
-      description: 'Exit with code 1 when differences are found (useful in CI).',
+      description: 'Exit 1 for differences, 0 for no changes; command errors exit 2.',
       default: false,
     }),
   };
@@ -53,10 +54,9 @@ export default class Diff extends Command {
   async run(): Promise<void> {
     const { args, flags } = await this.parse(Diff);
 
-    const [before, after] = await Promise.all([
-      loadGtmExport(args.before),
-      loadGtmExport(args.after),
-    ]);
+    // Validate the baseline first so two invalid files always report the same error.
+    const before = await loadGtmExport(args.before);
+    const after = await loadGtmExport(args.after);
 
     const diff = diffExports(before, after, {
       before: basename(args.before),
@@ -67,7 +67,7 @@ export default class Diff extends Command {
 
     if (flags.output) {
       await writeFile(flags.output, rendered, 'utf8');
-      this.log(`Wrote ${flags.format} report to ${flags.output}`);
+      this.log(`Wrote ${flags.format} report to ${sanitizeLabel(flags.output)}`);
     } else {
       this.log(rendered);
     }
@@ -75,6 +75,12 @@ export default class Diff extends Command {
     if (flags['exit-code'] && hasChanges(diff)) {
       this.exit(1);
     }
+  }
+
+  protected override async catch(error: unknown): Promise<void> {
+    if (error instanceof Errors.ExitError) throw error;
+    const message = error instanceof Error ? error.message : String(error);
+    this.error(sanitizeLabel(message), { exit: 2 });
   }
 
   private render(
