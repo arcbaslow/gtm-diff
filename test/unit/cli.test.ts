@@ -193,6 +193,7 @@ describe('diff command contract', () => {
     { args: ['missing-before.json', 'missing-after.json'], message: 'Could not read file' },
     { args: [before, 'test/fixtures/invalid-json.json'], message: 'Invalid JSON' },
     { args: [before, 'test/fixtures/malformed-entry-after.json'], message: 'tag[0]' },
+    { args: [before, 'test/fixtures/depth-limit-after.json'], message: 'nesting levels' },
     { args: [before, after, '--output', 'test/fixtures'], message: 'fixtures' },
   ])('returns two for command, input or output errors: $message', ({ args, message }) => {
     const result = cli('diff', ...args);

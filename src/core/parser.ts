@@ -1,4 +1,5 @@
-import { readFile } from 'node:fs/promises';
+import { createReadStream } from 'node:fs';
+import { assertInputLimits, MAX_EXPORT_BYTES } from './input-limits.js';
 import type { GtmBuiltInVariable, GtmEntity, GtmExport, GtmGtagConfig } from '../types/gtm.js';
 import { ENTITY_KINDS } from '../types/gtm.js';
 import { builtInIdentity, gtagConfigIdentity, identityKey } from './identity.js';
@@ -25,7 +26,17 @@ export class GtmParseError extends Error {
 export async function loadGtmExport(path: string): Promise<GtmExport> {
   let raw: string;
   try {
-    raw = await readFile(path, 'utf8');
+    const chunks: Buffer[] = [];
+    let size = 0;
+    for await (const chunk of createReadStream(path, { highWaterMark: 64 * 1024 })) {
+      const bytes = chunk as Buffer;
+      size += bytes.length;
+      if (size > MAX_EXPORT_BYTES) throw new Error(`Export exceeds ${MAX_EXPORT_BYTES} bytes.`);
+      chunks.push(bytes);
+    }
+    raw = Buffer.concat(chunks, size).toString('utf8');
+    // Accept one UTF-8 BOM at the start, without changing authored string data.
+    if (raw.startsWith('\uFEFF')) raw = raw.slice(1);
   } catch (err) {
     const reason = err instanceof Error ? err.message : String(err);
     throw new GtmParseError(`Could not read file: ${reason}`, path);
@@ -43,6 +54,9 @@ export async function loadGtmExport(path: string): Promise<GtmExport> {
 }
 
 export function validateGtmExport(value: unknown, source: string): GtmExport {
+  assertInputLimits(value, (reason) => {
+    throw new GtmParseError(reason, source);
+  });
   function fail(path: string, reason: string): never {
     throw new GtmParseError(`${path}: ${reason}`, source);
   }

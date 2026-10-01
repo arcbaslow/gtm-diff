@@ -9,6 +9,7 @@ Versioning is [semantic](https://semver.org/spec/v2.0.0.html).
 
 ### Added
 
+- Bound exports to 32 MiB, 128 object/array nesting levels and 500,000 values before recursive normalization. Accept a single leading UTF-8 BOM without changing embedded string data.
 - Add `--format json` and library `renderJson` with a version 1 report contract, explicit coverage, full normalized change data, deterministic ordering and reversible escaping for untrusted strings.
 - Compare clients, transformations, custom templates, zones and Google tag configs with typed resources, deterministic ordering, consumed-shape validation and escaped reports. Resolve client/transformation folders and zone evaluation triggers; match nameless Google tag configs by type and source ID. Preserve template text as inert data and retain gallery metadata.
 - Report omitted container-version fields in all formats and expose them through the library; add `--strict` to return status 2 before writing a report when coverage is incomplete.

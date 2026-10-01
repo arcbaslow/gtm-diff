@@ -1,0 +1,100 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`bounded inputs > accepts the depth fixture before and rejects excessive unknown-field nesting after 1`] = `
+"{
+  "containerMeta": [],
+  "coverage": {
+    "complete": true,
+    "omittedFields": {
+      "after": [],
+      "before": []
+    }
+  },
+  "hasChanges": false,
+  "kinds": [
+    {
+      "added": [],
+      "kind": "tag",
+      "modified": [],
+      "removed": [],
+      "unchanged": 0
+    },
+    {
+      "added": [],
+      "kind": "trigger",
+      "modified": [],
+      "removed": [],
+      "unchanged": 0
+    },
+    {
+      "added": [],
+      "kind": "variable",
+      "modified": [],
+      "removed": [],
+      "unchanged": 0
+    },
+    {
+      "added": [],
+      "kind": "folder",
+      "modified": [],
+      "removed": [],
+      "unchanged": 0
+    },
+    {
+      "added": [],
+      "kind": "builtInVariable",
+      "modified": [],
+      "removed": [],
+      "unchanged": 0
+    },
+    {
+      "added": [],
+      "kind": "client",
+      "modified": [],
+      "removed": [],
+      "unchanged": 0
+    },
+    {
+      "added": [],
+      "kind": "transformation",
+      "modified": [],
+      "removed": [],
+      "unchanged": 0
+    },
+    {
+      "added": [],
+      "kind": "customTemplate",
+      "modified": [],
+      "removed": [],
+      "unchanged": 0
+    },
+    {
+      "added": [],
+      "kind": "zone",
+      "modified": [],
+      "removed": [],
+      "unchanged": 0
+    },
+    {
+      "added": [],
+      "kind": "gtagConfig",
+      "modified": [],
+      "removed": [],
+      "unchanged": 0
+    }
+  ],
+  "schemaVersion": 1,
+  "source": {
+    "label": "before"
+  },
+  "summary": {
+    "added": 0,
+    "modified": 0,
+    "removed": 0,
+    "unchanged": 0
+  },
+  "target": {
+    "label": "after"
+  }
+}"
+`;
