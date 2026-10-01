@@ -15,10 +15,16 @@ permissions:
 jobs:
   build:
     runs-on: ubuntu-latest
+    outputs:
+      commit: ${{ steps.source.outputs.commit }}
     steps:
       - uses: actions/checkout@v7
         with:
-          ref: ${{ github.event.release.tag_name }}
+          ref: refs/tags/${{ github.event.release.tag_name || inputs.tag }}
+
+      - name: Record the selected commit
+        id: source
+        run: echo "commit=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
 
       - uses: actions/setup-node@v7
         with:
@@ -41,10 +47,11 @@ jobs:
           fi
           echo "OK: tag $TAG matches package.json version $PKG"
 
-      - name: Typecheck, lint and test
+      - name: Typecheck, lint, format and test
         run: |
           npm run typecheck
           npm run lint
+          npm run format:check
           npm test
 
       - name: Pack
@@ -66,7 +73,7 @@ jobs:
     steps:
       - uses: actions/checkout@v7
         with:
-          ref: ${{ github.event.release.tag_name }}
+          ref: ${{ needs.build.outputs.commit }}
 
       - uses: actions/setup-node@v7
         with:
