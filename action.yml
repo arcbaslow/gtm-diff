@@ -1,0 +1,74 @@
+name: GTM export diff
+description: Compare local GTM exports and expose deterministic reports without GTM credentials.
+inputs:
+  before:
+    description: Local baseline export path, relative to the workspace or absolute.
+    required: true
+  after:
+    description: Local proposed export path, relative to the workspace or absolute.
+    required: true
+  node-version:
+    description: Supported Node version (20, 22 or 24).
+    default: '24'
+  strict:
+    description: Reject omitted container-version fields.
+    default: 'true'
+  fail-on-change:
+    description: Fail after writing reports when differences exist.
+    default: 'false'
+  details:
+    description: Include full normalized configurations in HTML and Markdown.
+    default: 'false'
+  summary:
+    description: Append counts and coverage status to the job summary.
+    default: 'true'
+outputs:
+  has-changes:
+    description: Whether compared data changed.
+    value: ${{ steps.compare.outputs.has-changes }}
+  complete:
+    description: Whether coverage has no omitted fields.
+    value: ${{ steps.compare.outputs.complete }}
+  exit-code:
+    description: Comparison status (0 unchanged, 1 changed); operational errors fail the Action.
+    value: ${{ steps.compare.outputs.exit-code }}
+  report-directory:
+    description: Fresh runner-temporary directory containing all reports.
+    value: ${{ steps.compare.outputs.report-directory }}
+  report-json:
+    description: Path to the versioned JSON report.
+    value: ${{ steps.compare.outputs.report-json }}
+  report-markdown:
+    description: Path to the unbounded Markdown report.
+    value: ${{ steps.compare.outputs.report-markdown }}
+  report-html:
+    description: Path to the standalone HTML report.
+    value: ${{ steps.compare.outputs.report-html }}
+  report-comment:
+    description: Path to a Markdown comment bounded to 60000 UTF-8 bytes.
+    value: ${{ steps.compare.outputs.report-comment }}
+runs:
+  using: composite
+  steps:
+    - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7
+      with:
+        node-version: ${{ inputs.node-version }}
+    - name: Build the pinned tool
+      shell: bash
+      working-directory: ${{ github.action_path }}
+      run: |
+        npm ci
+        npm run build
+    - name: Compare local exports
+      id: compare
+      shell: bash
+      working-directory: ${{ github.workspace }}
+      env:
+        GTM_DIFF_ACTION_PATH: ${{ github.action_path }}
+        GTM_DIFF_BEFORE: ${{ inputs.before }}
+        GTM_DIFF_AFTER: ${{ inputs.after }}
+        GTM_DIFF_STRICT: ${{ inputs.strict }}
+        GTM_DIFF_FAIL_ON_CHANGE: ${{ inputs.fail-on-change }}
+        GTM_DIFF_DETAILS: ${{ inputs.details }}
+        GTM_DIFF_SUMMARY: ${{ inputs.summary }}
+      run: node "$GTM_DIFF_ACTION_PATH/scripts/run-action.mjs"

@@ -9,6 +9,7 @@ Versioning is [semantic](https://semver.org/spec/v2.0.0.html).
 
 ### Added
 
+- Add a composite GitHub Action with strict coverage by default, explicit comparison/report outputs, bounded comment files and aggregate job summaries. Pin workflow dependencies to verified commits and restrict test-workflow permissions.
 - Add opt-in full Markdown/HTML configurations and values, plus byte-bounded Markdown comments with stable markers, explicit omission notices and optional HTTPS artifact links.
 - Bound exports to 32 MiB, 128 object/array nesting levels and 500,000 values before recursive normalization. Accept a single leading UTF-8 BOM without changing embedded string data.
 - Add `--format json` and library `renderJson` with a version 1 report contract, explicit coverage, full normalized change data, deterministic ordering and reversible escaping for untrusted strings.

@@ -53,9 +53,18 @@ somewhere the operator did not ask for.
 
 ## Credentials
 
-There are none. v0.1 takes two JSON files and touches no network and no
-API. Nothing is read from the environment and nothing is written outside
-the path you pass to `--output`.
+The diff command requires no credentials. It takes two local JSON files,
+makes no network or API calls, and writes its report only to the requested
+output (or stdout).
+
+The optional GitHub Action reads explicitly configured path/boolean inputs
+and runner output-file settings from the environment. It writes reports to
+a fresh runner-temporary directory and appends paths/status to
+`GITHUB_OUTPUT`. Its optional job summary contains only counts and coverage
+status. It reads no GTM credentials and does not upload reports or post
+comments. Action setup installs the pinned tool's dependencies; comparison
+code and tests remain offline. Caller-configured artifact uploads can
+disclose export values, including secrets. See the [Action contract](docs/ACTION.md).
 
 That changes at v0.3. `apply` will require a bring-your-own OAuth client,
 default to dry-run, operate only in a newly created workspace, never

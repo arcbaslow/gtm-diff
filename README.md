@@ -108,6 +108,8 @@ Omit `--exit-code` when differences are expected and the job should produce a re
 
 See the [CI contract and status-handling example](docs/CI.md). Reports do not post themselves as comments or call GitHub APIs.
 
+The repository also provides a [composite GitHub Action](docs/ACTION.md) that builds a pinned checkout, compares local files and exposes report paths and counts. It defaults to strict coverage and can optionally fail on changes. Installation needs registry access; comparison uses no network or GTM credentials.
+
 For full added/removed configurations, use `--details` with Markdown or HTML. For a bounded comment, use `--format markdown --max-report-bytes 60000`; oversized reports become an explicit compact summary with intact markup. See [details, byte limits and artifact links](docs/REPORT_DETAILS.md).
 
 For machine processing, use `--format json`. Its version 1 contract includes `schemaVersion`, `hasChanges`, coverage omissions, entity counts, full changed normalized entities and typed field paths/values. JSON escapes preserve data strings without truncation; source/target display labels are sanitized. Parsed strings remain untrusted and need escaping when rendered. See the [JSON report contract](docs/JSON_REPORT.md). The library also exports `renderJson` and `JsonReportV1`.
