@@ -3,6 +3,7 @@ import type { EntityKind, GtmExport } from '../types/gtm.js';
 import { ENTITY_KINDS } from '../types/gtm.js';
 import { normalizeExport, type NormalizedContainer, type NormalizedEntity } from './normalize.js';
 import { canonicalize } from './canonical.js';
+import { assertInputLimits } from './input-limits.js';
 
 export type EntityChange =
   | { status: 'added'; kind: EntityKind; key: string; entity: NormalizedEntity }
@@ -54,6 +55,11 @@ export function diffNormalized(
   labels: { before: string; after: string },
 ): ContainerDiff {
   // Also protect callers of this lower-level library API from inherited keys.
+  for (const input of [before, after]) {
+    assertInputLimits(input, (reason) => {
+      throw new Error(reason);
+    });
+  }
   before = canonicalize(before) as NormalizedContainer;
   after = canonicalize(after) as NormalizedContainer;
   const emptyEntities = Object.create(null) as Record<string, NormalizedEntity>;

@@ -68,6 +68,8 @@ Exit status is `0` on success (including differences when `--exit-code` is omitt
 
 ## What the comparison means
 
+Inputs are limited to 32 MiB per file, 128 object/array nesting levels and 500,000 values. Limit failures return status 2 before report output. One leading UTF-8 BOM is accepted. See [input limits and fixture coverage](docs/INPUT_LIMITS.md).
+
 | Normalization | Why it matters |
 | --- | --- |
 | Match named entities by type and name | IDs can differ between workspaces or environments; Google tag configs use type and source ID because they have no documented name |
