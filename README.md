@@ -162,6 +162,8 @@ GitHub Releases include downloadable artifacts and checksums. Package-registry p
 
 Read [CONTRIBUTING.md](CONTRIBUTING.md), run the checks above, and include a minimal reproduction for bugs. Report vulnerabilities through [SECURITY.md](SECURITY.md).
 
+The [roadmap](docs/ROADMAP.md) distinguishes implemented changes from designs and evidence still needed. Review-ready designs cover the [v0.2 read-only plan](docs/designs/PLAN.md), [dependency impact](docs/designs/IMPACT.md), and [local review and policies](docs/designs/LOCAL_REVIEW.md). These features are not implemented. `apply` remains outside this work; the [boundary record](docs/designs/APPLY_BOUNDARY.md) lists its prerequisites.
+
 ## Related tools
 
 | Project | Use it for |
