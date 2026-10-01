@@ -85,6 +85,7 @@ describe('canonical normalization', () => {
       renderHtml,
       (diff: typeof original) => renderConsole(diff, { color: false }),
       renderJson,
+      (diff: typeof original) => renderMarkdown(diff, { full: true, maxBytes: 1024 }),
     ]) {
       expect(render(reordered)).toBe(render(original));
       expect(render(original)).toMatchSnapshot();

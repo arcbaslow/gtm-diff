@@ -14,7 +14,15 @@ import {
  * `<details>` blocks so reviewers see the summary by default and can drill
  * into field-level diffs on demand.
  */
-export function renderMarkdown(diff: ContainerDiff): string {
+export type MarkdownReportOptions = {
+  full?: boolean | undefined;
+  maxBytes?: number | undefined;
+  artifactUrl?: string | undefined;
+};
+
+export const COMMENT_MARKER = '<!-- gtm-diff:report:v1 -->';
+
+export function renderMarkdown(diff: ContainerDiff, options: MarkdownReportOptions = {}): string {
   const lines: string[] = [];
   lines.push(
     `# GTM diff: <code>${escapeHtml(sanitizeLabel(diff.source.label))}</code> → <code>${escapeHtml(sanitizeLabel(diff.target.label))}</code>`,
@@ -39,7 +47,7 @@ export function renderMarkdown(diff: ContainerDiff): string {
     lines.push('');
     lines.push('```diff');
     for (const d of diff.containerMeta) {
-      lines.push(renderUnifiedDiffLine(d));
+      lines.push(renderUnifiedDiffLine(d, options.full));
     }
     lines.push('```');
     lines.push('');
@@ -47,17 +55,17 @@ export function renderMarkdown(diff: ContainerDiff): string {
 
   for (const kind of diff.kinds) {
     if (kind.added.length + kind.removed.length + kind.modified.length === 0) continue;
-    renderKindMarkdown(kind, lines);
+    renderKindMarkdown(kind, lines, options.full);
   }
 
   if (added + removed + modified === 0 && diff.containerMeta.length === 0) {
     lines.push(diff.omittedFields ? '_No changes in compared fields._' : '_No changes._');
   }
 
-  return lines.join('\n') + '\n';
+  return boundComment(diff, lines.join('\n') + '\n', options);
 }
 
-function renderKindMarkdown(kind: KindDiff, lines: string[]): void {
+function renderKindMarkdown(kind: KindDiff, lines: string[], full = false): void {
   lines.push(`## ${capitalize(KIND_LABELS[kind.kind].plural)}`);
   lines.push('');
 
@@ -66,6 +74,7 @@ function renderKindMarkdown(kind: KindDiff, lines: string[]): void {
     for (const change of kind.added) {
       const { type, name } = displayIdentity(change);
       lines.push(`- **${escapeMd(escapeHtml(name))}** <code>${escapeHtml(type)}</code>`);
+      if (full && change.status === 'added') lines.push(entityDetails(change.entity));
     }
     lines.push('');
   }
@@ -75,6 +84,7 @@ function renderKindMarkdown(kind: KindDiff, lines: string[]): void {
     for (const change of kind.removed) {
       const { type, name } = displayIdentity(change);
       lines.push(`- **${escapeMd(escapeHtml(name))}** <code>${escapeHtml(type)}</code>`);
+      if (full && change.status === 'removed') lines.push(entityDetails(change.entity));
     }
     lines.push('');
   }
@@ -91,7 +101,7 @@ function renderKindMarkdown(kind: KindDiff, lines: string[]): void {
       lines.push('');
       lines.push('```diff');
       for (const d of change.fieldDiffs) {
-        lines.push(renderUnifiedDiffLine(d));
+        lines.push(renderUnifiedDiffLine(d, full));
       }
       lines.push('```');
       lines.push('');
@@ -101,16 +111,59 @@ function renderKindMarkdown(kind: KindDiff, lines: string[]): void {
   }
 }
 
-function renderUnifiedDiffLine(d: {
-  type: string;
-  path: ReadonlyArray<string | number>;
-  value?: unknown;
-  oldValue?: unknown;
-}): string {
+function renderUnifiedDiffLine(
+  d: {
+    type: string;
+    path: ReadonlyArray<string | number>;
+    value?: unknown;
+    oldValue?: unknown;
+  },
+  full = false,
+): string {
   const path = formatPath(d.path);
-  if (d.type === 'CREATE') return `+ ${path} = ${formatValue(d.value)}`;
-  if (d.type === 'REMOVE') return `- ${path} (was ${formatValue(d.oldValue)})`;
-  return `~ ${path}: ${formatValue(d.oldValue)} → ${formatValue(d.value)}`;
+  if (d.type === 'CREATE') return `+ ${path} = ${formatValue(d.value, full)}`;
+  if (d.type === 'REMOVE') return `- ${path} (was ${formatValue(d.oldValue, full)})`;
+  return `~ ${path}: ${formatValue(d.oldValue, full)} → ${formatValue(d.value, full)}`;
+}
+
+function entityDetails(entity: Record<string, unknown>): string {
+  return `\n<details><summary>Full normalized configuration</summary>\n<pre>${escapeHtml(formatValue(entity, true))}</pre>\n</details>\n`;
+}
+
+function boundComment(diff: ContainerDiff, body: string, options: MarkdownReportOptions): string {
+  if (options.maxBytes === undefined) {
+    if (options.artifactUrl !== undefined) throw new Error('artifactUrl requires maxBytes.');
+    return body;
+  }
+  if (!Number.isSafeInteger(options.maxBytes) || options.maxBytes < 1024) {
+    throw new Error('Markdown maxBytes must be an integer of at least 1024.');
+  }
+  let footer = '';
+  if (options.artifactUrl !== undefined) {
+    const url = new URL(options.artifactUrl);
+    if (
+      url.protocol !== 'https:' ||
+      url.username ||
+      url.password ||
+      sanitizeLabel(options.artifactUrl) !== options.artifactUrl
+    ) {
+      throw new Error('The artifact URL must be HTTPS without credentials or controls.');
+    }
+    footer = `\n<p><a href="${escapeHtml(url.href)}">Full report artifact</a></p>\n`;
+  }
+  const complete = `${COMMENT_MARKER}\n${body}${footer}`;
+  if (Buffer.byteLength(complete, 'utf8') <= options.maxBytes) return complete;
+  const summary = diff.summary;
+  const compact =
+    `${COMMENT_MARKER}\n# GTM diff\n\n` +
+    `Added: ${summary.added}; removed: ${summary.removed}; modified: ${summary.modified}; unchanged: ${summary.unchanged}.\n\n` +
+    `Container metadata changes: ${diff.containerMeta.length}. Coverage: ${diff.omittedFields ? 'incomplete' : 'complete under the comparison policy'}.\n\n` +
+    `Source labels and details omitted: the full report exceeds ${options.maxBytes} UTF-8 bytes. Generate an unbounded report for the full comparison.\n` +
+    footer;
+  if (Buffer.byteLength(compact, 'utf8') > options.maxBytes) {
+    throw new Error('The artifact URL is too long for the Markdown byte budget.');
+  }
+  return compact;
 }
 
 function escapeMd(s: string): string {

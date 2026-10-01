@@ -84,14 +84,14 @@ export function formatPath(path: ReadonlyArray<string | number>): string {
   return sanitizeLabel(out) || '(root)';
 }
 
-export function formatValue(value: unknown): string {
+export function formatValue(value: unknown, full = false): string {
   if (value === undefined) return 'undefined';
   if (typeof value === 'string') return safeJson(value);
   if (typeof value === 'number' || typeof value === 'boolean' || value === null) {
     return String(value);
   }
   const json = safeJson(value, 2);
-  return json.length > 200 ? `${json.slice(0, 200)}…` : json;
+  return !full && json.length > 200 ? `${json.slice(0, 200)}…` : json;
 }
 
 function safeJson(value: unknown, space?: number): string {

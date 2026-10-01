@@ -30,6 +30,28 @@ function cli(...args: string[]) {
 }
 
 describe('diff command contract', () => {
+  it('emits bounded Markdown comments and opt-in HTML details', () => {
+    const comment = cli(
+      'diff',
+      before,
+      after,
+      '--format',
+      'markdown',
+      '--details',
+      '--max-report-bytes',
+      '1024',
+      '--exit-code',
+    );
+    expect(comment.status).toBe(1);
+    expect(comment.stderr).toBe('');
+    expect(Buffer.byteLength(comment.stdout)).toBeLessThanOrEqual(1024);
+    expect(comment.stdout).toContain('<!-- gtm-diff:report:v1 -->');
+    expect(comment.stdout).toContain('details omitted');
+    const html = cli('diff', before, after, '--format', 'html', '--details');
+    expect(html.status).toBe(0);
+    expect(html.stdout).toContain('Full normalized configuration');
+  });
+
   it.each([
     { a: before, b: after, status: 1, changed: true, complete: true },
     { a: before, b: before, status: 0, changed: false, complete: true },
@@ -190,6 +212,12 @@ describe('diff command contract', () => {
     { args: [before], message: 'required' },
     { args: [before, after, '--unknown'], message: '--unknown' },
     { args: [before, after, '--format', 'xml'], message: '--format=xml' },
+    { args: [before, after, '--details'], message: '--details requires' },
+    { args: [before, after, '--max-report-bytes', '1024'], message: '--max-report-bytes requires' },
+    {
+      args: [before, after, '--format', 'markdown', '--artifact-url', 'https://example.invalid'],
+      message: '--artifact-url requires',
+    },
     { args: ['missing-before.json', 'missing-after.json'], message: 'Could not read file' },
     { args: [before, 'test/fixtures/invalid-json.json'], message: 'Invalid JSON' },
     { args: [before, 'test/fixtures/malformed-entry-after.json'], message: 'tag[0]' },

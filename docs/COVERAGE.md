@@ -26,7 +26,7 @@ Folder IDs absent from a partial export remain their raw ID; missing zone evalua
 
 Zone child-container and whitelist array ordering is preserved pending evidence for different semantics. Gallery IDs/signatures and child-container public IDs are retained because they identify referenced content rather than the local export environment. None of these reference limits are classified as omitted fields: their values are compared, though raw IDs may introduce noise. Strict mode does not certify cross-environment semantic equivalence.
 
-The library exports the five new resource types and `gtagConfigIdentity` for the nameless resource. `identityKey` remains the named-entity helper. `normalizeExport` supplies maps for all ten kinds; `diffNormalized` treats absent new-kind maps in older normalized objects as empty. Human-readable reporters retain their existing abbreviated object values and name-only added/removed sections; full human-report detail design remains X7. The [JSON report](JSON_REPORT.md) includes full normalized changed entities and untruncated values.
+The library exports the five new resource types and `gtagConfigIdentity` for the nameless resource. `identityKey` remains the named-entity helper. `normalizeExport` supplies maps for all ten kinds; `diffNormalized` treats absent new-kind maps in older normalized objects as empty. Human-readable defaults retain abbreviated object values and name-only added/removed sections; [opt-in full details](REPORT_DETAILS.md) are available in Markdown/HTML. The [JSON report](JSON_REPORT.md) includes full normalized changed entities and untruncated values.
 
 ## Omitted fields and strict mode
 

@@ -1,0 +1,172 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`report details and comment budgets > adds escaped full configurations only when requested 1`] = `
+"# GTM diff: <code>before</code> → <code>after</code>
+
+| | Added | Removed | Modified | Unchanged |
+|---|---:|---:|---:|---:|
+| Total | 1 | 1 | 2 | 0 |
+| tags | 1 | 1 | 1 | 0 |
+| triggers | 0 | 0 | 0 | 0 |
+| variables | 0 | 0 | 0 | 0 |
+| folders | 0 | 0 | 0 | 0 |
+| built-in variables | 0 | 0 | 1 | 0 |
+| clients | 0 | 0 | 0 | 0 |
+| transformations | 0 | 0 | 0 | 0 |
+| custom templates | 0 | 0 | 0 | 0 |
+| zones | 0 | 0 | 0 | 0 |
+| Google tag configs | 0 | 0 | 0 | 0 |
+
+## Container metadata
+
+\`\`\`diff
+~ ["</pre><script>alert(1)</script>\\u009b[2A\\u2028"]: "old" → "new\\u009b[2A\\u0085\\u2028\\n\`\`\`\\n<script>alert(1)</script>"
+~ notes: "old" → "new\\u009b[2A\\u0085\\u2028\\n\`\`\`\\n<script>alert(1)</script>"
+\`\`\`
+
+## Tags
+
+### Added
+- **after &lt;img src=x onerror=alert\\(1\\)&gt; &amp; \\\`label\\\`\\[2A** <code>html\`&lt;b&gt;&amp;</code>
+
+<details><summary>Full normalized configuration</summary>
+<pre>{
+  &quot;name&quot;: &quot;after &lt;img src=x onerror=alert(1)&gt; &amp; \`label\`\\u001b[2A&quot;,
+  &quot;type&quot;: &quot;html\`&lt;b&gt;&amp;&quot;
+}</pre>
+</details>
+
+
+### Removed
+- **before &lt;img src=x onerror=alert\\(1\\)&gt; &amp; \\\`label\\\`\\[2A** <code>html\`&lt;b&gt;&amp;</code>
+
+<details><summary>Full normalized configuration</summary>
+<pre>{
+  &quot;name&quot;: &quot;before &lt;img src=x onerror=alert(1)&gt; &amp; \`label\`\\u001b[2A&quot;,
+  &quot;type&quot;: &quot;html\`&lt;b&gt;&amp;&quot;
+}</pre>
+</details>
+
+
+### Modified
+<details>
+<summary><strong>&lt;img src=x onerror=alert(1)&gt; &amp; \`label\`[2A</strong> <code>html\`&lt;b&gt;&amp;</code> — 3 field changes</summary>
+
+\`\`\`diff
+~ ["</pre><script>alert(1)</script>\\u009b[2A\\u2028"]: "old" → "new\\u009b[2A\\u0085\\u2028\\n\`\`\`\\n<script>alert(1)</script>"
+~ notes: "old" → "new\\u009b[2A\\u0085\\u2028\\n\`\`\`\\n<script>alert(1)</script>"
+~ parameter[0].value: "old" → "new\\u009b[2A\\u0085\\u2028\\n\`\`\`\\n<script>alert(1)</script>"
+\`\`\`
+
+</details>
+
+## Built-in variables
+
+### Modified
+<details>
+<summary><strong>after &lt;img src=x onerror=alert(1)&gt; &amp; \`label\`[2A</strong> <code>pageUrl</code> — 1 field change</summary>
+
+\`\`\`diff
+~ name: "before <img src=x onerror=alert(1)> & \`label\`\\u001b[2A" → "after <img src=x onerror=alert(1)> & \`label\`\\u001b[2A"
+\`\`\`
+
+</details>
+
+"
+`;
+
+exports[`report details and comment budgets > adds escaped full configurations only when requested 2`] = `
+"<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>GTM diff</title>
+<style>
+  :root { color-scheme: light dark; }
+  body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; max-width: 1000px; margin: 2rem auto; padding: 0 1rem; }
+  h1 { font-size: 1.4rem; }
+  h2 { margin-top: 2rem; border-bottom: 1px solid #888; padding-bottom: .25rem; }
+  h3 { margin-top: 1rem; }
+  table.summary { border-collapse: collapse; margin: 1rem 0; }
+  table.summary th, table.summary td { padding: .25rem .75rem; border: 1px solid #888; text-align: right; }
+  table.summary th { text-align: left; }
+  pre.diff { background: rgba(128,128,128,.08); padding: .5rem; border-radius: 4px; overflow-x: auto; font-size: .85rem; line-height: 1.4; }
+  .add { color: #2e7d32; }
+  .rem { color: #c62828; }
+  .mod { color: #b26a00; }
+  .unchanged { color: #888; }
+  details { margin: .25rem 0; }
+  summary { cursor: pointer; }
+  code { background: rgba(128,128,128,.15); padding: .1em .3em; border-radius: 3px; font-size: .9em; }
+</style>
+</head>
+<body>
+<h1>GTM diff: <code>before</code> → <code>after</code></h1>
+<table class="summary">
+<thead><tr><th></th><th>Added</th><th>Removed</th><th>Modified</th><th>Unchanged</th></tr></thead>
+<tbody><tr><th>Total</th><td class="add">1</td><td class="rem">1</td><td class="mod">2</td><td class="unchanged">0</td></tr>
+<tr><th>tags</th><td class="add">1</td><td class="rem">1</td><td class="mod">1</td><td class="unchanged">0</td></tr>
+<tr><th>triggers</th><td class="add">0</td><td class="rem">0</td><td class="mod">0</td><td class="unchanged">0</td></tr>
+<tr><th>variables</th><td class="add">0</td><td class="rem">0</td><td class="mod">0</td><td class="unchanged">0</td></tr>
+<tr><th>folders</th><td class="add">0</td><td class="rem">0</td><td class="mod">0</td><td class="unchanged">0</td></tr>
+<tr><th>built-in variables</th><td class="add">0</td><td class="rem">0</td><td class="mod">1</td><td class="unchanged">0</td></tr>
+<tr><th>clients</th><td class="add">0</td><td class="rem">0</td><td class="mod">0</td><td class="unchanged">0</td></tr>
+<tr><th>transformations</th><td class="add">0</td><td class="rem">0</td><td class="mod">0</td><td class="unchanged">0</td></tr>
+<tr><th>custom templates</th><td class="add">0</td><td class="rem">0</td><td class="mod">0</td><td class="unchanged">0</td></tr>
+<tr><th>zones</th><td class="add">0</td><td class="rem">0</td><td class="mod">0</td><td class="unchanged">0</td></tr>
+<tr><th>Google tag configs</th><td class="add">0</td><td class="rem">0</td><td class="mod">0</td><td class="unchanged">0</td></tr></tbody>
+</table>
+<h2>Container metadata</h2>
+<pre class="diff">
+<span class="mod">~ [&quot;&lt;/pre&gt;&lt;script&gt;alert(1)&lt;/script&gt;\\u009b[2A\\u2028&quot;]: &quot;old&quot; → &quot;new\\u009b[2A\\u0085\\u2028\\n\`\`\`\\n&lt;script&gt;alert(1)&lt;/script&gt;&quot;</span>
+<span class="mod">~ notes: &quot;old&quot; → &quot;new\\u009b[2A\\u0085\\u2028\\n\`\`\`\\n&lt;script&gt;alert(1)&lt;/script&gt;&quot;</span>
+</pre>
+<h2>Tags</h2>
+<h3 class="add">Added</h3><ul>
+<li><strong>after &lt;img src=x onerror=alert(1)&gt; &amp; \`label\`[2A</strong> <code>html\`&lt;b&gt;&amp;</code><details><summary>Full normalized configuration</summary><pre>{
+  &quot;name&quot;: &quot;after &lt;img src=x onerror=alert(1)&gt; &amp; \`label\`\\u001b[2A&quot;,
+  &quot;type&quot;: &quot;html\`&lt;b&gt;&amp;&quot;
+}</pre></details></li>
+</ul>
+<h3 class="rem">Removed</h3><ul>
+<li><strong>before &lt;img src=x onerror=alert(1)&gt; &amp; \`label\`[2A</strong> <code>html\`&lt;b&gt;&amp;</code><details><summary>Full normalized configuration</summary><pre>{
+  &quot;name&quot;: &quot;before &lt;img src=x onerror=alert(1)&gt; &amp; \`label\`\\u001b[2A&quot;,
+  &quot;type&quot;: &quot;html\`&lt;b&gt;&amp;&quot;
+}</pre></details></li>
+</ul>
+<h3 class="mod">Modified</h3>
+<details>
+<summary><strong>&lt;img src=x onerror=alert(1)&gt; &amp; \`label\`[2A</strong> <code>html\`&lt;b&gt;&amp;</code> — 3 field changes</summary>
+<pre class="diff">
+<span class="mod">~ [&quot;&lt;/pre&gt;&lt;script&gt;alert(1)&lt;/script&gt;\\u009b[2A\\u2028&quot;]: &quot;old&quot; → &quot;new\\u009b[2A\\u0085\\u2028\\n\`\`\`\\n&lt;script&gt;alert(1)&lt;/script&gt;&quot;</span>
+<span class="mod">~ notes: &quot;old&quot; → &quot;new\\u009b[2A\\u0085\\u2028\\n\`\`\`\\n&lt;script&gt;alert(1)&lt;/script&gt;&quot;</span>
+<span class="mod">~ parameter[0].value: &quot;old&quot; → &quot;new\\u009b[2A\\u0085\\u2028\\n\`\`\`\\n&lt;script&gt;alert(1)&lt;/script&gt;&quot;</span>
+</pre>
+</details>
+<h2>Built-in variables</h2>
+<h3 class="mod">Modified</h3>
+<details>
+<summary><strong>after &lt;img src=x onerror=alert(1)&gt; &amp; \`label\`[2A</strong> <code>pageUrl</code> — 1 field change</summary>
+<pre class="diff">
+<span class="mod">~ name: &quot;before &lt;img src=x onerror=alert(1)&gt; &amp; \`label\`\\u001b[2A&quot; → &quot;after &lt;img src=x onerror=alert(1)&gt; &amp; \`label\`\\u001b[2A&quot;</span>
+</pre>
+</details>
+
+</body>
+</html>
+"
+`;
+
+exports[`report details and comment budgets > returns a complete bounded summary with coverage and an escaped artifact link 1`] = `
+"<!-- gtm-diff:report:v1 -->
+# GTM diff
+
+Added: 0; removed: 0; modified: 0; unchanged: 0.
+
+Container metadata changes: 0. Coverage: incomplete.
+
+Source labels and details omitted: the full report exceeds 1024 UTF-8 bytes. Generate an unbounded report for the full comparison.
+
+<p><a href="https://example.invalid/report?a=1&amp;b=2">Full report artifact</a></p>
+"
+`;
