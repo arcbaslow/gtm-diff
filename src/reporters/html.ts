@@ -13,7 +13,10 @@ import {
  * Self-contained HTML report. No external CSS, no JS. Opens in any browser,
  * attaches cleanly to CI artifacts.
  */
-export function renderHtml(diff: ContainerDiff): string {
+export function renderHtml(
+  diff: ContainerDiff,
+  options: { full?: boolean | undefined } = {},
+): string {
   const { added, removed, modified } = diff.summary;
   const body = [
     `<h1>GTM diff: <code>${escapeHtml(sanitizeLabel(diff.source.label))}</code> → <code>${escapeHtml(sanitizeLabel(diff.target.label))}</code></h1>`,
@@ -23,14 +26,14 @@ export function renderHtml(diff: ContainerDiff): string {
       ? [
           '<h2>Container metadata</h2>',
           '<pre class="diff">',
-          diff.containerMeta.map(renderUnifiedDiffLineHtml).join('\n'),
+          diff.containerMeta.map((d) => renderUnifiedDiffLineHtml(d, options.full)).join('\n'),
           '</pre>',
         ]
       : []),
     ...diff.kinds.flatMap((kind) =>
       kind.added.length + kind.removed.length + kind.modified.length === 0
         ? []
-        : renderKindHtml(kind),
+        : renderKindHtml(kind, options.full),
     ),
     added + removed + modified === 0 && diff.containerMeta.length === 0
       ? `<p><em>${diff.omittedFields ? 'No changes in compared fields.' : 'No changes.'}</em></p>`
@@ -66,7 +69,7 @@ function renderSummary(diff: ContainerDiff): string {
 </table>`;
 }
 
-function renderKindHtml(kind: KindDiff): string[] {
+function renderKindHtml(kind: KindDiff, full = false): string[] {
   const out: string[] = [];
   out.push(`<h2>${escapeHtml(capitalize(KIND_LABELS[kind.kind].plural))}</h2>`);
 
@@ -74,7 +77,9 @@ function renderKindHtml(kind: KindDiff): string[] {
     out.push('<h3 class="add">Added</h3><ul>');
     for (const c of kind.added) {
       const { type, name } = displayIdentity(c);
-      out.push(`<li><strong>${escapeHtml(name)}</strong> <code>${escapeHtml(type)}</code></li>`);
+      out.push(
+        `<li><strong>${escapeHtml(name)}</strong> <code>${escapeHtml(type)}</code>${full && c.status === 'added' ? entityDetails(c.entity) : ''}</li>`,
+      );
     }
     out.push('</ul>');
   }
@@ -82,7 +87,9 @@ function renderKindHtml(kind: KindDiff): string[] {
     out.push('<h3 class="rem">Removed</h3><ul>');
     for (const c of kind.removed) {
       const { type, name } = displayIdentity(c);
-      out.push(`<li><strong>${escapeHtml(name)}</strong> <code>${escapeHtml(type)}</code></li>`);
+      out.push(
+        `<li><strong>${escapeHtml(name)}</strong> <code>${escapeHtml(type)}</code>${full && c.status === 'removed' ? entityDetails(c.entity) : ''}</li>`,
+      );
     }
     out.push('</ul>');
   }
@@ -96,7 +103,7 @@ function renderKindHtml(kind: KindDiff): string[] {
         `<summary><strong>${escapeHtml(name)}</strong> <code>${escapeHtml(type)}</code> — ${c.fieldDiffs.length} field change${c.fieldDiffs.length === 1 ? '' : 's'}</summary>`,
       );
       out.push('<pre class="diff">');
-      out.push(c.fieldDiffs.map(renderUnifiedDiffLineHtml).join('\n'));
+      out.push(c.fieldDiffs.map((d) => renderUnifiedDiffLineHtml(d, full)).join('\n'));
       out.push('</pre>');
       out.push('</details>');
     }
@@ -104,20 +111,27 @@ function renderKindHtml(kind: KindDiff): string[] {
   return out;
 }
 
-function renderUnifiedDiffLineHtml(d: {
-  type: string;
-  path: ReadonlyArray<string | number>;
-  value?: unknown;
-  oldValue?: unknown;
-}): string {
+function renderUnifiedDiffLineHtml(
+  d: {
+    type: string;
+    path: ReadonlyArray<string | number>;
+    value?: unknown;
+    oldValue?: unknown;
+  },
+  full = false,
+): string {
   const path = escapeHtml(formatPath(d.path));
   if (d.type === 'CREATE') {
-    return `<span class="add">+ ${path} = ${escapeHtml(formatValue(d.value))}</span>`;
+    return `<span class="add">+ ${path} = ${escapeHtml(formatValue(d.value, full))}</span>`;
   }
   if (d.type === 'REMOVE') {
-    return `<span class="rem">- ${path} (was ${escapeHtml(formatValue(d.oldValue))})</span>`;
+    return `<span class="rem">- ${path} (was ${escapeHtml(formatValue(d.oldValue, full))})</span>`;
   }
-  return `<span class="mod">~ ${path}: ${escapeHtml(formatValue(d.oldValue))} → ${escapeHtml(formatValue(d.value))}</span>`;
+  return `<span class="mod">~ ${path}: ${escapeHtml(formatValue(d.oldValue, full))} → ${escapeHtml(formatValue(d.value, full))}</span>`;
+}
+
+function entityDetails(entity: Record<string, unknown>): string {
+  return `<details><summary>Full normalized configuration</summary><pre>${escapeHtml(formatValue(entity, true))}</pre></details>`;
 }
 
 function capitalize(s: string): string {

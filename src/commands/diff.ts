@@ -33,6 +33,17 @@ export default class Diff extends Command {
   };
 
   static override flags = {
+    details: Flags.boolean({
+      description: 'Include full normalized details in Markdown or HTML.',
+      default: false,
+    }),
+    'max-report-bytes': Flags.integer({
+      description: 'Bound Markdown comments in UTF-8 bytes (minimum 1024).',
+      min: 1024,
+    }),
+    'artifact-url': Flags.string({
+      description: 'HTTPS full-report link for bounded Markdown comments.',
+    }),
     strict: Flags.boolean({
       description:
         'Fail with exit 2 before writing a report when containerVersion fields are omitted.',
@@ -60,6 +71,15 @@ export default class Diff extends Command {
 
   async run(): Promise<void> {
     const { args, flags } = await this.parse(Diff);
+    if (flags.details && !['markdown', 'html'].includes(flags.format)) {
+      throw new Error('--details requires --format markdown or html.');
+    }
+    if (flags['max-report-bytes'] !== undefined && flags.format !== 'markdown') {
+      throw new Error('--max-report-bytes requires --format markdown.');
+    }
+    if (flags['artifact-url'] !== undefined && flags['max-report-bytes'] === undefined) {
+      throw new Error('--artifact-url requires --max-report-bytes.');
+    }
 
     // Validate the baseline first so two invalid files always report the same error.
     const before = await loadGtmExport(args.before);
@@ -78,7 +98,8 @@ export default class Diff extends Command {
       await writeFile(flags.output, rendered, 'utf8');
       this.log(`Wrote ${flags.format} report to ${sanitizeLabel(flags.output)}`);
     } else {
-      this.log(rendered);
+      // Bounded Markdown already has a final newline; do not exceed its byte cap.
+      this.log(flags['max-report-bytes'] !== undefined ? rendered.slice(0, -1) : rendered);
     }
 
     if (flags['exit-code'] && hasChanges(diff)) {
@@ -94,15 +115,26 @@ export default class Diff extends Command {
 
   private render(
     diff: ReturnType<typeof diffExports>,
-    flags: { format: string; 'no-color': boolean; output?: string | undefined },
+    flags: {
+      format: string;
+      'no-color': boolean;
+      output?: string | undefined;
+      details: boolean;
+      'max-report-bytes'?: number | undefined;
+      'artifact-url'?: string | undefined;
+    },
   ): string {
     switch (flags.format) {
       case 'json':
         return renderJson(diff);
       case 'markdown':
-        return renderMarkdown(diff);
+        return renderMarkdown(diff, {
+          full: flags.details,
+          maxBytes: flags['max-report-bytes'],
+          artifactUrl: flags['artifact-url'],
+        });
       case 'html':
-        return renderHtml(diff);
+        return renderHtml(diff, { full: flags.details });
       case 'console':
       default:
         return renderConsole(diff, {

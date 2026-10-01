@@ -63,6 +63,9 @@ node bin/run.js diff before.json after.json --exit-code --no-color
 | `--no-color` | Disable console ANSI colors |
 | `--exit-code` | Return `1` when differences exist; unchanged exports return `0` |
 | `--strict` | Return `2` before writing a report when container-version fields are omitted |
+| `--details` | Include full normalized configurations and values in Markdown/HTML |
+| `--max-report-bytes` | Bound a Markdown comment by UTF-8 bytes; minimum 1024 |
+| `--artifact-url` | Add an HTTPS full-report link to a bounded Markdown comment |
 
 Exit status is `0` on success (including differences when `--exit-code` is omitted), `1` for detected differences with `--exit-code`, and `2` for diff command, input or output errors. Errors go to stderr. Reports go to stdout unless `--output` is supplied; the selected file is written before returning `1`. When both inputs are invalid, the before-file error is reported first. Help returns `0`.
 
@@ -104,6 +107,8 @@ node bin/run.js diff before.json after.json --format markdown --output diff.md -
 Omit `--exit-code` when differences are expected and the job should produce a report without failing on a change. Supply `before.json` from a trusted baseline and `after.json` from the proposed change. No OAuth token is required.
 
 See the [CI contract and status-handling example](docs/CI.md). Reports do not post themselves as comments or call GitHub APIs.
+
+For full added/removed configurations, use `--details` with Markdown or HTML. For a bounded comment, use `--format markdown --max-report-bytes 60000`; oversized reports become an explicit compact summary with intact markup. See [details, byte limits and artifact links](docs/REPORT_DETAILS.md).
 
 For machine processing, use `--format json`. Its version 1 contract includes `schemaVersion`, `hasChanges`, coverage omissions, entity counts, full changed normalized entities and typed field paths/values. JSON escapes preserve data strings without truncation; source/target display labels are sanitized. Parsed strings remain untrusted and need escaping when rendered. See the [JSON report contract](docs/JSON_REPORT.md). The library also exports `renderJson` and `JsonReportV1`.
 

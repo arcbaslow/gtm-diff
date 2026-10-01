@@ -452,6 +452,51 @@ exports[`canonical normalization > renders identical snapshots across object, en
 }"
 `;
 
+exports[`canonical normalization > renders identical snapshots across object, entity and map permutations 5`] = `
+"<!-- gtm-diff:report:v1 -->
+# GTM diff: <code>before</code> → <code>after</code>
+
+| | Added | Removed | Modified | Unchanged |
+|---|---:|---:|---:|---:|
+| Total | 0 | 0 | 2 | 0 |
+| tags | 0 | 0 | 2 | 0 |
+| triggers | 0 | 0 | 0 | 0 |
+| variables | 0 | 0 | 0 | 0 |
+| folders | 0 | 0 | 0 | 0 |
+| built-in variables | 0 | 0 | 0 | 0 |
+| clients | 0 | 0 | 0 | 0 |
+| transformations | 0 | 0 | 0 | 0 |
+| custom templates | 0 | 0 | 0 | 0 |
+| zones | 0 | 0 | 0 | 0 |
+| Google tag configs | 0 | 0 | 0 | 0 |
+
+## Tags
+
+### Modified
+<details>
+<summary><strong>A</strong> <code>html</code> — 1 field change</summary>
+
+\`\`\`diff
+~ notes: "old" → "new"
+\`\`\`
+
+</details>
+<details>
+<summary><strong>Z</strong> <code>html</code> — 5 field changes</summary>
+
+\`\`\`diff
+~ extension.a: "old" → "new"
+~ extension.z: "old" → "new"
+~ notes: "old" → "new"
+~ parameter[0].map[0].value: "old" → "new"
+~ parameter[0].map[1].value: "old" → "new"
+\`\`\`
+
+</details>
+
+"
+`;
+
 exports[`canonical normalization > retains unknown parameter and condition fields 1`] = `
 [
   {
