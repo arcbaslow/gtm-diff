@@ -3,7 +3,7 @@ import { mkdtemp, readFile, rm, rmdir, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 import { diffExports } from '../../src/core/diff.js';
 import { loadGtmExport } from '../../src/core/parser.js';
 import { renderMarkdown } from '../../src/reporters/markdown.js';
@@ -12,6 +12,10 @@ import { renderJson, type JsonReportV1 } from '../../src/reporters/json.js';
 const root = fileURLToPath(new URL('../../', import.meta.url));
 const before = 'test/fixtures/minimal-before.json';
 const after = 'test/fixtures/minimal-after.json';
+
+// Some cases start several CLI processes. Keep each process bounded below,
+// but allow cold starts to finish without Vitest's shorter default racing them.
+vi.setConfig({ testTimeout: 60_000 });
 
 function cli(...args: string[]) {
   const result = spawnSync(process.execPath, ['--import', 'tsx', 'bin/dev.js', ...args], {
