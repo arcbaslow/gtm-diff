@@ -32,6 +32,8 @@ The built Action entry point was also exercised as a process against local fixtu
 
 The Action's setup, checkout and artifact example dependencies are pinned to verified commit objects. actionlint 1.7.12 passes the final tests and release workflows with optional shellcheck/pyflakes disabled. A source build inside the composite Action is intentional: it uses the reviewed revision and avoids committing generated distribution code. Installation needs registry access; comparison remains offline.
 
+Hosted verification at `124097d2d0d128b1ae55f93a150469542522a153` passed all six Ubuntu/Windows Node 20/22/24 jobs on 2026-10-01: [run 36837502565](https://github.com/arcbaslow/gtm-diff/actions/runs/36837502565). Each job passed the five required checks, exercised the composite Action and verified its report outputs. This was the tests workflow only, dispatched against `roadmap-work`; main was not changed. Commit `124097d` contains the completed design documents and roadmap status. This later verification-record update changes documentation only.
+
 ## Design coverage and limits
 
 The [plan](designs/PLAN.md), [impact](designs/IMPACT.md), and [local review/policy](designs/LOCAL_REVIEW.md) documents describe contracts, failure behavior, security boundaries, acceptance tests and remaining decisions. These complete the design pass the owner requested; they are not implemented commands or engines. [Apply](designs/APPLY_BOUNDARY.md) remains explicitly prohibited.
