@@ -5,9 +5,14 @@ on:
     branches: [main]
   pull_request:
     branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
 
 jobs:
   test:
+    timeout-minutes: 15
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
@@ -16,10 +21,10 @@ jobs:
         node-version: ["20.x", "22.x", "24.x"]
 
     steps:
-      - uses: actions/checkout@v7
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
 
       - name: Set up Node ${{ matrix.node-version }}
-        uses: actions/setup-node@v7
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7
         with:
           node-version: ${{ matrix.node-version }}
           cache: npm
@@ -41,3 +46,22 @@ jobs:
 
       - name: Verify the package builds
         run: npm run build
+
+      - name: Exercise the composite Action
+        id: comparison
+        uses: ./
+        with:
+          before: test/fixtures/resources-before.json
+          after: test/fixtures/resources-after.json
+          node-version: ${{ matrix.node-version }}
+
+      - name: Verify Action outputs
+        shell: bash
+        env:
+          DIFF_EXIT_CODE: ${{ steps.comparison.outputs.exit-code }}
+          REPORT_DIRECTORY: ${{ steps.comparison.outputs.report-directory }}
+        run: |
+          test "$DIFF_EXIT_CODE" = 1
+          test -f "$REPORT_DIRECTORY/diff.json"
+          test -f "$REPORT_DIRECTORY/diff.html"
+          test -f "$REPORT_DIRECTORY/comment.md"

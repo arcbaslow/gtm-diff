@@ -26,7 +26,7 @@ esac
 
 Upload `diff.md` as an artifact after this step. If changes should fail the job, preserve status 1 and configure artifact upload to run after a failed comparison step too. Do not interpret status 2 as an ordinary drift result or publish an old report from a previous run.
 
-The Markdown report uses a summary table, lists and collapsed details. It can be selected as a PR comment body by a separately configured integration. The CLI does not send comments, access GitHub tokens or run network requests. Review the destination before sharing: reports can include secrets present in exports. A reusable GitHub Action remains a [roadmap proposal](ROADMAP.md).
+The Markdown report uses a summary table, lists and collapsed details. It can be selected as a PR comment body by a separately configured integration. The CLI does not send comments, access GitHub tokens or run network requests. Review the destination before sharing: reports can include secrets present in exports. The [composite Action](ACTION.md) exposes artifact paths and aggregate summaries; [bounded Markdown](REPORT_DETAILS.md) provides a comment-size policy without posting anything.
 
 ## Machine-readable reports
 
