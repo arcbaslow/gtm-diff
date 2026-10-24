@@ -34,7 +34,7 @@ These normalized objects are comparison data, not GTM exports. Library consumers
 
 ## Conservative limits
 
-Special built-in trigger IDs absent from the export remain unresolved, and missing versus resolved targets remain distinguishable. No hard-coded built-in ID table is inferred. The existing name-only normalization for firing/blocking/enabling/disabling arrays and zone evaluation arrays is unchanged; its ambiguous-name policy remains a roadmap question.
+Special built-in trigger IDs absent from the export remain unresolved, and missing versus resolved targets remain distinguishable. No hard-coded built-in ID table is inferred. Firing/blocking/enabling/disabling arrays and zone evaluation arrays use the same structured references as Parameter values: `{ trigger: { type, name } }` for resolved targets and `{ unresolvedTriggerId }` for missing targets. Same-name targets of different types remain distinct.
 
 Template-backed type identifiers remain literal pending real fixtures. Generated values such as uniqueTriggerId are preserved unless explicitly represented as a recognized trigger-reference Parameter. Absent versus empty fields and ordering of consent lists remain unchanged. The parser validates consumed structures, not every semantic constraint of a specific GTM field.
 

@@ -26,7 +26,7 @@ describe('normalizeExport', () => {
     expect(entity!['path']).toBeUndefined();
   });
 
-  it('resolves firingTriggerId to names and sorts them', () => {
+  it('resolves firingTriggerId to typed identities and sorts them', () => {
     const exp = buildExport({
       tag: [{ name: 'T', type: 'html', firingTriggerId: ['200', '100'] }],
       trigger: [
@@ -36,7 +36,10 @@ describe('normalizeExport', () => {
     });
     const norm = normalizeExport(exp);
     const entity = norm.tag['html::T']!;
-    expect(entity['firingTriggerNames']).toEqual(['A-trigger', 'B-trigger']);
+    expect(entity['firingTriggerNames']).toEqual([
+      { trigger: { type: 'pageview', name: 'A-trigger' } },
+      { trigger: { type: 'pageview', name: 'B-trigger' } },
+    ]);
     expect(entity['firingTriggerId']).toBeUndefined();
   });
 

@@ -1,0 +1,29 @@
+{
+  "containerVersion": {
+    "container": {
+      "name": "Trigger references"
+    },
+    "trigger": [
+      {
+        "triggerId": "1",
+        "name": "Checkout",
+        "type": "pageview"
+      },
+      {
+        "triggerId": "2",
+        "name": "Checkout",
+        "type": "customEvent"
+      }
+    ],
+    "tag": [
+      {
+        "tagId": "3",
+        "name": "Checkout tag",
+        "type": "html",
+        "firingTriggerId": [
+          "1"
+        ]
+      }
+    ]
+  }
+}

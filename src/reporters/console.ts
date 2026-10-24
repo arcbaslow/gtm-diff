@@ -1,6 +1,13 @@
 import chalk, { Chalk } from 'chalk';
 import type { ContainerDiff, KindDiff } from '../core/diff.js';
-import { displayIdentity, formatPath, formatValue, KIND_LABELS, sanitizeLabel } from './shared.js';
+import {
+  displayFieldDiffs,
+  displayIdentity,
+  formatPath,
+  formatValue,
+  KIND_LABELS,
+  sanitizeLabel,
+} from './shared.js';
 import { coverageNotice } from './shared.js';
 
 export type ConsoleReporterOptions = {
@@ -63,7 +70,7 @@ function renderKind(kind: KindDiff, c: ReturnType<typeof buildChalk>, lines: str
     const { name, type } = displayIdentity(change);
     lines.push(`  ${c.yellow('~')} ${c.yellow(name)}  ${c.gray(`(${type})`)}`);
     if (change.status === 'modified') {
-      for (const d of change.fieldDiffs) {
+      for (const d of displayFieldDiffs(change)) {
         lines.push('      ' + renderDifference(d, c));
       }
     }

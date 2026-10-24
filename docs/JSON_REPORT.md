@@ -35,6 +35,12 @@ Added and removed entries have a full normalized `entity`. Modified entries have
 
 `path` is an array of string object keys and numeric array indices relative to the normalized entity or container metadata. A field literally named `a.b` stays one string segment; it is not dotted-path notation. Missing sides are absent properties, distinct from a present value of `null`. Values keep their JSON types, including booleans, numbers, nulls, arrays and objects.
 
+## Trigger references
+
+Version 1 uses structured trigger references in the canonical arrays `firingTriggerNames`, `blockingTriggerNames`, `disablingTriggerNames`, `enablingTriggerNames` and zone `boundary.customEvaluationTriggerNames`, and in the `value` of trigger-reference Parameters at [recognized locations](PARAMETERS.md). Resolved references contain the target type/name as `{ "trigger": { "type": "pageview", "name": "Checkout" } }`; missing targets contain `{ "unresolvedTriggerId": "missing" }`. These shapes distinguish same-name targets of different types and unresolved IDs from authored names.
+
+Lists are sorted by a canonical JSON key containing the full reference, including both type and name for resolved targets. Source IDs of resolved triggers remain excluded. Field-change paths can point inside these structured entries. Human reporters display resolved targets as `Name (type)` and missing targets as `<unresolved:id>` only at known trigger-reference locations; unknown extension fields remain ordinary JSON. Human reports, including full details, use quoted reference labels that can match authored strings with the same text. Use JSON to distinguish their data types and structures.
+
 ## Data and escaping
 
 The report preserves normalized JSON data, not the original export bytes. Normalization still removes volatile IDs and excluded metadata, resolves supported references, and orders documented unordered collections. Numbers retain the existing JavaScript parsing semantics; original numeric spelling and arbitrary precision are not preserved, and negative zero serializes as zero. Non-finite numbers in report data raise a rendering error instead of silently becoming null. Library callers must supply JSON-compatible data; undefined, bigint, symbols and functions are unsupported. The format is a comparison report, not an import file, backup or executable plan.

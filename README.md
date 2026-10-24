@@ -77,7 +77,7 @@ Inputs are limited to 32 MiB per file, 128 object/array nesting levels and 500,0
 | --- | --- |
 | Match named entities by type and name | IDs can differ between workspaces or environments; Google tag configs use type and source ID because they have no documented name |
 | Strip IDs, fingerprints, paths and other volatile fields | Export metadata does not overwhelm the review |
-| Resolve supported trigger-ID arrays and folder references to names | References remain meaningful after ID changes; tag references already use names |
+| Resolve supported trigger-ID arrays to type/name identities and folder references to names | References remain meaningful after ID changes; tag references already use names |
 | Sort keyed parameter and map collections | Serialization order does not create false changes |
 | Preserve every parameter list in authored order | E-commerce, custom and keyless list ordering is still compared |
 | Sort condition sets and object keys recursively | Equivalent JSON property and condition order produces identical reports |
@@ -88,7 +88,7 @@ A renamed entity appears as removed plus added. This is a semantic export compar
 
 Malformed entity entries, parameter trees and reference arrays fail validation with a location. Duplicate `(type, name)` identities (or built-in types), ambiguous identity keys, duplicate source IDs and duplicate keyed parameters are rejected instead of silently selecting one entry. These checks also apply to `normalizeExport` and `diffExports` library calls. Unknown fields on supported entities are retained; this is not a complete GTM schema validator.
 
-Comparison covers container metadata and all ten documented entity collections: tags, triggers, variables, folders, built-in variables, clients, transformations, custom templates, zones and Google tag configs. Template text is compared without execution. Zone evaluation trigger IDs resolve to names. Google tag configs require a nonempty `gtagConfigId`; an ID change is removed plus added. Template-backed type identifiers remain raw, so relocated template IDs can still produce differences.
+Comparison covers container metadata and all ten documented entity collections: tags, triggers, variables, folders, built-in variables, clients, transformations, custom templates, zones and Google tag configs. Template text is compared without execution. Zone evaluation trigger IDs resolve to structured type/name references, retaining explicit unresolved IDs for missing targets. Google tag configs require a nonempty `gtagConfigId`; an ID change is removed plus added. Template-backed type identifiers remain raw, so relocated template IDs can still produce differences.
 
 Documented singleton Parameters in triggers, tag priority/consent and variable conversions follow the same map/list rules as parameter arrays. Nested trigger-reference Parameters resolve to target type/name; missing or built-in targets retain explicit unresolved IDs. Tag references remain names. These newly consumed Parameter structures are validated; unknown extension fields remain uninterpreted. See the [Parameter contract](docs/PARAMETERS.md) for the normalized library representation and remaining limits.
 
@@ -112,7 +112,7 @@ The repository also provides a [composite GitHub Action](docs/ACTION.md) that bu
 
 For full added/removed configurations, use `--details` with Markdown or HTML. For a bounded comment, use `--format markdown --max-report-bytes 60000`; oversized reports become an explicit compact summary with intact markup. See [details, byte limits and artifact links](docs/REPORT_DETAILS.md).
 
-For machine processing, use `--format json`. Its version 1 contract includes `schemaVersion`, `hasChanges`, coverage omissions, entity counts, full changed normalized entities and typed field paths/values. JSON escapes preserve data strings without truncation; source/target display labels are sanitized. Parsed strings remain untrusted and need escaping when rendered. See the [JSON report contract](docs/JSON_REPORT.md). The library also exports `renderJson` and `JsonReportV1`.
+For machine processing, use `--format json`. Its version 1 contract includes `schemaVersion`, `hasChanges`, coverage omissions, entity counts, full changed normalized entities and typed field paths/values. Trigger-reference arrays and Parameter values use `{ trigger: { type, name } }` for resolved targets and `{ unresolvedTriggerId }` for missing targets. JSON escapes preserve data strings without truncation; source/target display labels are sanitized. Parsed strings remain untrusted and need escaping when rendered. See the [JSON report contract](docs/JSON_REPORT.md). The library also exports `renderJson` and `JsonReportV1`.
 
 ## Use as a library
 

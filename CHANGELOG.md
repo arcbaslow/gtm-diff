@@ -19,10 +19,13 @@ Versioning is [semantic](https://semver.org/spec/v2.0.0.html).
 
 ### Changed
 
+- Change normalized trigger arrays returned by `normalizeExport` and `diffExports` to hold structured references instead of names.
+- Remove the unused `triggerIdToName` field from the exported `buildReferenceIndex` result.
 - Upgrade development testing to Vitest 4.1.11 and Vite 6.4.3, removing the remaining audited test-tool vulnerabilities while retaining Node 20/22/24 support and unchanged report snapshots.
 
 ### Fixed
 
+- Resolve trigger ID lists by type and name so same-name retargeting stays visible; render typed references in human reports and preserve structured references in JSON.
 - Select the requested tag for manual release builds, publish from the build's verified commit, and include formatting in release checks. Correct the release instructions.
 - Update compatible transitive dependencies to remove the production brace-expansion advisories and affected development XML, YAML, PostCSS and Nano ID packages without adding runtime dependencies.
 - Normalize documented singleton Parameters in triggers, tag priority/consent and variable conversions; validate their consumed shapes. Resolve nested trigger-reference Parameters by target type/name, retain explicit unresolved IDs, and preserve tag-reference names and authored list order.

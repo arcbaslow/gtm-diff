@@ -1,6 +1,8 @@
 import type { ContainerDiff, KindDiff } from '../core/diff.js';
 import {
   coverageNotice,
+  displayEntity,
+  displayFieldDiffs,
   displayIdentity,
   escapeHtml,
   formatPath,
@@ -78,7 +80,7 @@ function renderKindHtml(kind: KindDiff, full = false): string[] {
     for (const c of kind.added) {
       const { type, name } = displayIdentity(c);
       out.push(
-        `<li><strong>${escapeHtml(name)}</strong> <code>${escapeHtml(type)}</code>${full && c.status === 'added' ? entityDetails(c.entity) : ''}</li>`,
+        `<li><strong>${escapeHtml(name)}</strong> <code>${escapeHtml(type)}</code>${full && c.status === 'added' ? entityDetails(displayEntity(c.entity, c.kind)) : ''}</li>`,
       );
     }
     out.push('</ul>');
@@ -88,7 +90,7 @@ function renderKindHtml(kind: KindDiff, full = false): string[] {
     for (const c of kind.removed) {
       const { type, name } = displayIdentity(c);
       out.push(
-        `<li><strong>${escapeHtml(name)}</strong> <code>${escapeHtml(type)}</code>${full && c.status === 'removed' ? entityDetails(c.entity) : ''}</li>`,
+        `<li><strong>${escapeHtml(name)}</strong> <code>${escapeHtml(type)}</code>${full && c.status === 'removed' ? entityDetails(displayEntity(c.entity, c.kind)) : ''}</li>`,
       );
     }
     out.push('</ul>');
@@ -98,12 +100,13 @@ function renderKindHtml(kind: KindDiff, full = false): string[] {
     for (const c of kind.modified) {
       if (c.status !== 'modified') continue;
       const { type, name } = displayIdentity(c);
+      const fieldDiffs = displayFieldDiffs(c);
       out.push('<details>');
       out.push(
-        `<summary><strong>${escapeHtml(name)}</strong> <code>${escapeHtml(type)}</code> — ${c.fieldDiffs.length} field change${c.fieldDiffs.length === 1 ? '' : 's'}</summary>`,
+        `<summary><strong>${escapeHtml(name)}</strong> <code>${escapeHtml(type)}</code> — ${fieldDiffs.length} field change${fieldDiffs.length === 1 ? '' : 's'}</summary>`,
       );
       out.push('<pre class="diff">');
-      out.push(c.fieldDiffs.map((d) => renderUnifiedDiffLineHtml(d, full)).join('\n'));
+      out.push(fieldDiffs.map((d) => renderUnifiedDiffLineHtml(d, full)).join('\n'));
       out.push('</pre>');
       out.push('</details>');
     }
@@ -130,7 +133,7 @@ function renderUnifiedDiffLineHtml(
   return `<span class="mod">~ ${path}: ${escapeHtml(formatValue(d.oldValue, full))} → ${escapeHtml(formatValue(d.value, full))}</span>`;
 }
 
-function entityDetails(entity: Record<string, unknown>): string {
+function entityDetails(entity: unknown): string {
   return `<details><summary>Full normalized configuration</summary><pre>${escapeHtml(formatValue(entity, true))}</pre></details>`;
 }
 
