@@ -1,6 +1,8 @@
 import type { ContainerDiff, KindDiff } from '../core/diff.js';
 import {
   coverageNotice,
+  displayEntity,
+  displayFieldDiffs,
   displayIdentity,
   escapeHtml,
   formatPath,
@@ -74,7 +76,8 @@ function renderKindMarkdown(kind: KindDiff, lines: string[], full = false): void
     for (const change of kind.added) {
       const { type, name } = displayIdentity(change);
       lines.push(`- **${escapeMd(escapeHtml(name))}** <code>${escapeHtml(type)}</code>`);
-      if (full && change.status === 'added') lines.push(entityDetails(change.entity));
+      if (full && change.status === 'added')
+        lines.push(entityDetails(displayEntity(change.entity, change.kind)));
     }
     lines.push('');
   }
@@ -84,7 +87,8 @@ function renderKindMarkdown(kind: KindDiff, lines: string[], full = false): void
     for (const change of kind.removed) {
       const { type, name } = displayIdentity(change);
       lines.push(`- **${escapeMd(escapeHtml(name))}** <code>${escapeHtml(type)}</code>`);
-      if (full && change.status === 'removed') lines.push(entityDetails(change.entity));
+      if (full && change.status === 'removed')
+        lines.push(entityDetails(displayEntity(change.entity, change.kind)));
     }
     lines.push('');
   }
@@ -94,13 +98,14 @@ function renderKindMarkdown(kind: KindDiff, lines: string[], full = false): void
     for (const change of kind.modified) {
       if (change.status !== 'modified') continue;
       const { type, name } = displayIdentity(change);
+      const fieldDiffs = displayFieldDiffs(change);
       lines.push('<details>');
       lines.push(
-        `<summary><strong>${escapeHtml(name)}</strong> <code>${escapeHtml(type)}</code> — ${change.fieldDiffs.length} field change${change.fieldDiffs.length === 1 ? '' : 's'}</summary>`,
+        `<summary><strong>${escapeHtml(name)}</strong> <code>${escapeHtml(type)}</code> — ${fieldDiffs.length} field change${fieldDiffs.length === 1 ? '' : 's'}</summary>`,
       );
       lines.push('');
       lines.push('```diff');
-      for (const d of change.fieldDiffs) {
+      for (const d of fieldDiffs) {
         lines.push(renderUnifiedDiffLine(d, full));
       }
       lines.push('```');
@@ -126,7 +131,7 @@ function renderUnifiedDiffLine(
   return `~ ${path}: ${formatValue(d.oldValue, full)} → ${formatValue(d.value, full)}`;
 }
 
-function entityDetails(entity: Record<string, unknown>): string {
+function entityDetails(entity: unknown): string {
   return `\n<details><summary>Full normalized configuration</summary>\n<pre>${escapeHtml(formatValue(entity, true))}</pre>\n</details>\n`;
 }
 

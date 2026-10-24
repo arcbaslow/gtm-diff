@@ -73,7 +73,7 @@ describe('remaining container resources', () => {
     expect(diff.summary.unchanged).toBe(7);
     expect(normalizeExport(after).zone?.['<no-type>::Site zone']?.['boundary']).toEqual({
       condition: before.containerVersion.zone![0]!.boundary!.condition,
-      customEvaluationTriggerNames: ['Allowed'],
+      customEvaluationTriggerNames: [{ trigger: { type: 'customEvent', name: 'Allowed' } }],
     });
   });
 
@@ -241,7 +241,7 @@ describe('remaining container resources', () => {
       ],
     });
     expect(normalizeExport(before).zone?.['<no-type>::Resource']?.['boundary']).toEqual({
-      customEvaluationTriggerNames: ['<unresolved:missing>'],
+      customEvaluationTriggerNames: [{ unresolvedTriggerId: 'missing' }],
     });
     const after = structuredClone(before);
     after.containerVersion.zone![0]!.childContainer![0]!.publicId = 'GTM-B';

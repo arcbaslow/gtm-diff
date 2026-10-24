@@ -1,0 +1,21 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`trigger reference lists > sorts complete identities deterministically across trigger and reference permutations 1`] = `
+[
+  {
+    "trigger": {
+      "name": "Checkout",
+      "type": "customEvent",
+    },
+  },
+  {
+    "trigger": {
+      "name": "Checkout",
+      "type": "pageview",
+    },
+  },
+  {
+    "unresolvedTriggerId": "missing",
+  },
+]
+`;

@@ -43,7 +43,6 @@ const VOLATILE_FIELDS = [
 
 type ReferenceIndex = {
   triggerIdToIdentity: Map<string, { type: string; name: string }>;
-  triggerIdToName: Map<string, string>;
   folderIdToName: Map<string, string>;
   tagIdToName: Map<string, string>;
 };
@@ -67,10 +66,8 @@ export type NormalizedEntity = Record<string, unknown>;
 
 export function buildReferenceIndex(cv: GtmContainerVersion): ReferenceIndex {
   const triggerIdToIdentity = new Map<string, { type: string; name: string }>();
-  const triggerIdToName = new Map<string, string>();
   for (const t of cv.trigger ?? []) {
     if (t.triggerId) {
-      triggerIdToName.set(t.triggerId, t.name);
       triggerIdToIdentity.set(t.triggerId, { type: t.type, name: t.name });
     }
   }
@@ -82,7 +79,7 @@ export function buildReferenceIndex(cv: GtmContainerVersion): ReferenceIndex {
   for (const t of cv.tag ?? []) {
     if (t.tagId) tagIdToName.set(t.tagId, t.name);
   }
-  return { triggerIdToName, triggerIdToIdentity, folderIdToName, tagIdToName };
+  return { triggerIdToIdentity, folderIdToName, tagIdToName };
 }
 
 export function normalizeExport(exp: GtmExport): NormalizedContainer {
@@ -175,11 +172,11 @@ function normalizeTag(tag: GtmTag, refs: ReferenceIndex): NormalizedEntity {
   if (tag.parameter) out['parameter'] = normalizeParameters(tag.parameter, refs);
   normalizeSingleParameters(out, 'tag', refs);
   if (tag.firingTriggerId) {
-    out['firingTriggerNames'] = resolveTriggerNames(tag.firingTriggerId, refs);
+    out['firingTriggerNames'] = resolveTriggerReferences(tag.firingTriggerId, refs);
     delete out['firingTriggerId'];
   }
   if (tag.blockingTriggerId) {
-    out['blockingTriggerNames'] = resolveTriggerNames(tag.blockingTriggerId, refs);
+    out['blockingTriggerNames'] = resolveTriggerReferences(tag.blockingTriggerId, refs);
     delete out['blockingTriggerId'];
   }
   if (tag.parentFolderId) {
@@ -212,11 +209,11 @@ function normalizeVariable(variable: GtmVariable, refs: ReferenceIndex): Normali
   normalizeSingleParameters(out, 'variable', refs);
   if (variable.parameter) out['parameter'] = normalizeParameters(variable.parameter, refs);
   if (variable.disablingTriggerId) {
-    out['disablingTriggerNames'] = resolveTriggerNames(variable.disablingTriggerId, refs);
+    out['disablingTriggerNames'] = resolveTriggerReferences(variable.disablingTriggerId, refs);
     delete out['disablingTriggerId'];
   }
   if (variable.enablingTriggerId) {
-    out['enablingTriggerNames'] = resolveTriggerNames(variable.enablingTriggerId, refs);
+    out['enablingTriggerNames'] = resolveTriggerReferences(variable.enablingTriggerId, refs);
     delete out['enablingTriggerId'];
   }
   if (variable.parentFolderId) {
@@ -256,7 +253,7 @@ function normalizeZone(zone: GtmZone, refs: ReferenceIndex): NormalizedEntity {
     if (zone.boundary.condition)
       boundary['condition'] = normalizeConditions(zone.boundary.condition, refs);
     if (zone.boundary.customEvaluationTriggerId) {
-      boundary['customEvaluationTriggerNames'] = resolveTriggerNames(
+      boundary['customEvaluationTriggerNames'] = resolveTriggerReferences(
         zone.boundary.customEvaluationTriggerId,
         refs,
       );
@@ -267,10 +264,23 @@ function normalizeZone(zone: GtmZone, refs: ReferenceIndex): NormalizedEntity {
   return out;
 }
 
-function resolveTriggerNames(ids: string[], refs: ReferenceIndex): string[] {
-  const names = ids.map((id) => refs.triggerIdToName.get(id) ?? `<unresolved:${id}>`);
-  names.sort();
-  return names;
+type TriggerReference =
+  | { trigger: { type: string; name: string } }
+  | { unresolvedTriggerId: string };
+
+function resolveTriggerReference(id: string, refs: ReferenceIndex): TriggerReference {
+  const target = refs.triggerIdToIdentity.get(id);
+  return target ? { trigger: { ...target } } : { unresolvedTriggerId: id };
+}
+
+function resolveTriggerReferences(ids: string[], refs: ReferenceIndex): TriggerReference[] {
+  return ids
+    .map((id) => resolveTriggerReference(id, refs))
+    .sort((a, b) => {
+      const ak = stableKey(a);
+      const bk = stableKey(b);
+      return ak < bk ? -1 : ak > bk ? 1 : 0;
+    });
 }
 
 function normalizeConditions(
@@ -309,10 +319,9 @@ function normalizeParameter(p: GtmParameter, refs: ReferenceIndex): NormalizedPa
   const out: NormalizedParameter = { ...p };
 
   if (isTriggerReference(p.type) && p.value !== undefined) {
-    const target = refs.triggerIdToIdentity.get(p.value);
     // Keep resolved identities distinct from unresolved IDs, even if a name
     // resembles an unresolved marker. Never interpret ordinary string values.
-    out['value'] = target ? { trigger: { ...target } } : { unresolvedTriggerId: p.value };
+    out['value'] = resolveTriggerReference(p.value, refs);
   }
 
   if (p.list) {

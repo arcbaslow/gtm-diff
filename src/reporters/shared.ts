@@ -1,5 +1,7 @@
 import type { ContainerDiff, EntityChange } from '../core/diff.js';
+import type { Difference } from 'microdiff';
 import type { EntityKind } from '../types/gtm.js';
+import { isTriggerReference, SINGLE_PARAMETER_PATHS } from '../core/parameter-fields.js';
 
 export const KIND_LABELS: Record<EntityKind, { singular: string; plural: string }> = {
   tag: { singular: 'tag', plural: 'tags' },
@@ -92,6 +94,131 @@ export function formatValue(value: unknown, full = false): string {
   }
   const json = safeJson(value, 2);
   return !full && json.length > 200 ? `${json.slice(0, 200)}…` : json;
+}
+
+function triggerReferenceLabel(value: unknown): string | undefined {
+  if (value === null || typeof value !== 'object' || Object.keys(value).length !== 1)
+    return undefined;
+  const ref = value as Record<string, unknown>;
+  if (typeof ref['unresolvedTriggerId'] === 'string')
+    return `<unresolved:${ref['unresolvedTriggerId']}>`;
+  const target = ref['trigger'];
+  if (target !== null && typeof target === 'object') {
+    const identity = target as Record<string, unknown>;
+    if (
+      Object.keys(identity).length === 2 &&
+      typeof identity['name'] === 'string' &&
+      typeof identity['type'] === 'string'
+    )
+      return `${identity['name']} (${identity['type']})`;
+  }
+  return undefined;
+}
+
+function referenceLabels(entity: Record<string, unknown>, kind: EntityKind): Map<unknown, string> {
+  const labels = new Map<unknown, string>();
+  const add = (value: unknown) => {
+    const label = triggerReferenceLabel(value);
+    if (label !== undefined) labels.set(value, label);
+  };
+  const parameters = (value: unknown) => items(value).forEach(parameter);
+  const parameter = (value: unknown): void => {
+    const type = property(value, 'type');
+    if (typeof type === 'string' && isTriggerReference(type)) add(property(value, 'value'));
+    parameters(property(value, 'list'));
+    parameters(property(value, 'map'));
+  };
+  const conditions = (value: unknown) =>
+    items(value).forEach((condition) => parameters(property(condition, 'parameter')));
+  if (['tag', 'trigger', 'variable', 'client', 'transformation', 'gtagConfig'].includes(kind))
+    parameters(entity['parameter']);
+  for (const [field, nested] of SINGLE_PARAMETER_PATHS[kind] ?? []) {
+    parameter(nested === undefined ? entity[field] : property(entity[field], nested));
+  }
+  if (kind === 'tag') {
+    items(entity['firingTriggerNames']).forEach(add);
+    items(entity['blockingTriggerNames']).forEach(add);
+  }
+  if (kind === 'variable') {
+    items(entity['enablingTriggerNames']).forEach(add);
+    items(entity['disablingTriggerNames']).forEach(add);
+  }
+  if (kind === 'trigger') {
+    for (const field of ['filter', 'customEventFilter', 'autoEventFilter'])
+      conditions(entity[field]);
+  }
+  if (kind === 'zone') {
+    const boundary = entity['boundary'];
+    items(property(boundary, 'customEvaluationTriggerNames')).forEach(add);
+    conditions(property(boundary, 'condition'));
+  }
+  return labels;
+}
+
+function items(value: unknown): unknown[] {
+  return Array.isArray(value) ? value : [];
+}
+
+function property(value: unknown, key: string | number): unknown {
+  return value !== null && typeof value === 'object'
+    ? (value as Record<string | number, unknown>)[key]
+    : undefined;
+}
+
+function displayReferences(value: unknown, labels: Map<unknown, string>): unknown {
+  if (labels.has(value)) return labels.get(value);
+  if (Array.isArray(value)) return value.map((item: unknown) => displayReferences(item, labels));
+  if (value !== null && typeof value === 'object') {
+    return Object.fromEntries(
+      Object.entries(value).map(([key, item]) => [key, displayReferences(item, labels)]),
+    );
+  }
+  return value;
+}
+
+export function displayEntity(entity: Record<string, unknown>, kind: EntityKind): unknown {
+  return displayReferences(entity, referenceLabels(entity, kind));
+}
+
+export function displayFieldDiffs(
+  change: Extract<EntityChange, { status: 'modified' }>,
+): Difference[] {
+  // Show a whole reference instead of separate changes to its identity properties.
+  const seen = new Set<string>();
+  const beforeLabels = referenceLabels(change.before, change.kind);
+  const afterLabels = referenceLabels(change.after, change.kind);
+  const diffs = change.fieldDiffs.flatMap((diff) => {
+    let before: unknown = change.before;
+    let after: unknown = change.after;
+    for (let i = 0; i <= diff.path.length; i++) {
+      if (beforeLabels.has(before) && afterLabels.has(after)) {
+        const path = diff.path.slice(0, i);
+        const key = JSON.stringify(path);
+        if (seen.has(key)) return [];
+        seen.add(key);
+        return [{ type: 'CHANGE' as const, path, oldValue: before, value: after }];
+      }
+      const segment = diff.path[i];
+      if (segment === undefined) break;
+      before = property(before, segment);
+      after = property(after, segment);
+    }
+    return [diff];
+  });
+  return diffs.map((diff) => {
+    switch (diff.type) {
+      case 'CREATE':
+        return { ...diff, value: displayReferences(diff.value, afterLabels) };
+      case 'REMOVE':
+        return { ...diff, oldValue: displayReferences(diff.oldValue, beforeLabels) };
+      case 'CHANGE':
+        return {
+          ...diff,
+          oldValue: displayReferences(diff.oldValue, beforeLabels),
+          value: displayReferences(diff.value, afterLabels),
+        };
+    }
+  });
 }
 
 function safeJson(value: unknown, space?: number): string {
