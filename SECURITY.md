@@ -22,7 +22,7 @@ somewhere the operator did not ask for.
   Container exports contain Custom HTML tags. Every interpolation of
   container-derived data currently goes through `escapeHtml`, and tests
   cover both the value path and the entity-name path. If you find one
-  that does not, report it — a diff report is exactly the artifact a
+  that does not, report it - a diff report is exactly the artifact a
   reviewer opens in a browser without thinking, so this is the
   highest-value bug class here.
 - **A regression in `sanitizeLabel`** (`src/reporters/shared.ts`).
@@ -45,7 +45,7 @@ somewhere the operator did not ask for.
 
 - Secrets you committed into a container export that is itself in a
   public repo. The tool reads what you hand it.
-- Bugs in Google Tag Manager or its export format — report those to
+- Bugs in Google Tag Manager or its export format - report those to
   Google.
 - The unimplemented `plan` and `apply` commands. When `apply` lands, its
   OAuth handling and write path become the top scope item; until then

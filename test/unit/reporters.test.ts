@@ -72,7 +72,7 @@ describe('renderHtml', () => {
     const diff = await loadDiff();
     // Inject an HTML-looking value into a modified variable's field diff to
     // prove escaping reaches into the rendered change lines, not just our
-    // chrome. Mutating the already-computed diff is fine here — reporters
+    // chrome. Mutating the already-computed diff is fine here - reporters
     // are pure functions of the diff object.
     const varDiff = diff.kinds.find((k) => k.kind === 'variable')!;
     const mod = varDiff.modified[0]!;

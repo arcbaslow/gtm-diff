@@ -18,7 +18,7 @@ All five checks passed before each local commit. `node node_modules/typescript/b
 
 ## Changes and evidence
 
-- `22891ad` — Report incomplete comparisons and add strict coverage checks. All five checks passed with 84 tests. The coverage fixture pair failed before implementation because omission metadata was absent. Tests verify sanitized notices in every reporter, stable field order, exit 2 under `--strict`, and preservation of an existing report file on failure.
+- `22891ad` - Report incomplete comparisons and add strict coverage checks. All five checks passed with 84 tests. The coverage fixture pair failed before implementation because omission metadata was absent. Tests verify sanitized notices in every reporter, stable field order, exit 2 under `--strict`, and preservation of an existing report file on failure.
 - The resource-support commit containing this record adds all five missing collections, fixture pairs, types, validation and normalization. The resource fixture regression failed before implementation because these collections were omitted. It now reports five modified resources and two unchanged supporting entities. The final commit hash is available in the local log and task report.
 
 New resource tests cover ID renumbering, folder and zone-trigger resolution, missing references, inert template text, gallery metadata, client priority, weak references, Google tag config identity, additions/removals/renames, unknown fields, malformed structures, duplicate identities/source IDs and hostile labels for every kind and change status. Older normalized library objects may omit the new maps; their empty-map fallback retains prototype-key protection.
