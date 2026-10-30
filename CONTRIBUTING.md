@@ -58,7 +58,7 @@ doesn't.
 
 **No new runtime dependencies without a written reason** in the commit
 or the PR body. Dev dependencies are easier, but the runtime tree stays
-small on purpose — this thing runs in other people's CI.
+small on purpose - this thing runs in other people's CI.
 
 **TypeScript strict.** No `any` escape hatches, no `@ts-ignore` without
 a comment saying why.
@@ -66,8 +66,8 @@ a comment saying why.
 ## Treat container exports as untrusted input
 
 A GTM export is not inert data. It contains Custom HTML tags and Custom
-JavaScript variables — arbitrary code authored by anyone who can edit
-the container — and often API keys and internal hostnames in tag
+JavaScript variables - arbitrary code authored by anyone who can edit
+the container - and often API keys and internal hostnames in tag
 parameters.
 
 Two rules follow:
@@ -86,7 +86,7 @@ Two rules follow:
 at all, and the test suite must not introduce any.
 
 If you're fixing a normalization or matching bug, the fixture pair
-showing the wrong diff is more valuable than the fix — send it even if
+showing the wrong diff is more valuable than the fix - send it even if
 you don't have a patch.
 
 ## What I'll accept
@@ -105,7 +105,7 @@ you don't have a patch.
 - Rename tracking. A renamed entity shows as one removed and one added,
   same as Git. Heuristic rename detection would make the diff
   non-deterministic and is not worth it.
-- Big rewrites without a discussion first — open an issue describing the
+- Big rewrites without a discussion first - open an issue describing the
   shape before the work
 
 ## License

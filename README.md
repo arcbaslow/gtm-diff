@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="assets/banner.svg" alt="GTM Diff — Review the changes in your Google Tag Manager exports." width="100%">
+  <img src="assets/banner.svg" alt="GTM Diff - Review the changes in your Google Tag Manager exports." width="100%">
 </p>
 
 # GTM Diff
@@ -154,7 +154,7 @@ Vitest covers export parsing, ID normalization, semantic diffs, reporters and HT
 
 ## Releases
 
-**[v0.1.0](https://github.com/arcbaslow/gtm-diff/releases/tag/v0.1.0)** — see the [release notes](docs/RELEASE_NOTES.md) for this release and the [changelog](CHANGELOG.md) for project history.
+**[v0.1.0](https://github.com/arcbaslow/gtm-diff/releases/tag/v0.1.0)** - see the [release notes](docs/RELEASE_NOTES.md) for this release and the [changelog](CHANGELOG.md) for project history.
 
 GitHub Releases include downloadable artifacts and checksums. Package-registry publication is a separate, opt-in workflow; a GitHub release does not imply that the same version is available on PyPI or npm. Maintainers can follow the [release guide](docs/RELEASING.md).
 
@@ -174,7 +174,7 @@ The [roadmap](docs/ROADMAP.md) distinguishes implemented changes from designs an
 | [Meta Ads Agents](https://github.com/arcbaslow/meta-ads-agents) | Campaign performance, creative fatigue and event health. |
 | [Figma Taxonomy Gen](https://github.com/arcbaslow/figma-taxonomy-gen) | Turn interactive designs into a reviewable tracking plan. |
 
-Maintained by [Good Labs](https://goodlabs.kz) — measurement implementation, tracking plans and analytics audits.
+Maintained by [Good Labs](https://goodlabs.kz) - measurement implementation, tracking plans and analytics audits.
 
 ## License
 

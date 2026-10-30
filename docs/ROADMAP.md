@@ -26,7 +26,7 @@ Evidence below uses paths and line numbers at the base commit so it remains insp
 
 Coverage at base: four unit test files, 30 tests, one synthetic web fixture pair. No snapshots, command-process tests, server/zone/template fixtures, duplicate-identity cases, deep parameter ordering cases, or malformed entity-entry cases. Existing reporter tests cover basic HTML names/values and C0 entity labels, but not Markdown HTML summaries, source labels, C1 values or hostile field paths.
 
-## Now — stabilize diff before v0.2
+## Now - stabilize diff before v0.2
 
 These are the bounded changes authorized for this branch. Bug fixes precede the small CI feature. Each row is independently reviewable; fixes include fixture pairs and regression tests, and changes affecting order include snapshots.
 
@@ -40,7 +40,7 @@ N1–N5 and X1–X4 are implemented and merged through `c3b96ef`. The [original 
 | N4 Escape every reporter context correctly | Sanitize source labels; visibly escape C1 controls in paths/values; use HTML escaping inside Markdown HTML, and safe code labels. Preserve export text as inert report data. | `console.ts:13`; `markdown.ts:8,94`; `shared.ts:94`; SECURITY.md | S | Low: presentation changes for hostile labels, with snapshots and hostile fixture pair |
 | N5 Distinguish CLI errors from differences | Keep default success and opt-in change status 1; use status 2 for command/input/output errors. Test actual processes, stdout/stderr, metadata-only changes and output files. CI can fail broken comparisons separately from a valid review containing changes. | `commands/diff.ts:51,85`; [Git diff exit-code](https://git-scm.com/docs/git-diff#Documentation/git-diff.txt---exit-code); [GitHub action exit codes](https://docs.github.com/en/actions/how-tos/create-and-publish-actions/set-exit-codes) | S | Medium: scripts expecting error status 1 must adopt 2; help remains success |
 
-## Next — complete comparison coverage, then design v0.2 plan
+## Next - complete comparison coverage, then design v0.2 plan
 
 Order within this group puts comparison correctness before new workflows. Implementation and design status are explicit below; a completed design does not mean the feature has shipped.
 
@@ -55,7 +55,7 @@ Order within this group puts comparison correctness before new workflows. Implem
 | X7 Reviewable PR comments at scale (implemented) | Opt-in full normalized added/removed details and untruncated values in Markdown/HTML; a UTF-8 byte budget emits a complete compact summary when details exceed it, with explicit omission notice, stable marker and optional HTTPS artifact link. | [Report contract](REPORT_DETAILS.md); `test/unit/report-options.test.ts`, `cli.test.ts`; `test/fixtures/reporter-hostile-{before,after}.json`; [GitHub collapsed sections](https://docs.github.com/en/get-started/writing-on-github/working-with-advanced-formatting/organizing-information-with-collapsed-sections) | M | Medium: export values can contain secrets. Defaults remain unchanged; no automatic posting. Browser/GitHub rendering remains unverified |
 | X8 Broader fixture and resilience corpus (resilience implemented; real exports needed) | Bound files to 32 MiB, nesting to 128 levels and parsed values to 500,000 before recursive processing. Accept one leading UTF-8 BOM; preserve embedded BOMs. Generated permutations and boundary fixtures exercise deterministic behavior and clear failures. | [Limits, benchmark and real-fixture intake](INPUT_LIMITS.md); `test/unit/input-limits.test.ts`; `test/fixtures/depth-limit-{before,after}.json`, `bom-{before,after}.json`; [partial export behavior](https://support.google.com/tagmanager/answer/6106997?hl=en) | M | Medium: synthetic benchmarks do not establish real export compatibility. Redacted web/server/consent/template/zone/partial exports with provenance are still needed; none were fabricated or fetched from live containers |
 
-## Later — after a proven v0.2
+## Later - after a proven v0.2
 
 | Item | What and why | Evidence | Effort | Risk |
 | --- | --- | --- | --- | --- |
