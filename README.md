@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="assets/banner.svg" alt="GTM Diff - Review the changes in your Google Tag Manager exports." width="100%">
+  <img src="assets/hero.jpg" alt="GTM Diff: on a dock, small robots compare the luggage tags hanging inside two open shipping containers, holding tags side by side and circling the one that changed." width="100%">
 </p>
 
 # GTM Diff
@@ -11,11 +11,26 @@ Review the changes in your Google Tag Manager exports.
 [![Node.js 20+](https://img.shields.io/badge/Node.js-20%2B-0891b2?logo=nodedotjs&logoColor=white)](#quick-start)
 [![MIT license](https://img.shields.io/badge/license-MIT-475569)](LICENSE)
 
-[Quick start](#quick-start) · [Example output](#example-output) · [Tests](#tests) · [Releases](#releases) · [Contributing](CONTRIBUTING.md)
+[Quick start](#quick-start) | [How a diff works](#how-a-diff-works) | [Example output](#example-output) | [Use in CI](#use-in-ci) | [Where it fits](#where-it-fits) | [Contributing](CONTRIBUTING.md)
 
 A local CLI and TypeScript library for comparing two Google Tag Manager container exports. It resolves GTM IDs to names and removes volatile metadata so reviewers can focus on changes to tags, triggers, variables and folders.
 
 **Implemented:** `diff`, console/Markdown/HTML/JSON reports and CI exit codes. **Not implemented:** `plan`, `apply` or live GTM synchronization. The tool reads local exports and makes no GTM API calls.
+
+## How a diff works
+
+```mermaid
+flowchart LR
+  A["before.json<br/>after.json"] --> B["Parse and validate<br/>size, depth, duplicate identities"]
+  B --> C["Normalize<br/>strip IDs and volatile fields,<br/>resolve references, sort keyed collections"]
+  C --> D["Match entities<br/>by type and name"]
+  D --> E["console, Markdown,<br/>HTML or JSON report"]
+  D -. "--exit-code" .-> F["Exit 1 on changes"]
+  classDef step fill:#e6f4f7,stroke:#0891b2,color:#17202a
+  class A,B,C,D,E,F step
+```
+
+See [What the comparison means](#what-the-comparison-means) for each normalization rule and the identity exceptions for built-in variables and Google tag configs.
 
 ## Quick start
 
@@ -164,10 +179,28 @@ Read [CONTRIBUTING.md](CONTRIBUTING.md), run the checks above, and include a min
 
 The [roadmap](docs/ROADMAP.md) distinguishes implemented changes from designs and evidence still needed. Review-ready designs cover the [v0.2 read-only plan](docs/designs/PLAN.md), [dependency impact](docs/designs/IMPACT.md), and [local review and policies](docs/designs/LOCAL_REVIEW.md). These features are not implemented. `apply` remains outside this work; the [boundary record](docs/designs/APPLY_BOUNDARY.md) lists its prerequisites.
 
+## Where it fits
+
+```mermaid
+flowchart LR
+  A["Figma design"] -- "figma-taxonomy-gen" --> B["Tracking plan"]
+  B --> C["GTM container"]
+  C -- "gtm-diff" --> D["Reviewed<br/>container change"]
+  D --> E["Live site"]
+  E -- "pulsecheck" --> F["Recorded session"]
+  F -- "analysis skill" --> G["Coverage vs plan"]
+  B -.-> G
+  classDef here fill:#e6f4f7,stroke:#0891b2,color:#17202a
+  class D here
+```
+
+Each tool works on its own inputs and runs without the others. The pulsecheck [analysis skill](https://github.com/arcbaslow/pulsecheck/blob/main/skill/SKILL.md) can take a figma-taxonomy-gen plan and report planned events not seen in the session and seen events missing from the plan.
+
 ## Related tools
 
 | Project | Use it for |
 | --- | --- |
+| [Pulsecheck](https://github.com/arcbaslow/pulsecheck) | Record network hits, dataLayer pushes and consent in Chrome DevTools. |
 | [Google Ads Agents](https://github.com/arcbaslow/google-ads-agents) | Paid media audits, tracking checks and reviewed changes. |
 | [Google Analytics Agent](https://github.com/arcbaslow/google-analytics-agent) | GA4 data quality, funnels and property management. |
 | [Search Console Agent](https://github.com/arcbaslow/google-search-console-agent) | Search performance, indexing and page experience. |
