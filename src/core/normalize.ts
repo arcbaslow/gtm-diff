@@ -265,8 +265,7 @@ function normalizeZone(zone: GtmZone, refs: ReferenceIndex): NormalizedEntity {
 }
 
 type TriggerReference =
-  | { trigger: { type: string; name: string } }
-  | { unresolvedTriggerId: string };
+  { trigger: { type: string; name: string } } | { unresolvedTriggerId: string };
 
 function resolveTriggerReference(id: string, refs: ReferenceIndex): TriggerReference {
   const target = refs.triggerIdToIdentity.get(id);
