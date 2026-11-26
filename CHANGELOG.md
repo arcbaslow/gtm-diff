@@ -19,9 +19,10 @@ Versioning is [semantic](https://semver.org/spec/v2.0.0.html).
 
 ### Changed
 
+- Require Node 22 or newer and drop Node 20 from CI, to upgrade `@oclif/core` to 5 and `@oclif/plugin-help` to 7.
 - Change normalized trigger arrays returned by `normalizeExport` and `diffExports` to hold structured references instead of names.
 - Remove the unused `triggerIdToName` field from the exported `buildReferenceIndex` result.
-- Upgrade development testing to Vitest 4.1.11 and Vite 6.4.3, removing the remaining audited test-tool vulnerabilities while retaining Node 20/22/24 support and unchanged report snapshots.
+- Upgrade development testing to Vitest 4.1.11 and Vite 6.4.3, removing the remaining audited test-tool vulnerabilities with unchanged report snapshots.
 
 ### Fixed
 

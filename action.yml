@@ -8,7 +8,7 @@ inputs:
     description: Local proposed export path, relative to the workspace or absolute.
     required: true
   node-version:
-    description: Supported Node version (20, 22 or 24).
+    description: Supported Node version (22 or 24).
     default: '24'
   strict:
     description: Reject omitted container-version fields.

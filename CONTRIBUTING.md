@@ -11,7 +11,7 @@ npm ci
 npm run dev -- diff test/fixtures/minimal-before.json test/fixtures/minimal-after.json
 ```
 
-Node.js `>=20.0.0`.
+Node.js `>=22.0.0`.
 
 ## Before you push
 
@@ -22,8 +22,8 @@ npm run format:check
 npm test
 ```
 
-All four must pass. CI runs them on Ubuntu and Windows across Node 20 /
-22 / 24, then verifies the package builds.
+All four must pass. CI runs them on Ubuntu and Windows across Node 22 /
+24, then verifies the package builds.
 
 `npm run lint:fix` and `npm run format` fix most of what the first two
 catch.

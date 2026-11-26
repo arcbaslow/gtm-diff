@@ -9,7 +9,7 @@ No npm publication is required. The Action does not check out the caller's repos
 | Input | Default | Meaning |
 | --- | --- | --- |
 | `before`, `after` | Required | Local paths, relative to the workspace or absolute |
-| `node-version` | `24` | Use the supported Node 20, 22 or 24 line |
+| `node-version` | `24` | Use the supported Node 22 or 24 line |
 | `strict` | `true` | Reject omitted container-version fields before report creation |
 | `fail-on-change` | `false` | Fail the step after reports/output paths are written if changes exist |
 | `details` | `false` | Include full normalized configurations in HTML/Markdown |
@@ -48,6 +48,6 @@ When `fail-on-change` is true, keep the `always()` condition to retain reports a
 
 ## Verification and sources
 
-Offline adapter tests use existing hostile, coverage, malformed and normal fixture pairs. They verify report contents, aggregate-only summaries, output protocol, drift failure after writing, strict failure before writing, unique output directories and explicit boolean handling. The repository test workflow exercises the composite itself in its Ubuntu/Windows Node 20/22/24 matrix. Hosted verification for the new branch is recorded separately from these local tests.
+Offline adapter tests use existing hostile, coverage, malformed and normal fixture pairs. They verify report contents, aggregate-only summaries, output protocol, drift failure after writing, strict failure before writing, unique output directories and explicit boolean handling. The repository test workflow exercises the composite itself in its Ubuntu/Windows Node 22/24 matrix. Hosted verification for the new branch is recorded separately from these local tests.
 
 Sources checked 2026-10-01: [composite actions](https://docs.github.com/en/actions/tutorials/create-actions/create-a-composite-action), [workflow outputs and summaries](https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-commands), [commit pinning and token permissions](https://docs.github.com/en/actions/reference/security/secure-use). Source fetching and artifact uploads are workflow responsibilities; offline comparison is the product contract.
