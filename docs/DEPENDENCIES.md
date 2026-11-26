@@ -20,7 +20,7 @@ After these compatible updates, `npm audit --omit=dev` reports zero vulnerabilit
 
 ## Test-tool migration decision
 
-The [Vitest advisory](https://github.com/advisories/GHSA-5xrq-8626-4rwp) affects versions before 3.2.6. npm suggests the current Vitest 5 release, but [Vitest 5 requires Node 22.12 or newer](https://vitest.dev/guide/migration/), excluding this repository's Node 20 support. Do not accept that automatic major upgrade.
+The [Vitest advisory](https://github.com/advisories/GHSA-5xrq-8626-4rwp) affects versions before 3.2.6. npm suggests the current Vitest 5 release, but [Vitest 5 requires Node 22.12 or newer](https://vitest.dev/guide/migration/), above this repository's Node 22.0 minimum. Do not accept that automatic major upgrade.
 
 The implemented compatible target is Vitest 4.1.11 with Vite 6.4.3. Their [Vitest package metadata](https://registry.npmjs.org/vitest/4.1.11) and [Vite package metadata](https://registry.npmjs.org/vite/6.4.3) include Node 20/22/24. Vite 6 is declared explicitly as a development dependency to keep Vitest's broad Vite range from selecting a newer Node minimum. No runtime dependency is added. The [Vitest 4 migration guide](https://v4.vitest.dev/guide/migration) was reviewed; the existing config and tests work without changes. All report snapshots remain unchanged.
 

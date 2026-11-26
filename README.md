@@ -8,7 +8,7 @@ Review the changes in your Google Tag Manager exports.
 
 [![Tests](https://github.com/arcbaslow/gtm-diff/actions/workflows/tests.yml/badge.svg)](https://github.com/arcbaslow/gtm-diff/actions/workflows/tests.yml)
 [![Release](https://img.shields.io/github/v/release/arcbaslow/gtm-diff?color=0891b2&label=release)](https://github.com/arcbaslow/gtm-diff/releases)
-[![Node.js 20+](https://img.shields.io/badge/Node.js-20%2B-0891b2?logo=nodedotjs&logoColor=white)](#quick-start)
+[![Node.js 22+](https://img.shields.io/badge/Node.js-22%2B-0891b2?logo=nodedotjs&logoColor=white)](#quick-start)
 [![MIT license](https://img.shields.io/badge/license-MIT-475569)](LICENSE)
 
 [Quick start](#quick-start) | [How a diff works](#how-a-diff-works) | [Example output](#example-output) | [Use in CI](#use-in-ci) | [Where it fits](#where-it-fits) | [Contributing](CONTRIBUTING.md)
@@ -34,7 +34,7 @@ See [What the comparison means](#what-the-comparison-means) for each normalizati
 
 ## Quick start
 
-Requires **Node.js 20+**. Build from source:
+Requires **Node.js 22+**. Build from source:
 
 ```bash
 git clone https://github.com/arcbaslow/gtm-diff.git
@@ -145,7 +145,7 @@ After installing a release tarball into another project, import from `gtm-diff` 
 
 ## Tests
 
-Tests use Vitest 4 with Vite 6 to retain Node 20/22/24 support. Dependency audit results and supported-runtime verification are recorded in [dependency maintenance](docs/DEPENDENCIES.md).
+Tests use Vitest 4 with Vite 6 on Node 22 and 24. Dependency audit results and supported-runtime verification are recorded in [dependency maintenance](docs/DEPENDENCIES.md).
 
 ```bash
 npm test
@@ -155,7 +155,7 @@ npm run format:check
 npm run build
 ```
 
-Vitest covers export parsing, ID normalization, semantic diffs, reporters and HTML escaping. CI runs these checks on **Ubuntu and Windows**, across **Node 20, 22 and 24**. It requires no Google credentials. For watch mode, use `npm run test:watch`; for a source CLI run, use `npm run dev -- diff before.json after.json`. See the [release verification](docs/VERIFICATION.md).
+Vitest covers export parsing, ID normalization, semantic diffs, reporters and HTML escaping. CI runs these checks on **Ubuntu and Windows**, across **Node 22 and 24**. It requires no Google credentials. For watch mode, use `npm run test:watch`; for a source CLI run, use `npm run dev -- diff before.json after.json`. See the [release verification](docs/VERIFICATION.md).
 
 ## Repository map
 
